@@ -1,0 +1,44 @@
+[
+    {
+      "title": "Delicious Food Festival",
+      "images": ["https://example.com/food-festival-image1.jpg", "https://example.com/food-festival-image2.jpg"],
+      "description": "Join us for a mouthwatering food festival with a wide variety of cuisines.",
+      "hours": 4,
+      "cost": 25,
+      "descriptor": "food",
+      "region": "New York",
+      "location": {
+        "type": "Point",
+        "coordinates": [40.7128, -74.0060]
+      },
+      "links": ["https://example.com/food-festival-link1", "https://example.com/food-festival-link2"]
+    },
+    {
+      "title": "Scenic Hiking Trail",
+      "images": ["https://example.com/hiking-trail-image1.jpg", "https://example.com/hiking-trail-image2.jpg"],
+      "description": "Experience the beauty of nature on this stunning hiking trail.",
+      "hours": 6,
+      "cost": 0,
+      "descriptor": "hiking",
+      "region": "California",
+      "location": {
+        "type": "Point",
+        "coordinates": [36.7783, -119.4179]
+      },
+      "links": ["https://example.com/hiking-trail-link1", "https://example.com/hiking-trail-link2"]
+    },
+    {
+      "title": "Live Music Concert",
+      "images": ["https://example.com/music-concert-image1.jpg", "https://example.com/music-concert-image2.jpg"],
+      "description": "Enjoy an electrifying music concert with your favorite artists.",
+      "hours": 3,
+      "cost": 50,
+      "descriptor": "music",
+      "region": "London",
+      "location": {
+        "type": "Point",
+        "coordinates": [51.5074, -0.1278]
+      },
+      "links": ["https://example.com/music-concert-link1", "https://example.com/music-concert-link2"]
+    }
+  ]  

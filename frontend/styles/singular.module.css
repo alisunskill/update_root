@@ -1,0 +1,355 @@
+/* Page 2 Singular event info page */
+
+.eventicon1 {
+  height: 60px;
+}
+
+.singleventhero {
+  margin: 20px 20px 15px 20px;
+  background-color: #f7f8fa;
+  border-radius: 50px;
+  padding: 0px 40px;
+}
+.crossbtn {
+  color: #818a91;
+  font-size: 24px;
+  position: relative !important;
+  right: -2px;
+  top: 3px;
+  cursor: pointer;
+}
+.createdhero {
+  background-color: #f7f8fa;
+  border-radius: 30px;
+  margin: 20px;
+  padding: 20px;
+}
+.eventicondiv {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgb(67, 63, 63);
+  border-radius: 30px;
+  padding: 12px;
+}
+.scenery {
+  /* max-width: 100%; */
+  height: 450px;
+  width: 100%;
+  border-radius: 10px;
+}
+.scenery2 {
+  height: 200px;
+  border-radius: 10px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.scenery2:hover {
+  transform: scale(1.2);
+}
+.scenerybox {
+  transition: transform 0.3s ease;
+}
+.scenerybox:hover .scenery2 {
+  transform: scale(1.2);
+}
+.savelink1 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.mapbox {
+  margin-right: 30px;
+  padding: 30px 30px 30px 0px;
+  border-radius: 20px;
+}
+.menicon {
+  width: 35px;
+  height: 35px;
+}
+.smallimg {
+  width: 100%;
+  width: 100%;
+  margin-top: 7px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.foodIcons {
+  max-width: 80px;
+}
+.eventicondiv:hover {
+  background-color: #7cc5e5;
+  color: #fff;
+}
+
+.eventicondiv:after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+.eventicon {
+  padding: 0px 40px;
+}
+.eventicondiv1 {
+  margin-left: 5px;
+}
+.eventtopicons {
+  width: 30px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.eventtoprighticon {
+  display: flex;
+  justify-content: flex-end;
+}
+.eventtoplefticon {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+.eventmidicons {
+  margin-top: 50px;
+}
+
+.tikicon {
+  color: green;
+  font-size: 25px;
+}
+.eventicons {
+  padding-top: 35px;
+  padding-right: 40px;
+}
+.eventmapimage {
+  width: 100%;
+  height: 850px !important;
+  padding-top: 20px;
+}
+.carousel-indicators {
+  position: static;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+}
+.carousel-indicators li {
+  width: 300px;
+  height: 100%;
+  opacity: 0.8;
+  border-bottom: 0px;
+  border-radius: 0px;
+  margin-left: 0px;
+  margin-right: 2px;
+}
+.carousel-item {
+  border-radius: 0px;
+}
+
+.eventtitlepara {
+  font-family: "Poppins", sans-serif;
+}
+.eventmidsection {
+  background-image: url("../public/images/page2midimage.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 600px;
+  margin-top: 20px;
+}
+.eventoperationhours {
+  max-width: 350px;
+  width: 100%;
+  background-color: white;
+  border-radius: 60px;
+  height: 340px;
+}
+.eventcostattend {
+  width: 350px;
+  height: 250px;
+  background-color: white;
+  border-radius: 40px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* .scenerypara {
+  padding-left: 60px;
+} */
+.eventclockicon {
+  width: 50px;
+  margin-bottom: 10px;
+}
+.eventhourstext {
+  font-family: "Poppins", sans-serif;
+}
+.eventmoneyicon {
+  width: 60px;
+  margin-bottom: 10px;
+}
+
+.eventendheading {
+  font-size: 30px;
+}
+
+.eventmaincard {
+  padding: 90px 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  margin: 10px 0px;
+}
+.eventendcard1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.eventendcard2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* recommendations */
+.recommendtriphero {
+  margin-top: 70px;
+}
+.recommendtrip {
+  background-color: #eaeef3;
+}
+/* upcoming trips */
+.dayshero {
+  background-color: #eeeeee;
+  border: none;
+  padding: 13px 20px !important;
+}
+.days {
+  padding: 20px 15px;
+  margin-bottom: 0px;
+}
+.tripimg {
+  width: 100%;
+  height: 230px;
+  border-radius: 8px;
+}
+
+.tripimg1 {
+  width: 100%;
+  height: 430px;
+  border-radius: 8px;
+}
+.eventiconbox {
+  width: 300px;
+  gap: 10px;
+  padding: 0px 20px;
+}
+.dayshero:hover {
+  background-color: #cccccc !important;
+}
+.dayshero:focus {
+  background-color: #cccccc !important;
+}
+.addimg {
+  z-index: 99999;
+  position: relative;
+  color: #767676;
+  text-align: center;
+  bottom: 10% ;
+}
+.days {
+  background-color: #eeeeee;
+}
+.notestext {
+  height: 200px;
+  border: 1px solid #cccccc;
+  background-color: #fff;
+  width: 100%;
+  font-size: 20px;
+  color: black;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+}
+.notestext::placeholder {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 8px;
+  font-size: 14px;
+  color: #999999;
+}
+.notestext:focus {
+  border: 1px solid #999999 !important;
+}
+
+@media only screen and (max-width: 1440px) {
+  .eventoperationhours {
+    height: 300px;
+  }
+  .foodIcons {
+    max-width: 60px;
+  }
+  /* .scenerypara {
+    padding-left: 50px;
+  } */
+}
+
+@media only screen and (max-width: 600px) and (min-width: 300px) {
+  .eventtitleimage {
+    width: 220px;
+  }
+  .eventicon {
+    display: flex;
+    flex-direction: column;
+    padding: 7px 14px;
+  }
+  .eventicondiv1 {
+    margin-left: 0px;
+    margin-top: 5px;
+  }
+  .eventmidicons {
+    display: flex;
+    flex-direction: row;
+    margin-top: -30px;
+    padding: 0px 33px;
+  }
+  .eventmapimage {
+    padding-top: 60px;
+  }
+  .eventmidsection {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .eventcostattend {
+    width: 240px;
+    margin-left: -3px;
+  }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 600px) {
+  .eventtopsection {
+    display: flex;
+    flex-direction: row;
+  }
+  .eventicon {
+    padding: 0px 20px;
+  }
+  .eventmidicons {
+    display: flex;
+    flex-direction: row;
+    margin-top: -60px;
+    padding: 0px 270px;
+  }
+}
+
+.imgradio {
+  position: relative;
+  top: -83px;
+  left: -26px;
+  z-index: -1;
+}

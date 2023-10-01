@@ -1,0 +1,120 @@
+.landingendcard1 {
+  padding: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.landingimage {
+  /* background-size: cover; */
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 100%;
+  height: -webkit-fill-available;
+  border-radius: 7px;
+  height: 400px;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease;
+  /* transition: transform 0.3s ease, border-radius 0.3s ease; */
+  overflow: hidden ;
+}
+.sweetslide:hover .landingimage {
+  transform: scale(1.2);
+}
+.sweetslide {
+  border-radius: 25px;
+}
+.landingimage1 {
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 380px;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.landingimageb {
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 313px;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.landingeventheading {
+  font-size: 50px;
+}
+.letterspac {
+  letter-spacing: 0.5em;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  text-transform: uppercase;
+}
+.placeImg {
+  border-radius: 20px;
+  max-width: 400px;
+  height: 300px;
+  object-fit: inherit;
+  width: 100%;
+}
+.plusicon3 {
+  width: 40px;
+  height: 40px;
+  color: black;
+  font-weight: 600;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 50px;
+  cursor: pointer;
+  position: absolute;
+  object-fit: cover;
+  right: 13px;
+  top: 13px;
+}
+.plusicon {
+  width: 25px;
+  height: 25px;
+  color: black;
+  font-weight: 600;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  position: absolute;
+  right: 17px;
+  top: 16px;
+}
+/* mediaqueries */
+
+@media only screen and (max-width: 1440px) {
+  .plusicon {
+    width: 20px;
+    height: 20px;
+  }
+  .landingimage {
+    height: 230px;
+  }
+  .landingimage1 {
+    height: 240px;
+  }
+  .landingimageb {
+    height: 240px;
+  }
+  .landingeventheading {
+    font-size: 27px;
+  }
+  .placeImg {
+    height: 270px;
+  }
+}
+@media only screen and (max-width: 1440px) {
+  .landingimage {
+    border-radius: 22px !important;
+  }
+}
