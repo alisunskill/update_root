@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { API_URL } from "../../apiConfig";
+import { API_URL } from "../../../apiConfig";
 // import moment from "moment";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "../../../styles/viewsave.module.css";
+import { API_URL } from "../../../apiConfig"
 import NewTrip from "./NewTrip";
 // import { setTripId } from "../../../store/actions/tripsAction";
 import { useRouter } from "next/router";

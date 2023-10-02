@@ -7,6 +7,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
+import { API_URL } from "../../../apiConfig"
 import "slick-carousel/slick/slick.css";
 import burger from "../../public/images/burger.svg";
 import newsletterimg from "../../public/images/card-two.svg";
@@ -49,7 +50,8 @@ export default () => {
   useEffect(() => {
     if (region) {
       axios
-        .get(`http://localhost:8000/api/recommendations?region=${region}`)
+        // .get(`http://localhost:8000/api/recommendations?region=${region}`)
+        .get(`${API_URL}/api/recommendations?region=${region}`)
         .then((response) => {
           const data = response.data;
           const cregion = data.Recommendations;

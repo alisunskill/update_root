@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../styles/profile.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { API_URL } from "../../apiConfig"
 import { faPlus, faHeart } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-bootstrap/Modal";
 
