@@ -61,7 +61,7 @@ export default (props) => {
       if (!uniqueRegions.has(recommendation.region)) {
         uniqueRegions.add(recommendation.region);
         acc.push({
-          label: recommendation.region,
+          label: recommendation.region.slice(0, 9),
           lat: recommendation.location.coordinates[0],
           lng: recommendation.location.coordinates[1],
           size: 18,

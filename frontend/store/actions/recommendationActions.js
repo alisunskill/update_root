@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import API_URL from "../../apiConfig";
 
 export const FETCH_RECOMMENDATIONS_REQUEST = "FETCH_RECOMMENDATIONS_REQUEST";
 export const FETCH_RECOMMENDATIONS_SUCCESS = "FETCH_RECOMMENDATIONS_SUCCESS";
@@ -108,9 +109,10 @@ export const fetchRecommendations = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchRecommendationsRequest());
-      const response = await axios.get(
-        "http://localhost:8000/api/recommendations"
-      );
+      // const response = await axios.get(
+      //   "http://localhost:8000/api/recommendations"
+      // );
+      const response = await axios.get(`${API_URL}/api/recommendations`);
       dispatch(fetchRecommendationsSuccess(response.data));
     } catch (error) {
       dispatch(fetchRecommendationsFailure(error.message));

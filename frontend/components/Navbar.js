@@ -10,6 +10,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
 import axios from "axios";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import { handleLogout } from "../website/Login/authUtils";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { fetchRecommendations } from "../store/actions/recommendationActions";
@@ -98,6 +100,24 @@ const Navbar = () => {
               <div
                 className={`icons-right col-xl-3 col-lg-3 col-md-3 col-sm-3 position-absolute d-flex justify-content-end align-items-center ${styles.right_box}`}
               >
+                {userIDs && (
+                  <div className="mx-3">
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Pages"
+                      variant="info"
+                    >
+                      <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                      <Dropdown.Item href="/globemap">Globe</Dropdown.Item>
+                      <Dropdown.Item href="/upcomingtrips">
+                        Upcoming Trips
+                      </Dropdown.Item>
+                      <Dropdown.Item href="/viewsave">
+                        Saves Posts
+                      </Dropdown.Item>
+                    </DropdownButton>
+                  </div>
+                )}
                 <Button
                   className="bg-transparent border-0 outline-none"
                   // onClick={() => setModalShow(true)}
@@ -113,13 +133,6 @@ const Navbar = () => {
                     />
                   </a>
                 </Button>
-                {/* {modalShow && (
-                  <Globe
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                    data={recommendationsData}
-                  />
-                )} */}
 
                 {!userIDs ? (
                   <div onClick={handleCreateItinerary}>
@@ -175,6 +188,7 @@ const Navbar = () => {
                     </Link>
                   </>
                 )}
+
                 {/* <Image
                   src={logout}
                   width={50}
