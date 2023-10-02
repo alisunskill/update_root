@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { API_URL } from "../../../apiConfig";
@@ -21,7 +21,7 @@ export default function NewTrip(props) {
     email: "",
     sdate: "",
     edate: "",
-    userID: localStorage.getItem("userID"),
+    userID: "",
   });
 
   const handleChange = (event) => {
@@ -57,6 +57,13 @@ export default function NewTrip(props) {
       console.error("Error creating trip:", error);
     }
   };
+
+  useEffect(() => {
+    const userID = localStorage.getItem("userID");
+    setFormData((prevData) => ({ ...prevData, userID }));
+  }, []);
+
+
   return (
     <div>
       <Modal

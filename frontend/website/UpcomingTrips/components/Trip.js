@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "../../../styles/viewsave.module.css";
-import { API_URL } from "../../../apiConfig"
+import { API_URL } from "../../../apiConfig";
 import NewTrip from "./NewTrip";
 import axios from "axios";
 // import { setTripId } from "../../../store/actions/tripsAction";
@@ -30,7 +30,6 @@ export default function Trip(props) {
   };
   const fetchTrips = async () => {
     try {
-      // const response = await axios.get("http://localhost:8000/api/trips");
       const response = await axios.get(`${API_URL}api/trips`);
       setTrips(response.data);
       setFullList(response.data);
@@ -94,7 +93,7 @@ export default function Trip(props) {
       const response = await axios.post(`${API_URL}api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
-    });
+      });
       // dispatch(setTripId(selectedIds));
       localStorage.setItem("selectedIds", selectedIds);
       console.log("Updated backend with new favList:", response.data);

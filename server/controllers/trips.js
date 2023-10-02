@@ -84,6 +84,10 @@ const getTripsPost = async (req, res) => {
     query.sdate = sdate;
   }
 
+  if (userID) {
+    query.userID = userID;
+  }
+
   try {
     const trips = await Trips.find(query);
     res.status(200).json(trips);
