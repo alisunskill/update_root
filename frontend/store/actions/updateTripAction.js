@@ -46,7 +46,7 @@ export const updateTripAction = (updateTripData) => async (dispatch) => {
   try {
     const response = await axios.put(
       // `http://localhost:8000/api/trips/${updateTripData.id}`,
-      `${API_URL}/api/trips/${updateTripData.id}`,
+      `${API_URL}api/trips/${updateTripData.id}`,
       {
         image: updateTripData.image,
         title: updateTripData.title,
@@ -66,7 +66,7 @@ export const removeTripAction = (tripId) => async (dispatch) => {
   dispatch(removeTripRequest());
   try {
     // await axios.delete(`http://localhost:8000/api/trips/${tripId}`);
-    await axios.delete(`${API_URL}/api/trips/${tripId}`);
+    await axios.delete(`${API_URL}api/trips/${tripId}`);
     dispatch(removeTripSuccess(tripId));
   } catch (error) {
     dispatch(removeTripFailure(error.message));

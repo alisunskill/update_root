@@ -70,7 +70,7 @@ export default ({ data1 }) => {
     if (region) {
       axios
         // .get(`http://localhost:8000/api/recommendations?region=${region}`)
-        .get(`${API_URL}/api/recommendations?region=${region}`)
+        .get(`${API_URL}api/recommendations?region=${region}`)
         .then((response) => {
           const data = response.data;
           const cregion = data.Recommendations;

@@ -49,7 +49,7 @@ export default function NewTrip(props) {
       //   "http://localhost:8000/api/trips",
       //   formData
       // );
-      const response = await axios.post(`${API_URL}/api/trips`, formData);
+      const response = await axios.post(`${API_URL}api/trips`, formData);
       router.push("/");
       props.onHide();
     } catch (error) {

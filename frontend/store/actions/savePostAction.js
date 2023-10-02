@@ -48,7 +48,7 @@ export const fetchSavePosts = () => {
       //   `http://localhost:8000/api/savepost?userID=${userID}`
       // );
       const response = await axios.get(
-        `${API_URL}/api/savepost?userID=${userID}`
+        `${API_URL}api/savepost?userID=${userID}`
       );
       dispatch(fetchSavePostSuccess(response.data));
     } catch (error) {
@@ -63,7 +63,7 @@ export const deleteSavePost = (postId) => {
     try {
       dispatch(deleteSavePostRequest());
       // await axios.delete(`http://localhost:8000/api/savepost/${postId}`, {
-      await axios.delete(`${API_URL}/api/savepost/${postId}`, {
+      await axios.delete(`${API_URL}api/savepost/${postId}`, {
         headers: {
           Authorization: `Bearer ${userID}`,
         },

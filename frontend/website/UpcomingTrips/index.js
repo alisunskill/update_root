@@ -36,7 +36,7 @@ export default () => {
   const fetchTrips = async () => {
     try {
       // const response = await axios.get("http://localhost:8000/api/trips");
-      const response = await axios.get(`${API_URL}/api/trips`);
+      const response = await axios.get(`${API_URL}api/trips`);
       setTrips(response.data);
       setFullList(response.data);
     } catch (error) {
@@ -49,7 +49,7 @@ export default () => {
       // const response = await axios.delete(
       //   `http://localhost:8000/api/trips/${tripId}`
       // );
-      const response = await axios.delete(`${API_URL}/api/trips/${tripId}`);
+      const response = await axios.delete(`${API_URL}api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
     } catch (error) {
@@ -102,10 +102,10 @@ export default () => {
       //   tripId: selectedIds,
       //   userID: userIDPerson,
       // });
-      const response = await axios.post(`${API_URL}/api/savetrip`, {
+      const response = await axios.post(`${API_URL}api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
-    });
+      });
       // dispatch(setTripId(selectedIds));
       localStorage.setItem("selectedIds", selectedIds);
       console.log("Updated backend with new favList:", response.data);
@@ -125,6 +125,15 @@ export default () => {
   }, [favList]);
 
   console.log(favList, "favList");
+
+  const addPlan = async (trip) => {
+    router.push({
+      pathname: "/tripPlans",
+      query: {
+        id: JSON.stringify(trip._id),
+      },
+    });
+  };
 
   return (
     <div className={`row ${styles.tripsherobox}`}>
@@ -226,28 +235,17 @@ export default () => {
                     );
                     const tripsLength = trips.length;
                     localStorage.setItem("tripsLength", tripsLength);
-                    {
-                      console.log(trips, "items");
-                    }
 
                     return (
                       <div
                         key={item._id}
-                        // onChange={() => handleFavoriteTrips(item._id)}
-                        onClick={() =>
-                          handleFavoriteTrips(item._id, item.title)
-                        }
                         className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves}`}
                       >
-                        {/* <input
-                            className={`form-check-input ${styles.radiobtn}`}
-                            type="radio"
-                            name="exampleRadios"
-                            id="exampleRadios1"
-                            value="option1"
-                          /> */}
                         <label
-                          className={`form-check-label f-16 fw-600 h4 text-dark thirty mb-0 ${styles.titleheader}`}
+                          onClick={() =>
+                            handleFavoriteTrips(item._id, item.title)
+                          }
+                          className={`form-check-label cursor-pointer f-16 fw-600 h4 text-dark thirty mb-0 ${styles.titleheader}`}
                           for="exampleRadios1"
                         >
                           {item.title}
@@ -266,6 +264,12 @@ export default () => {
                           style={{ fontSize: "25px" }}
                         >
                           x
+                        </button>
+                        <button
+                          onClick={() => addPlan(item)}
+                          className=" border-0 text-dark px-3 fw-600 py-1 bg-gray1 rounded-5 z-1"
+                        >
+                          PLans
                         </button>
                       </div>
                     );

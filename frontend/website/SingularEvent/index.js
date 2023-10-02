@@ -22,7 +22,7 @@ function Singularevent() {
   useEffect(() => {
     axios
       // .get("http://localhost:8000/api/recommendations?select=title,region")
-      .get(`${API_URL}/api/recommendations?select=title,region`)
+      .get(`${API_URL}api/recommendations?select=title,region`)
       .then((response) => {
         const data = response.data;
         const extractedTitles = data.Recommendations;
@@ -38,7 +38,7 @@ function Singularevent() {
       // .get(
       //   "http://localhost:8000/api/recommendations?select=title,region,description,cost"
       // )
-      .get(`${API_URL}/api/recommendations?select=title,region,description,cost`)
+      .get(`${API_URL}api/recommendations?select=title,region,description,cost`)
       .then((response) => {
         const data = response.data;
         console.log(data.Recommendations[0]?.cost, "kkk");

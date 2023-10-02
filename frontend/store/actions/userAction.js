@@ -46,7 +46,7 @@ export const fetchUserData = (userIds) => {
       //   `http://localhost:8000/api/users/username/${userIds}`
       // );
       const response = await axios.get(
-        `${API_URL}/api/users/username/${userIds}`
+        `${API_URL}api/users/username/${userIds}`
       );
       dispatch(fetchUserIDSuccess(response.data));
     } catch (error) {
@@ -61,7 +61,7 @@ export const deleteUserProfile = (userID) => {
     dispatch(deleteProfileRequest());
     try {
       // await axios.delete(`http://localhost:8000/api/users/profile/${userID}`);
-      await axios.delete(`${API_URL}/api/users/profile/${userID}`);
+      await axios.delete(`${API_URL}api/users/profile/${userID}`);
       dispatch(deleteProfileSuccess());
     } catch (error) {
       dispatch(deleteProfileFailure(error.message));

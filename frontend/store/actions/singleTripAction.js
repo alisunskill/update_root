@@ -23,7 +23,7 @@ export const fetchSingleTrip = (singletripId) => async (dispatch) => {
     // const response = await axios.get(
     //   `http://localhost:8000/api/trips/${singletripId}`
     // );
-    const response = await axios.get(`${API_URL}/api/trips/${singletripId}`);
+    const response = await axios.get(`${API_URL}api/trips/${singletripId}`);
     dispatch(fetchSignleTripSuccess(response.data));
   } catch (error) {
     dispatch(fetchSignleTripFailure(error.message));

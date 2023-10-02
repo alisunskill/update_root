@@ -23,7 +23,7 @@ function ForgotPassword() {
       //   values
       // );
       const response = await axios.post(
-        `${API_URL}/api/users/forgot-password`,
+        `${API_URL}api/users/forgot-password`,
         values
       );
 

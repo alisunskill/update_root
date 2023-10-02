@@ -130,7 +130,7 @@ export const fetchCreateRecommendations = (formData, token) => {
 
       const response = await axios.post(
         // "http://localhost:8000/api/createrecommendation",
-        `${API_URL}/api/createrecommendation`,
+        `${API_URL}api/createrecommendation`,
         formData,
         {
           headers: {
@@ -153,7 +153,7 @@ export const fetchFavPosts = () => {
     try {
       dispatch(fetchPostsRequest());
       // const response = await axios.post("http://localhost:8000/api/savepost");
-      const response = await axios.post(`${API_URL}/api/savepost`);
+      const response = await axios.post(`${API_URL}api/savepost`);
       dispatch(fetchPostsSuccess(response.data));
     } catch (error) {
       dispatch(fetchPostsFailure(error.message));
@@ -172,7 +172,7 @@ export const fetchLoginUser = (credentials) => {
       //   credentials
       // );
       const response = await axios.post(
-        `${API_URL}/api/users/login`,
+        `${API_URL}api/users/login`,
         credentials
       );
       console.log("Response data from server:", response.data);

@@ -88,7 +88,7 @@ function EditProfile() {
       //   profileData
       // );
       const response = await axios.put(
-        `${API_URL}/api/users/profile/${userID}`,
+        `${API_URL}api/users/profile/${userID}`,
         profileData
       );
 

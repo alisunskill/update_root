@@ -71,7 +71,7 @@ export const fetchSavedTrips = (tripIdData) => {
     dispatch(fetchSavedTripsRequest());
     try {
       // const response = await axios.get("http://localhost:8000/api/savetrip");
-      const response = await axios.get(`${API_URL}/api/savetrip`);
+      const response = await axios.get(`${API_URL}api/savetrip`);
       dispatch(fetchSavedTripsSuccess(response.data, tripIdData));
     } catch (error) {
       dispatch(fetchSavedTripsFailure(error.message));
@@ -85,7 +85,7 @@ export const fetchGetTrips = () => {
     try {
       dispatch(fetchGetTripsRequest());
       // const response = await axios.get("http://localhost:8000/api/trips");
-      const response = await axios.get(`${API_URL}/api/trips`);
+      const response = await axios.get(`${API_URL}api/trips`);
       console.log(response.data); // Add this line
       dispatch(fetchGetTripsSuccess(response.data));
     } catch (error) {
@@ -100,7 +100,7 @@ export const sendFavListToBackend = () => {
     try {
       dispatch(fetchSaveTripRequest());
       // const response = await axios.post("http://localhost:8000/api/savetrip", {
-      const response = await axios.post(`${API_URL}/api/savetrip`, {
+      const response = await axios.post(`${API_URL}api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
       });

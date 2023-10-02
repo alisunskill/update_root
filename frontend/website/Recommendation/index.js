@@ -59,7 +59,7 @@ export default () => {
     try {
       const response = await axios.get(
         // `http://localhost:8000/api/recommendations?userID=${userID}`
-        `${API_URL}/api/recommendations?userID=${userID}`
+        `${API_URL}api/recommendations?userID=${userID}`
       );
       const data = response.data;
 
@@ -98,7 +98,7 @@ export default () => {
       //     },
       //   }
       // );
-      await axios.delete(`${API_URL}/api/recommendations/${postId}`, {
+      await axios.delete(`${API_URL}api/recommendations/${postId}`, {
         headers: {
           Authorization: `Bearer ${userID}`,
         },

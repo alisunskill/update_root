@@ -45,7 +45,7 @@ function Signup() {
       //     },
       //   }
       // );
-      const response = await axios.post(`${API_URL}/api/users`, values, {
+      const response = await axios.post(`${API_URL}api/users`, values, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

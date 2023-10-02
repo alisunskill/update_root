@@ -40,7 +40,7 @@ export default function NewTrip(props) {
       //   formData
       // );
       const response = await axios.post(
-        `${API_URL}/api/trips`,
+        `${API_URL}api/trips`,
         formData
     );
       router.push("/createdtrips");

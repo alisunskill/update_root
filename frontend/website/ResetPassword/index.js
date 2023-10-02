@@ -44,7 +44,7 @@ function ResetPassword() {
       //     resetToken: resetToken,
       //   }
       // );
-      const response = await axios.post(`${API_URL}/api/users/resetpassword`, {
+      const response = await axios.post(`${API_URL}api/users/resetpassword`, {
         ...values,
         resetToken: resetToken,
       });

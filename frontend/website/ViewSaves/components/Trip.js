@@ -42,7 +42,7 @@ export default function Trip(props) {
       // const response = await axios.delete(
       //   `http://localhost:8000/api/trips/${tripId}`
       // );
-      const response = await axios.delete(`${API_URL}/api/trips/${tripId}`);
+      const response = await axios.delete(`${API_URL}api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
     } catch (error) {
@@ -89,7 +89,7 @@ export default function Trip(props) {
       //   tripId: selectedIds,
       //   userID: userIDPerson,
       // });
-      const response = await axios.post(`${API_URL}/api/savetrip`, {
+      const response = await axios.post(`${API_URL}api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
     });

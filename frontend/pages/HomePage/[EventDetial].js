@@ -179,7 +179,7 @@ export default function EventDetail() {
     //     userID: userID,
     //   });
     try {
-      const response = await axios.post(`${API_URL}/api/savepost`, {
+      const response = await axios.post(`${API_URL}api/savepost`, {
         postId: selectedIds,
         userID: userID,
       });
@@ -199,7 +199,7 @@ export default function EventDetail() {
       //   `http://localhost:8000/api/recommendations/${filteredData._id}`
       // );
       const response = await axios.get(
-        `${API_URL}/api/recommendations/${filteredData._id}`
+        `${API_URL}api/recommendations/${filteredData._id}`
       );
       const totalLikes = response.data.totalLikes;
       setTotalLikesData(totalLikes);
@@ -333,7 +333,7 @@ export default function EventDetail() {
       // .post(
       //   `http://localhost:8000/api/recommendations/${recommendationId}/like`
       // )
-      .post(`${API_URL}/api/recommendations/${recommendationId}/like`)
+      .post(`${API_URL}api/recommendations/${recommendationId}/like`)
       .then((response) => {
         if (response) {
           const updatedLikeCount = response.data.likes;

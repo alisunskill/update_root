@@ -19,6 +19,8 @@ const recommendations_routes = require("./routes/recommendations");
 
 const trips_routes = require("./routes/tripsRoute");
 
+const tripPlan_routes = require("./routes/tripPlanRoutes");
+
 const savePostRoute = require("./routes/savePostRoute");
 
 const saveTripRoute = require("./routes/saveTripsRoute");
@@ -64,6 +66,8 @@ app.use("/api/savepost", savePostRoute);
 
 // SaveTrips
 app.use("/api/savetrip", saveTripRoute);
+
+app.use("/api/tripPlans", tripPlan_routes);
 
 const start = async () => {
   try {
