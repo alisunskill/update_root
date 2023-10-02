@@ -38,9 +38,10 @@ export default function Trip(props) {
   };
   const handleRemoveTrips = async (tripId) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/trips/${tripId}`
-      );
+      // const response = await axios.delete(
+      //   `http://localhost:8000/api/trips/${tripId}`
+      // );
+      const response = await axios.delete(`${API_URL}/api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
     } catch (error) {
@@ -83,10 +84,14 @@ export default function Trip(props) {
     const userIDPerson = localStorage.getItem("userID"); // Use "userID" key
 
     try {
-      const response = await axios.post("http://localhost:8000/api/savetrip", {
+      // const response = await axios.post("http://localhost:8000/api/savetrip", {
+      //   tripId: selectedIds,
+      //   userID: userIDPerson,
+      // });
+      const response = await axios.post(`${API_URL}/api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
-      });
+    });
       // dispatch(setTripId(selectedIds));
       localStorage.setItem("selectedIds", selectedIds);
       console.log("Updated backend with new favList:", response.data);

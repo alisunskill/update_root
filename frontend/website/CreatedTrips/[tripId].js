@@ -6,6 +6,7 @@ import travelicon from "../../public/images/travelicon.svg";
 import mapimage from "../../public/images/mapimage.svg";
 import Image from "next/image";
 import Geocode from "react-geocode";
+import { API_URL } from "../../apiConfig";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -87,7 +88,8 @@ function UpcomingtripsList() {
     const apiKey = "AIzaSyAX815OLgYZi7EbfQOgbBn6XeyCzwexMlM";
     const fetchCoordinates = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/trips");
+        // const response = await axios.get("http://localhost:8000/api/trips");
+        const response = await axios.get(`${API_URL}/api/trips`);
         const tripsWithCoordinates = await Promise.all(
           response.data.map(async (trip) => {
             const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -158,7 +160,8 @@ function UpcomingtripsList() {
 
   const fetchTrips = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/trips");
+      // const response = await axios.get("http://localhost:8000/api/trips");
+      const response = await axios.get(`${API_URL}/api/trips`);
       setTrips(response.data);
     } catch (error) {
       console.error("Error fetching trips:", error);

@@ -12,6 +12,7 @@ import styles from "../../styles/viewsave.module.css";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Box } from "@mui/material";
 import { Masonry } from "@mui/lab";
+import { API_URL } from "../../apiConfig";
 import Image from "next/image";
 import listicon from "../../public/images/list.png";
 import listbl from "../../public/images/listbl.png";
@@ -138,7 +139,8 @@ function CreatedTrips() {
   // trips
   const fetchTripsList = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/trips");
+      // const response = await axios.get("http://localhost:8000/api/trips");
+      const response = await axios.get(`${API_URL}/api/trips`);
       setTripsList(response.data);
       // setFullList(response.data);
     } catch (error) {
@@ -147,9 +149,10 @@ function CreatedTrips() {
   };
   const handleRemoveTrips = async (tripId) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/trips/${tripId}`
-      );
+      // const response = await axios.delete(
+      //   `http://localhost:8000/api/trips/${tripId}`
+      // );
+      const response = await axios.delete(`${API_URL}/api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
     } catch (error) {
@@ -162,8 +165,12 @@ function CreatedTrips() {
 
   // note message
   const saveHandle = async () => {
+    // try {
+    //   const response = await axios.post("http://localhost:8000/api/trips", {
+    //     note,
+    //   });
     try {
-      const response = await axios.post("http://localhost:8000/api/trips", {
+      const response = await axios.post(`${API_URL}/api/trips`, {
         note,
       });
       console.log("Note saved successfully:", response.data);
@@ -322,7 +329,10 @@ function CreatedTrips() {
                         })}
                       </>
                     ) : (
-                      <div className="spinner-border text-primary" role="status">
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      >
                         <span className="sr-only">Loading...</span>
                       </div>
                     )}
@@ -427,7 +437,10 @@ function CreatedTrips() {
                           })}
                         </>
                       ) : (
-                        <div className="spinner-border text-primary" role="status">
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
                           <span className="sr-only">Loading...</span>
                         </div>
                       )}

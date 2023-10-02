@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import styles from "../../../styles/viewsave.module.css";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import { API_URL } from "../../../apiConfig";
 import FileBase64 from "react-file-base64";
 import { useRouter } from "next/router";
 import PlacesAutocomplete, {
@@ -34,10 +35,14 @@ export default function NewTrip(props) {
   };
   const handleCreate = async () => {
     try {
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/trips",
+      //   formData
+      // );
       const response = await axios.post(
-        "http://localhost:8000/api/trips",
+        `${API_URL}/api/trips`,
         formData
-      );
+    );
       router.push("/createdtrips");
 
       console.log(response.data);

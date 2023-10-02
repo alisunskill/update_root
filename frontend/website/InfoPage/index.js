@@ -7,6 +7,7 @@ import painticon from "../../public/images/painticon.svg";
 import travelicon from "../../public/images/travelicon.svg";
 // import mapimage from "../../public/images/mapimage.svg";
 import PlaceCard from "../../website/components/PlaceCard";
+import { API_URL } from "../../apiConfig";
 import Image from "next/image";
 import women from "../../public/images/women.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -67,7 +68,8 @@ function Singularevent() {
   // const [regionData, setRegion] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/recommendations?select=title,region")
+      // .get("http://localhost:8000/api/recommendations?select=title,region")
+      .get(`${API_URL}/api/recommendations?select=title,region`)
       .then((response) => {
         const data = response.data;
         const extractedTitles = data.Recommendations;
@@ -83,7 +85,8 @@ function Singularevent() {
   useEffect(() => {
     if (regions) {
       axios
-        .get(`http://localhost:8000/api/recommendations?regions=${region}`)
+        // .get(`http://localhost:8000/api/recommendations?regions=${region}`)
+        .get(`${API_URL}/api/recommendations?regions=${region}`)
         .then((response) => {
           const data = response.data;
           const cregion = data.Recommendations;

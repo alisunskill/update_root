@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import API_URL from "../../apiConfig";
+import { API_URL } from "../../apiConfig";
 
 export const FETCH_RECOMMENDATIONS_REQUEST = "FETCH_RECOMMENDATIONS_REQUEST";
 export const FETCH_RECOMMENDATIONS_SUCCESS = "FETCH_RECOMMENDATIONS_SUCCESS";
@@ -109,10 +109,12 @@ export const fetchRecommendations = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchRecommendationsRequest());
+
       // const response = await axios.get(
       //   "http://localhost:8000/api/recommendations"
       // );
-      const response = await axios.get(`${API_URL}/api/recommendations`);
+      const response = await axios.get(`${API_URL}api/recommendations`);
+
       dispatch(fetchRecommendationsSuccess(response.data));
     } catch (error) {
       dispatch(fetchRecommendationsFailure(error.message));
@@ -127,7 +129,8 @@ export const fetchCreateRecommendations = (formData, token) => {
       dispatch(fetchCreateRecommendationsRequest());
 
       const response = await axios.post(
-        "http://localhost:8000/api/createrecommendation",
+        // "http://localhost:8000/api/createrecommendation",
+        `${API_URL}/api/createrecommendation`,
         formData,
         {
           headers: {
@@ -149,7 +152,8 @@ export const fetchFavPosts = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchPostsRequest());
-      const response = await axios.post("http://localhost:8000/api/savepost");
+      // const response = await axios.post("http://localhost:8000/api/savepost");
+      const response = await axios.post(`${API_URL}/api/savepost`);
       dispatch(fetchPostsSuccess(response.data));
     } catch (error) {
       dispatch(fetchPostsFailure(error.message));
@@ -163,8 +167,12 @@ export const fetchLoginUser = (credentials) => {
   return async (dispatch) => {
     try {
       dispatch(loginRequest());
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/users/login",
+      //   credentials
+      // );
       const response = await axios.post(
-        "http://localhost:8000/api/users/login",
+        `${API_URL}/api/users/login`,
         credentials
       );
       console.log("Response data from server:", response.data);

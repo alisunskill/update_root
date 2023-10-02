@@ -82,8 +82,12 @@ function EditProfile() {
     console.log(profileData, "profileData");
     setIsSaving(true);
     try {
+      // const response = await axios.put(
+      //   `http://localhost:8000/api/users/profile/${userID}`,
+      //   profileData
+      // );
       const response = await axios.put(
-        `http://localhost:8000/api/users/profile/${userID}`,
+        `${API_URL}/api/users/profile/${userID}`,
         profileData
       );
 

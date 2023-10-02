@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../styles/signin.module.css";
 import Link from "next/link";
 import axios from "axios";
+import { API_URL } from "../../apiConfig";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
@@ -36,14 +37,17 @@ function ResetPassword() {
   const handleReset = async (values) => {
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:8000/api/users/resetpassword",
-        // values
-        {
-          ...values,
-          resetToken: resetToken,
-        }
-      );
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/users/resetpassword",
+      //   {
+      //     ...values,
+      //     resetToken: resetToken,
+      //   }
+      // );
+      const response = await axios.post(`${API_URL}/api/users/resetpassword`, {
+        ...values,
+        resetToken: resetToken,
+      });
 
       if (response.status === 200) {
         console.log("Password reset request successful.");

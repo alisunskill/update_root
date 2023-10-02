@@ -4,6 +4,7 @@ import styles from "../../styles/signin.module.css";
 import Captcha from "./Captcha";
 import wlogo from "../../public/images/rootwhite.png";
 import Image from "next/image";
+import { API_URL } from "../../apiConfig";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
@@ -34,16 +35,22 @@ function Signup() {
     try {
       const token = localStorage.getItem("token");
       console.log(token, "token he ye");
-      const response = await axios.post(
-        "http://localhost:8000/api/users",
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/users",
+      //   values,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      const response = await axios.post(`${API_URL}/api/users`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       console.log("Response Data:", response.data);
 

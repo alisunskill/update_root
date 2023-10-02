@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../../apiConfig";
 
 export const FETCH_USERID_REQUEST = "FETCH_USERID_REQUEST";
 export const FETCH_USERID_SUCCESS = "FETCH_USERID_SUCCESS";
@@ -41,8 +42,11 @@ export const fetchUserData = (userIds) => {
   return async (dispatch) => {
     dispatch(fetchUserIDRequest());
     try {
+      // const response = await axios.get(
+      //   `http://localhost:8000/api/users/username/${userIds}`
+      // );
       const response = await axios.get(
-        `http://localhost:8000/api/users/username/${userIds}`
+        `${API_URL}/api/users/username/${userIds}`
       );
       dispatch(fetchUserIDSuccess(response.data));
     } catch (error) {
@@ -56,7 +60,8 @@ export const deleteUserProfile = (userID) => {
   return async (dispatch) => {
     dispatch(deleteProfileRequest());
     try {
-      await axios.delete(`http://localhost:8000/api/users/profile/${userID}`);
+      // await axios.delete(`http://localhost:8000/api/users/profile/${userID}`);
+      await axios.delete(`${API_URL}/api/users/profile/${userID}`);
       dispatch(deleteProfileSuccess());
     } catch (error) {
       dispatch(deleteProfileFailure(error.message));

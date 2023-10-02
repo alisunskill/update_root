@@ -3,6 +3,7 @@ import styles from "../../styles/signin.module.css";
 import axios from "axios";
 import wlogo from "../../public/images/rootwhite.png";
 import Image from "next/image";
+import { API_URL } from "../../apiConfig";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
@@ -17,8 +18,12 @@ function ForgotPassword() {
   const handleForgot = async (values) => {
     try {
       setLoading(true);
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/users/forgot-password",
+      //   values
+      // );
       const response = await axios.post(
-        "http://localhost:8000/api/users/forgot-password",
+        `${API_URL}/api/users/forgot-password`,
         values
       );
 
@@ -74,7 +79,10 @@ function ForgotPassword() {
                         disabled={!isValid}
                       >
                         {loading ? (
-                          <div className="spinner-border text-light" role="status">
+                          <div
+                            className="spinner-border text-light"
+                            role="status"
+                          >
                             <span className="sr-only">Loading...</span>
                           </div>
                         ) : (

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../../apiConfig";
 
 export const FETCH_SAVEPOST_REQUEST = "FETCH_SAVEPOST_REQUEST";
 export const FETCH_SAVEPOST_SUCCESS = "FETCH_SAVEPOST_SUCCESS";
@@ -43,8 +44,11 @@ export const fetchSavePosts = () => {
     const userID = localStorage.getItem("userID");
     try {
       dispatch(fetchSavePostRequest());
+      // const response = await axios.get(
+      //   `http://localhost:8000/api/savepost?userID=${userID}`
+      // );
       const response = await axios.get(
-        `http://localhost:8000/api/savepost?userID=${userID}`
+        `${API_URL}/api/savepost?userID=${userID}`
       );
       dispatch(fetchSavePostSuccess(response.data));
     } catch (error) {
@@ -58,7 +62,8 @@ export const deleteSavePost = (postId) => {
     const userID = localStorage.getItem("userID");
     try {
       dispatch(deleteSavePostRequest());
-      await axios.delete(`http://localhost:8000/api/savepost/${postId}`, {
+      // await axios.delete(`http://localhost:8000/api/savepost/${postId}`, {
+      await axios.delete(`${API_URL}/api/savepost/${postId}`, {
         headers: {
           Authorization: `Bearer ${userID}`,
         },

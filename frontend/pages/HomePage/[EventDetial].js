@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import { API_URL } from "../../apiConfig";
 import SliderApps from "./SliderApps";
 import { useDispatch, useSelector } from "react-redux";
 import GoogleMapReact from "google-map-react";
@@ -172,8 +173,13 @@ export default function EventDetail() {
   const sendFavListToBackend = async (selectedIds) => {
     const userID = localStorage.getItem("userID");
 
+    // try {
+    //   const response = await axios.post("http://localhost:8000/api/savepost", {
+    //     postId: selectedIds,
+    //     userID: userID,
+    //   });
     try {
-      const response = await axios.post("http://localhost:8000/api/savepost", {
+      const response = await axios.post(`${API_URL}/api/savepost`, {
         postId: selectedIds,
         userID: userID,
       });
@@ -189,8 +195,11 @@ export default function EventDetail() {
 
   const totalLikes = async () => {
     try {
+      // const response = await axios.get(
+      //   `http://localhost:8000/api/recommendations/${filteredData._id}`
+      // );
       const response = await axios.get(
-        `http://localhost:8000/api/recommendations/${filteredData._id}`
+        `${API_URL}/api/recommendations/${filteredData._id}`
       );
       const totalLikes = response.data.totalLikes;
       setTotalLikesData(totalLikes);
@@ -320,13 +329,11 @@ export default function EventDetail() {
 
   const handleLikeCount = (recommendationId) => {
     console.log("Clicked Like for recommendationId:", recommendationId);
-
-    // Perform the API request and update the state here...
-
     axios
-      .post(
-        `http://localhost:8000/api/recommendations/${recommendationId}/like`
-      )
+      // .post(
+      //   `http://localhost:8000/api/recommendations/${recommendationId}/like`
+      // )
+      .post(`${API_URL}/api/recommendations/${recommendationId}/like`)
       .then((response) => {
         if (response) {
           const updatedLikeCount = response.data.likes;

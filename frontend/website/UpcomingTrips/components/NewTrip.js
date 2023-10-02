@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { API_URL } from "../../apiConfig";
 // import moment from "moment";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
@@ -44,10 +45,11 @@ export default function NewTrip(props) {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/trips",
-        formData
-      );
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/trips",
+      //   formData
+      // );
+      const response = await axios.post(`${API_URL}/api/trips`, formData);
       router.push("/");
       props.onHide();
     } catch (error) {
@@ -180,7 +182,7 @@ export default function NewTrip(props) {
                 onChange={(date) =>
                   setFormData((prevData) => ({ ...prevData, sdate: date }))
                 }
-                minDate={new Date()} 
+                minDate={new Date()}
                 className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
                 placeholderText="Start Date"
               />
@@ -190,7 +192,7 @@ export default function NewTrip(props) {
                 onChange={(date) =>
                   setFormData((prevData) => ({ ...prevData, edate: date }))
                 }
-                minDate={formData.sdate || new Date()} 
+                minDate={formData.sdate || new Date()}
                 className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
                 placeholderText="End Date"
               />

@@ -57,7 +57,8 @@ export default () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/recommendations?userID=${userID}`
+        // `http://localhost:8000/api/recommendations?userID=${userID}`
+        `${API_URL}/api/recommendations?userID=${userID}`
       );
       const data = response.data;
 
@@ -75,9 +76,11 @@ export default () => {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
     fetchPostIds();
   }, [trigger]);
+
   const handleRemove = async (postId) => {
     const userID = localStorage.getItem("userID");
     if (!userID) {
@@ -86,14 +89,19 @@ export default () => {
     }
 
     try {
-      await axios.delete(
-        `http://localhost:8000/api/recommendations/${postId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userID}`,
-          },
-        }
-      );
+      // await axios.delete(
+      //   `http://localhost:8000/api/recommendations/${postId}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${userID}`,
+      //     },
+      //   }
+      // );
+      await axios.delete(`${API_URL}/api/recommendations/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${userID}`,
+        },
+      });
       setPostIds((prevPostIds) => prevPostIds.filter((id) => id !== postId));
       console.log("Post deleted successfully.");
       setTrigger(new Date());

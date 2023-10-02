@@ -5,6 +5,7 @@ import plusicon2 from "../../public/images/plusicon2.svg";
 import hearticon21 from "../../public/images/hearticon21.svg";
 import burger from "../../public/images/burger.svg";
 import painticon from "../../public/images/painticon.svg";
+import { API_URL } from "../../apiConfig";
 import travelicon from "../../public/images/travelicon.svg";
 import mapimage from "../../public/images/mapimage.svg";
 import moneyicon from "../../public/images/moneyicon.svg";
@@ -20,7 +21,8 @@ function Singularevent() {
   const [costD, setCostD] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/recommendations?select=title,region")
+      // .get("http://localhost:8000/api/recommendations?select=title,region")
+      .get(`${API_URL}/api/recommendations?select=title,region`)
       .then((response) => {
         const data = response.data;
         const extractedTitles = data.Recommendations;
@@ -33,9 +35,10 @@ function Singularevent() {
   // cost api
   useEffect(() => {
     axios
-      .get(
-        "http://localhost:8000/api/recommendations?select=title,region,description,cost"
-      )
+      // .get(
+      //   "http://localhost:8000/api/recommendations?select=title,region,description,cost"
+      // )
+      .get(`${API_URL}/api/recommendations?select=title,region,description,cost`)
       .then((response) => {
         const data = response.data;
         console.log(data.Recommendations[0]?.cost, "kkk");

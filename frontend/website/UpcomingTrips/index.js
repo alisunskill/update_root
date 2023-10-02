@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "../../styles/viewsave.module.css";
 import NewTrip from "./components/NewTrip";
+import { API_URL } from "../../apiConfig";
 import axios from "axios";
 import Profile from "./components/Profile";
 // import { setTripId } from "../../../store/actions/tripsAction";
@@ -34,7 +35,8 @@ export default () => {
   };
   const fetchTrips = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/trips");
+      // const response = await axios.get("http://localhost:8000/api/trips");
+      const response = await axios.get(`${API_URL}/api/trips`);
       setTrips(response.data);
       setFullList(response.data);
     } catch (error) {
@@ -44,9 +46,10 @@ export default () => {
 
   const handleRemoveTrips = async (tripId) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/trips/${tripId}`
-      );
+      // const response = await axios.delete(
+      //   `http://localhost:8000/api/trips/${tripId}`
+      // );
+      const response = await axios.delete(`${API_URL}/api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
     } catch (error) {
@@ -95,10 +98,14 @@ export default () => {
     const userIDPerson = localStorage.getItem("userID"); // Use "userID" key
 
     try {
-      const response = await axios.post("http://localhost:8000/api/savetrip", {
+      // const response = await axios.post("http://localhost:8000/api/savetrip", {
+      //   tripId: selectedIds,
+      //   userID: userIDPerson,
+      // });
+      const response = await axios.post(`${API_URL}/api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
-      });
+    });
       // dispatch(setTripId(selectedIds));
       localStorage.setItem("selectedIds", selectedIds);
       console.log("Updated backend with new favList:", response.data);
@@ -204,7 +211,7 @@ export default () => {
                 Upcoming Trips
               </h3>
             </div>
-            <div style={{ padding: "20px 40px 40px 40px" }} >
+            <div style={{ padding: "20px 40px 40px 40px" }}>
               {trips.length === 0 || trips === undefined ? (
                 <div className="d-flex justify-content-center">
                   <div class="spinner-border text-primary " role="status">
@@ -254,12 +261,12 @@ export default () => {
                             : "No item available"}
                         </label>
                         <button
-                        onClick={() => handleRemoveTrips(item._id)}
-                        className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
-                        style={{ fontSize: "25px" }}
-                      >
-                        x
-                      </button>
+                          onClick={() => handleRemoveTrips(item._id)}
+                          className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
+                          style={{ fontSize: "25px" }}
+                        >
+                          x
+                        </button>
                       </div>
                     );
                   })}

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
-import API_URL from "../../apiConfig";
+import { API_URL } from "../../apiConfig";
 import Sliderm from "@mui/material/Slider";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
