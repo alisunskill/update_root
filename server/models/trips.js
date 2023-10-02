@@ -22,7 +22,13 @@ const tripSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  note: String, 
+  note: {
+    type: String,
+  },
+  userID: {
+    type: String,
+    // required: true,
+  },
 });
 
 const Trip = mongoose.model("Trip", tripSchema);

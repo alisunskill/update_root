@@ -21,6 +21,7 @@ export default function NewTrip(props) {
     email: "",
     sdate: "",
     edate: "",
+    userID: localStorage.getItem("userID"),
   });
 
   const handleChange = (event) => {
@@ -56,7 +57,6 @@ export default function NewTrip(props) {
       console.error("Error creating trip:", error);
     }
   };
-
   return (
     <div>
       <Modal

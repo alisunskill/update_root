@@ -23,7 +23,7 @@ const Trips = require("../models/trips");
 //   } catch (err) {
 //     if (err.name === "ValidationError") {
 //       const errorMessages = Object.values(err.errors).map(
-//         (error) => error.message
+//         (error) => error.messageUnable to create the itinerary
 //       );
 //       res.status(400).json({ error: errorMessages });
 //     } else {
@@ -33,8 +33,8 @@ const Trips = require("../models/trips");
 // };
 const createTripsPost = async (req, res) => {
   try {
-    const { title, region, email, sdate, edate, note } = req.body;
-    console.log(title, region, email, sdate, edate, note, "allfields");
+    const { title, region, email, sdate, edate, note, userID } = req.body;
+    console.log(title, region, email, sdate, edate, note, userID, "allfields");
 
     const itinerary = await Trips.create({
       title,
@@ -43,6 +43,7 @@ const createTripsPost = async (req, res) => {
       sdate,
       edate,
       note,
+      userID,
     });
     res.status(201).json(itinerary);
   } catch (err) {
@@ -59,7 +60,8 @@ const createTripsPost = async (req, res) => {
 
 // Get Trips
 const getTripsPost = async (req, res) => {
-  const { title, region, email, edate, sdate } = req.query;
+  const { title, region, email, edate, sdate, userID } = req.query;
+
   const query = {};
 
   if (title) {
