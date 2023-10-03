@@ -159,6 +159,7 @@ export default function Trip(props) {
                         id="exampleRadios1"
                         value="option1"
                       />
+                      <p>{item.userID}</p>
                       <label
                         className={`form-check-label fw-500 h4 text-dark ${styles.titleheader}`}
                         for="exampleRadios1"
@@ -166,67 +167,16 @@ export default function Trip(props) {
                         {item.title}
                       </label>
                     </div>
-                    <div>
-                      {/* <button
-                        onClick={() => handleRemoveTrips(item._id)}
-                        className="bg-transparent border-0 text-dark"
-                        style={{ fontSize: "25px" }}
-                      >
-                        x
-                      </button> */}
-                    </div>
+                    <div></div>
                   </div>
                 );
               })}
             </div>
           )}
 
-          {/* <div
-            className={`form-check d-flex align-center gap-3 mt3 ${styles.herosaves}`}
-          >
-            <input
-              className={`form-check-input ${styles.radiobtn}`}
-              type="radio"
-              name="exampleRadios"
-              id="exampleRadios1"
-              value="option1"
-            />
-            <label
-              className="form-check-label fw-500 h4 text-dark"
-              for="exampleRadios1"
-            >
-              Trip to “AFRICA”
-            </label>
-          </div>
-
-          <div
-            className={`form-check d-flex align-center gap-3 mt3 ${styles.herosaves}`}
-          >
-            <input
-              className={`form-check-input ${styles.radiobtn}`}
-              type="radio"
-              name="exampleRadios"
-              id="exampleRadios1"
-              value="option1"
-            />
-            <label
-              className="form-check-label fw-500 h4 text-dark"
-              for="exampleRadios1"
-            >
-              Trip to “EUROPE”
-            </label>
-          </div> */}
           <button className={`fw-500 ${styles.herobtn1}`} onClick={handleClick}>
             + Create New
           </button>
-          {/* <div className="d-flex justify-content-center">
-            <button
-              className={`fw-500 savebtn mt-3 mt-lg-4`}
-              onClick={handleSaveBtn}
-            >
-              Save Trips
-            </button>
-          </div> */}
         </div>
       </div>
       {/* New Trip */}

@@ -141,74 +141,6 @@ export default () => {
         <Profile trips={trips} />
       </div>
 
-      {/* <div className="col-lg-6 h-full">
-        <div className="w-100">
-          <Dropdown className="w-100">
-            <Dropdown.Toggle
-              className="w-100 d-flex justify-content-between  align-center px-3 py-3"
-              style={{
-                background: "#F5F5F5",
-                color: "#000",
-                border: "none",
-                borderRadius: "12px",
-              }}
-              id="dropdown-basic"
-            >
-              Asia
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu className="w-100">
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <div className="w-100 pt-4">
-          <Dropdown className="w-100">
-            <Dropdown.Toggle
-              className="w-100 d-flex justify-content-between  align-center px-3 py-3"
-              style={{
-                background: "#F5F5F5",
-                color: "#000",
-                border: "none",
-                borderRadius: "12px",
-              }}
-              id="dropdown-basic"
-            >
-              Asia
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu className="w-100">
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <div className="w-100 pt-4">
-          <Dropdown className="w-100">
-            <Dropdown.Toggle
-              className="w-100 d-flex justify-content-between  align-center px-3 py-3"
-              style={{
-                background: "#F5F5F5",
-                color: "#000",
-                border: "none",
-                borderRadius: "12px",
-              }}
-              id="dropdown-basic"
-            >
-              Asia
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu className="w-100">
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </div> */}
       <div className="col-lg-8">
         <div className={styles.tripbox}>
           <div centered>
@@ -230,49 +162,54 @@ export default () => {
               ) : (
                 <div className="cursor-pointer">
                   {trips?.map((item) => {
-                    const isFav = favList.some(
-                      (favItem) => favItem._id === item.id
-                    );
-                    const tripsLength = trips.length;
-                    localStorage.setItem("tripsLength", tripsLength);
+                    // Check if item.userID exists
+                    if (item.userID) {
+                      const isFav = favList.some(
+                        (favItem) => favItem._id === item.id
+                      );
+                      const tripsLength = trips.length;
+                      localStorage.setItem("tripsLength", tripsLength);
 
-                    return (
-                      <div
-                        key={item._id}
-                        className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves}`}
-                      >
-                        <label
-                          onClick={() =>
-                            handleFavoriteTrips(item._id, item.title)
-                          }
-                          className={`form-check-label cursor-pointer f-16 fw-600 h4 text-dark thirty mb-0 ${styles.titleheader}`}
-                          for="exampleRadios1"
+                      return (
+                        <div
+                          key={item._id}
+                          className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves}`}
                         >
-                          {item.title}
-                        </label>
-                        {/* <label>{item.sdate.slice(0, 7)}</label> */}
-                        <label className="thirty">
-                          {item && item.sdate
-                            ? item.sdate.slice(0, 7)
-                            : item
-                            ? item.sdate
-                            : "No item available"}
-                        </label>
-                        <button
-                          onClick={() => handleRemoveTrips(item._id)}
-                          className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
-                          style={{ fontSize: "25px" }}
-                        >
-                          x
-                        </button>
-                        <button
-                          onClick={() => addPlan(item)}
-                          className=" border-0 text-dark px-3 fw-600 py-1 bg-gray1 rounded-5 z-1"
-                        >
-                          PLans
-                        </button>
-                      </div>
-                    );
+                          <label
+                            onClick={() =>
+                              handleFavoriteTrips(item._id, item.title)
+                            }
+                            className={`form-check-label cursor-pointer f-16 fw-600 h4 text-dark thirty mb-0 ${styles.titleheader}`}
+                            for="exampleRadios1"
+                          >
+                            {item.title}
+                          </label>
+                          <label className="thirty">
+                            {item && item.sdate
+                              ? item.sdate.slice(0, 7)
+                              : item
+                              ? item.sdate
+                              : "No item available"}
+                          </label>
+                          <button
+                            onClick={() => handleRemoveTrips(item._id)}
+                            className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
+                            style={{ fontSize: "25px" }}
+                          >
+                            x
+                          </button>
+                          <button
+                            onClick={() => addPlan(item)}
+                            className=" border-0 text-dark px-3 fw-600 py-1 bg-gray1 rounded-5 z-1"
+                          >
+                            PLans
+                          </button>
+                        </div>
+                      );
+                    } else {
+                      // Render nothing if userID doesn't exist
+                      return null;
+                    }
                   })}
                 </div>
               )}
