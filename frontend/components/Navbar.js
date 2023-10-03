@@ -17,8 +17,6 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { fetchRecommendations } from "../store/actions/recommendationActions";
 import { useRouter } from "next/navigation";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Globe from "./Globe";
 import { fetchLoginUser } from "../store/actions/recommendationActions";
 
 const Navbar = () => {
@@ -37,7 +35,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const recommendationsData = useSelector((state) => state.recommendation);
   const [searchTerm, setSearchTerm] = useState("");
-  const { recommendations, loading, error } = recommendationsData;
   const [userIDs, setUserID] = useState("");
   const [emails, setEmail] = useState(null);
 

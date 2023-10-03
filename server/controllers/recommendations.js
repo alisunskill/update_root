@@ -12,9 +12,7 @@ const getAllRecommendations = async (req, res) => {
     queryObject.region = region;
   }
 
-  // if (descriptors) {
-  //   queryObject.descriptor = descriptors;
-  // }
+
   if (descriptors) {
     if (typeof descriptors === "string") {
       queryObject.descriptor = descriptors;

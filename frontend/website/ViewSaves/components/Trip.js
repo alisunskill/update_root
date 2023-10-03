@@ -29,13 +29,13 @@ export default function Trip(props) {
     setModalShow(false);
   };
   const fetchTrips = async () => {
-    // try {
-    //   const response = await axios.get("http://localhost:8000/api/trips");
-    //   setTrips(response.data);
-    //   setFullList(response.data);
-    // } catch (error) {
-    //   console.error("Error fetching trips:", error);
-    // }
+    try {
+      const response = await axios.get("http://localhost:8000/api/trips");
+      setTrips(response.data);
+      setFullList(response.data);
+    } catch (error) {
+      console.error("Error fetching trips:", error);
+    }
   };
   const handleRemoveTrips = async (tripId) => {
     try {

@@ -22,10 +22,9 @@ const Searchbar = () => {
   const recommendationsData = useSelector((state) => state.recommendation);
   const { recommendations, loading, error } = recommendationsData;
 
-  // const loading = true;
-  useEffect(() => {
-    dispatch(fetchRecommendations());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchRecommendations());
+  // }, [dispatch]);
 
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -67,9 +66,9 @@ const Searchbar = () => {
   }, [searchTerm, posts]);
 
   // api
-  useEffect(() => {
-    fetchRecommendations();
-  }, [fetchRecommendations]);
+  // useEffect(() => {
+  //   fetchRecommendations();
+  // }, [fetchRecommendations]);
 
   const recommendationData = recommendations?.Recommendations || [];
   // warning
@@ -298,14 +297,16 @@ const Searchbar = () => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  recommendations: state.recommendation.recommendations,
-  loading: state.recommendation.loading,
-  error: state.recommendation.error,
-});
+// const mapStateToProps = (state) => ({
+//   recommendations: state.recommendation.recommendations,
+//   loading: state.recommendation.loading,
+//   error: state.recommendation.error,
+// });
 
-const mapDispatchToProps = {
-  fetchRecommendations,
-};
+// const mapDispatchToProps = {
+//   fetchRecommendations,
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Searchbar);
+// export default connect(mapStateToProps, mapDispatchToProps)(Searchbar);
+
+export default Searchbar;

@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import Alert from '@mui/material/Alert';
-import { API_URL } from '../apiConfig';
-import { Backdrop } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-import { CalendarMonthRounded, AddCircleOutline } from '@mui/icons-material';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Alert from "@mui/material/Alert";
+import { API_URL } from "../apiConfig";
+import { Backdrop } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import { CalendarMonthRounded, AddCircleOutline } from "@mui/icons-material";
 
 export default () => {
   const router = useRouter();
-  const [tripId, setTripId] = useState(null); 
+  const [tripId, setTripId] = useState(null);
   const [tripDetail, setTripDetail] = useState({});
   const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   // State for trip plans
   const [tripPlans, setTripPlans] = useState([]);
   const [plansAdded, setPlansAdded] = useState(false);
-
 
   useEffect(() => {
     // Check if router.query.id has a value
@@ -29,22 +28,21 @@ export default () => {
         fetchTripDetail(parsedId);
       } catch (error) {
         // Handle parsing error
-        console.error('Error parsing trip._id:', error);
-        setErrorMessage('Invalid trip ID format');
+        console.error("Error parsing trip._id:", error);
+        setErrorMessage("Invalid trip ID format");
         setShowError(true);
         setLoading(false);
       }
     }
-  }, [router.query.id]); // Run this effect whenever router.query.id changes
+  }, [router.query.id]);
 
   const fetchTripDetail = async (id) => {
-    // const url = `http://localhost:8000/api/tripPlans/getATripPlan`;
     const url = `${API_URL}api/tripPlans/getATripPlan`;
     fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         tripId: id,
@@ -53,7 +51,7 @@ export default () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status) {
-          console.log(data)
+          console.log(data);
           setTripDetail(data.trip);
           setLoading(false);
           if (data.hasPlans) {
@@ -63,7 +61,6 @@ export default () => {
             console.log("Nhi Hain Plans"); // Log a message when tripPlans is empty
             generateInitialTripPlans(data.trip.sdate, data.trip.edate); // Generate initial trip plans when tripPlans is empty
           }
-
         } else {
           setErrorMessage(data.message);
           setShowError(true);
@@ -71,13 +68,14 @@ export default () => {
         }
       })
       .catch((error) => {
-        setErrorMessage('Failed To Fetch Detail Due TO Internet Connection or Server Down');
+        setErrorMessage(
+          "Failed To Fetch Detail Due TO Internet Connection or Server Down"
+        );
         setShowError(true);
         setLoading(false);
       });
   };
 
-  // Function to generate initial trip plans based on start and end date
   const generateInitialTripPlans = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -86,8 +84,8 @@ export default () => {
     while (start <= end) {
       plans.push({
         date: start.toISOString(),
-        note: '',
-        places: '',
+        note: "",
+        places: "",
       });
 
       start.setDate(start.getDate() + 1);
@@ -101,53 +99,49 @@ export default () => {
     const userID = localStorage.getItem("userID");
     setPlansAdded(false);
 
-    // const url = `http://localhost:8000/api/tripPlans/addTripPlan`;
     const url = `${API_URL}api/tripPlans/addTripPlan`;
     fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: userID,
         tripId: tripId,
-        plans: tripPlans
+        plans: tripPlans,
       }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.status) {
           setPlansAdded(true);
         } else {
-          setErrorMessage(data.message)
-          setShowError(true)
-
-          // alert(data.message);
-
+          setErrorMessage(data.message);
+          setShowError(true);
         }
       })
-      .catch(error => {
-        setErrorMessage('Failed To Submit Plans Due TO Internet Connection or Server Down')
-        setShowError(true)
-        //console.log(error)
+      .catch((error) => {
+        setErrorMessage(
+          "Failed To Submit Plans Due TO Internet Connection or Server Down"
+        );
+        setShowError(true);
       });
-
   };
 
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '20px',
-        border: '0.5px solid #ccc',
-        borderRadius: '5px',
-        boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
-        width: '60%',
-        margin: '10px auto',
-        minHeight: '60vh',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
+        border: "0.5px solid #ccc",
+        borderRadius: "5px",
+        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
+        width: "60%",
+        margin: "10px auto",
+        minHeight: "60vh",
       }}
     >
       {plansAdded && (
@@ -161,63 +155,90 @@ export default () => {
         </Alert>
       )}
       {loading ? (
-        <Backdrop sx={{ color: '#fff' }} open={loading}>
+        <Backdrop sx={{ color: "#fff" }} open={loading}>
           <CircularProgress color="inherit" />
         </Backdrop>
       ) : (
-        <div style={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        <div
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
           <h2
             style={{
-              alignSelf: 'center',
-              width: '100%',
-              textAlign: 'center',
+              alignSelf: "center",
+              width: "100%",
+              textAlign: "center",
             }}
           >
             {tripDetail?.title}
           </h2>
           <h6
             style={{
-              alignSelf: 'center',
-              width: '100%',
-              textAlign: 'center',
+              alignSelf: "center",
+              width: "100%",
+              textAlign: "center",
             }}
           >
             Region: {tripDetail?.region}
           </h6>
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
             }}
           >
             <div>
               <span>
                 <CalendarMonthRounded />
               </span>
-              {new Date(tripDetail?.sdate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' })}
+              {new Date(tripDetail?.sdate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "2-digit",
+              })}
             </div>
             <div>
-              <p>{'--------------->'}</p>
+              <hr class="hr-19"></hr>
             </div>
             <div>
               <span>
                 <CalendarMonthRounded />
               </span>
-              {new Date(tripDetail?.edate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' })}
+              {new Date(tripDetail?.edate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "2-digit",
+              })}
             </div>
           </div>
 
           {/* Render other trip details */}
           {/* Trip Plans Section */}
-          <div style={{ marginTop: '20px', width: '100%' }}>
+          <div style={{ marginTop: "20px", width: "100%" }}>
             <h3>Add Trip Plans</h3>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
               {tripPlans.map((plan, index) => (
-                <div key={index} style={{ width: '48%', marginBottom: '20px' }}>
-                  <h4>{new Date(plan.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' })}</h4>
-                  <div style={{ alignItems: 'center', marginBottom: '10px' }}>
+                <div key={index} style={{ width: "48%", marginBottom: "20px" }}>
+                  <h4>
+                    {new Date(plan.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "2-digit",
+                    })}
+                  </h4>
+                  <div style={{ alignItems: "center", marginBottom: "10px" }}>
                     <input
                       type="text"
                       placeholder="Add a reminder/note"
@@ -227,7 +248,7 @@ export default () => {
                         updatedPlans[index].note = e.target.value;
                         setTripPlans(updatedPlans);
                       }}
-                      style={{ marginRight: '10px' }}
+                      style={{ marginRight: "10px" }}
                     />
                     <input
                       type="text"
@@ -238,7 +259,7 @@ export default () => {
                         updatedPlans[index].places = e.target.value;
                         setTripPlans(updatedPlans);
                       }}
-                      style={{ marginRight: '10px', marginTop: '5px', }}
+                      style={{ marginRight: "10px", marginTop: "5px" }}
                     />
                   </div>
                 </div>
@@ -247,20 +268,19 @@ export default () => {
             <button
               onClick={submitPlans}
               style={{
-                padding: '10px 20px',
-                backgroundColor: 'lightblue',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '16px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-                transition: 'background-color 0.3s ease',
+                padding: "10px 20px",
+                backgroundColor: "lightblue",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "16px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                transition: "background-color 0.3s ease",
               }}
             >
               Submit
             </button>
-
           </div>
         </div>
       )}
