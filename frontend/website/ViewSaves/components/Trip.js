@@ -39,9 +39,6 @@ export default function Trip(props) {
   };
   const handleRemoveTrips = async (tripId) => {
     try {
-      // const response = await axios.delete(
-      //   `http://localhost:8000/api/trips/${tripId}`
-      // );
       const response = await axios.delete(`${API_URL}api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
