@@ -116,10 +116,21 @@
     font-size: 25px;
   }
 }
+@media only screen and (max-width: 991px) {
+  .signupsignupcontainer {
+    width: 70%;
+    margin-top: 30px;
+  }
+  .captchabox{
+    width: 100%;
+  }
+}
+
 
 @media only screen and (max-width: 600px) and (min-width: 300px) {
   .signupsignupcontainer {
     width: 90%;
+    padding: 25px 20px;
   }
   .signupinputinfo {
     width: 86%;

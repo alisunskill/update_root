@@ -46,36 +46,24 @@ exports.createUser = async (req, res) => {
     await user.save();
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
+      service: "gmail", // SMTP server hostname for Gmail
       auth: {
-        user: "jaiden.rowe@ethereal.email",
-        pass: "7xyBzUvjMZTSNSxpQ4",
+        user: "asim.sunskilltechs@gmail.com",
+        pass: "zesl wjcb ksxw awlg",
       },
     });
 
     const verificationURL = `http://localhost:3000/login?token=${verificationToken}`;
 
     const mailOptions = {
-      from: "harmony.carroll@ethereal.email",
-      to: user.email,
-      subject: "Email Verification",
+      from: "asim.sunskilltechs@gmail.com",
+      to: email,
+      subject: "Gmail Verification",
       text: `Click the following link to verify your email address: ${verificationURL}`,
     };
 
     // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email:", error);
-        return res.status(500).json({ message: "Failed to send email" });
-      } else {
-        console.log("Email sent:", info.response);
-        res.status(201).json({
-          message:
-            "User created successfully. Check your email for verification instructions.",
-        });
-      }
-    });
+    await transporter.sendMail(mailOptions);
 
     res.status(201).json({ message: "User created successfully", user });
   } catch (error) {
@@ -191,16 +179,15 @@ exports.forgotPassword = async (req, res) => {
     await user.save();
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
+      service: "gmail", // SMTP server hostname for Gmail
       auth: {
-        user: "jaiden.rowe@ethereal.email",
-        pass: "7xyBzUvjMZTSNSxpQ4",
+        user: "asim.sunskilltechs@gmail.com",
+        pass: "zesl wjcb ksxw awlg",
       },
     });
 
     const mailOptions = {
-      from: "harmony.carroll@ethereal.email",
+      from: "muhammadali.sunskilltechs@gmail.com",
       to: user.email,
       subject: "Password Reset",
       text: `Click the following link to reset your password: http://localhost:3000/resetpassword?token=${resetToken}`,
@@ -248,16 +235,16 @@ exports.resetPassword = async (req, res) => {
     await user.save();
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
+      service: "gmail",
+      // port: 587,
       auth: {
-        user: "kellie.spinka62@ethereal.email",
-        pass: "uTGFjjuhTsKVn4UMHX",
+        user: "testsunskill@gmail.com",
+        pass: "Testali7@",
       },
     });
 
     const mailOptions = {
-      from: "harmony.carroll@ethereal.email",
+      from: "testsunskill@gmail.com",
       to: user.email,
       subject: "Password Reset Confirmation",
       text: "Your password has been reset successfully.",

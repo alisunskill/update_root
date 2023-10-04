@@ -41,6 +41,39 @@ function Login() {
     setRecaptchaResponse(response);
   };
 
+  // const handleLogin = async (values, { setSubmitting, getState }) => {
+  //   try {
+  //     if (!recaptchaResponse) {
+  //       Swal.fire({
+  //         text: "Please complete the reCAPTCHA challenge.",
+  //         icon: "error",
+  //       });
+  //       return;
+  //     }
+
+  //     await dispatch(fetchLoginUser({ ...values, recaptchaResponse }));
+
+  //     const token = localStorage.getItem("token");
+  //     console.log(token, "kkk");
+  //     if (token) {
+  //       router.push("/");
+  //     } else {
+  //       Swal.fire({
+  //         text: "An error occurred during login.",
+  //         icon: "error",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     Swal.fire({
+  //       text: "An error occurred during login.",
+  //       icon: "error",
+  //     });
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
+
   const handleLogin = async (values, { setSubmitting, getState }) => {
     try {
       if (!recaptchaResponse) {
@@ -51,17 +84,26 @@ function Login() {
         return;
       }
 
-      await dispatch(fetchLoginUser({ ...values, recaptchaResponse }));
+      const response = await dispatch(
+        fetchLoginUser({ ...values, recaptchaResponse })
+      );
 
-      const token = localStorage.getItem("token");
-      console.log(token, "kkk");
-      if (token) {
-        router.push("/");
-      } else {
+      if (response.error) {
         Swal.fire({
-          text: "An error occurred during login.",
+          text: "Invalid email or password. Please try again.",
           icon: "error",
         });
+      } else {
+        const token = localStorage.getItem("token");
+        console.log(token, "kkk");
+        if (token) {
+          router.push("/");
+        } else {
+          Swal.fire({
+            text: "An error occurred during login.",
+            icon: "error",
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -153,9 +195,12 @@ function Login() {
                     className="text-light"
                   />
 
-                  <div className="text-center">
-                    <div className="w-100 d-flex justify-content-center mt-3">
+                  <div className="text-center d-flex justify-content-center flex-column">
+                    <div
+                      className={`w-100 d-flex justify-content-center align-items-center mt-3 ${styles.captchabox}`}
+                    >
                       <ReCAPTCHA
+                        className="w-100 d-flex justify-content-center"
                         sitekey="6LdNryEnAAAAAHvI4ty3RvMc2dnX0fR9aF1dXq7r"
                         onChange={handleCaptchaChange}
                       />

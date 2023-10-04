@@ -148,13 +148,13 @@ export default () => {
     }
   }, [descriptor, regionData]);
 
-  const allLocations = recommendations?.Recommendations?.map((item) => {
-    return {
-      lat: item.location.coordinates[1],
-      lng: item.location.coordinates[0],
-      title: item.title,
-    };
-  });
+  // const allLocations = recommendations?.Recommendations?.map((item) => {
+  //   return {
+  //     lat: item.location.coordinates[1],
+  //     lng: item.location.coordinates[0],
+  //     title: item.title,
+  //   };
+  // });
   // console.log(allLocations, "allregions");
   const [locationInput, setLocationInput] = useState("");
   const [mapCenter, setMapCenter] = useState({

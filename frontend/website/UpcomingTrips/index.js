@@ -130,7 +130,7 @@ export default () => {
     router.push({
       pathname: "/tripPlans",
       query: {
-        id: JSON.stringify(trip._id),
+        id: trip._id
       },
     });
   };
