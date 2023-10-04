@@ -14,7 +14,9 @@ import { useRouter } from "next/router";
 
 export default () => {
   const router = useRouter();
-
+  const userIDPerson1 =
+    typeof window !== "undefined" ? localStorage.getItem("userID") : null;
+  console.log(userIDPerson1, "userIDPerson");
   // const { setModalShow } = props;
   const dispatch = useDispatch();
   const [modalTrip, setModalTrip] = useState(false);
@@ -130,7 +132,7 @@ export default () => {
     router.push({
       pathname: "/tripPlans",
       query: {
-        id: trip._id
+        id: trip._id,
       },
     });
   };
@@ -140,6 +142,7 @@ export default () => {
       <div className="col-lg-4">
         <Profile trips={trips} />
       </div>
+      {console.log(trips, "ali")}
 
       <div className="col-lg-8">
         <div className={styles.tripbox}>
@@ -152,6 +155,7 @@ export default () => {
                 Upcoming Trips
               </h3>
             </div>
+
             <div style={{ padding: "20px 40px 40px 40px" }}>
               {trips.length === 0 || trips === undefined ? (
                 <div className="d-flex justify-content-center">
@@ -162,14 +166,8 @@ export default () => {
               ) : (
                 <div className="cursor-pointer">
                   {trips?.map((item) => {
-                    // Check if item.userID exists
-                    if (item.userID) {
-                      const isFav = favList.some(
-                        (favItem) => favItem._id === item.id
-                      );
-                      const tripsLength = trips.length;
-                      localStorage.setItem("tripsLength", tripsLength);
-
+                    console.log(item, "item.userID");
+                    if (item.userID === userIDPerson1) {
                       return (
                         <div
                           key={item._id}

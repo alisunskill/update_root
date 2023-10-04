@@ -35,14 +35,7 @@ export default function NewTrip(props) {
   };
   const handleCreate = async () => {
     try {
-      // const response = await axios.post(
-      //   "http://localhost:8000/api/trips",
-      //   formData
-      // );
-      const response = await axios.post(
-        `${API_URL}api/trips`,
-        formData
-    );
+      const response = await axios.post(`${API_URL}api/trips`, formData);
       router.push("/createdtrips");
 
       console.log(response.data);
@@ -90,12 +83,6 @@ export default function NewTrip(props) {
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <h5>Choose an Image</h5>
-              {/* <FileBase64
-                name="image"
-                value={formData.image}
-                onDone={onSelectImage}
-                style={{border:"0.5px solid grey,", borderRadius:"4px"}}
-              /> */}
               <div
                 style={{
                   border: "0.5px solid #dee2e6",
