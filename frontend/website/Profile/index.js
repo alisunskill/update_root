@@ -115,7 +115,7 @@ function Profile() {
           </div>
           <div className="col-12 col-md-4 col-lg-4 text-center justify-content-center d-flex">
             <Link
-              href="/recommendation"
+              href="/infinitescroll"
               className="text-decoration-none text-light"
             >
               <button

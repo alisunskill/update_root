@@ -82,13 +82,10 @@ function UpcomingtripsList() {
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
 
   const locationName = trips.map((item) => item.region);
-
-  // const apiKey = "AIzaSyAX815OLgYZi7EbfQOgbBn6XeyCzwexMlM";
   useEffect(() => {
     const apiKey = "AIzaSyAX815OLgYZi7EbfQOgbBn6XeyCzwexMlM";
     const fetchCoordinates = async () => {
       try {
-        // const response = await axios.get("http://localhost:8000/api/trips");
         const response = await axios.get(`${API_URL}api/trips`);
         const tripsWithCoordinates = await Promise.all(
           response.data.map(async (trip) => {

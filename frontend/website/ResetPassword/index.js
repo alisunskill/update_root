@@ -37,13 +37,7 @@ function ResetPassword() {
   const handleReset = async (values) => {
     try {
       setLoading(true);
-      // const response = await axios.post(
-      //   "http://localhost:8000/api/users/resetpassword",
-      //   {
-      //     ...values,
-      //     resetToken: resetToken,
-      //   }
-      // );
+
       const response = await axios.post(`${API_URL}api/users/resetpassword`, {
         ...values,
         resetToken: resetToken,
