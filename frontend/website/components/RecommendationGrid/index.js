@@ -4,6 +4,7 @@ import { fetchRecommendations } from "../../../store/actions/recommendationActio
 import styles from "../../../styles/home.module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Files_URL } from "../../../apiConfig";
 
 const RecommendationGrid = ({
   recommendations,
@@ -62,7 +63,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage1}   d-flex align-center text-align-center  m-0`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[5]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[5]?.images[0]})`,
                         }}
                       >
                         <div
@@ -95,7 +96,7 @@ const RecommendationGrid = ({
                         <div
                           className={`${styles.landingimage5} d-flex align-center p-0 m-0`}
                           style={{
-                            backgroundImage: `url(${recentRecommendations[4]?.images[0]})`,
+                            backgroundImage: `url(${Files_URL}${recentRecommendations[4]?.images[0]})`,
                           }}
                         >
                           <div
@@ -135,7 +136,7 @@ const RecommendationGrid = ({
                           <div
                             className={`${styles.landingimage2} d-flex align-center light-dark`}
                             style={{
-                              backgroundImage: `url(${recentRecommendations[0]?.images[0]})`,
+                              backgroundImage: `url(${Files_URL}${recentRecommendations[0]?.images[0]})`,
                             }}
                           >
                             <div
@@ -168,7 +169,7 @@ const RecommendationGrid = ({
                           <div
                             className={`${styles.landingimage2} d-flex align-center light-dark`}
                             style={{
-                              backgroundImage: `url(${recentRecommendations[2]?.images[0]})`,
+                              backgroundImage: `url(${Files_URL}${recentRecommendations[2]?.images[0]})`,
                             }}
                           >
                             <div
@@ -200,7 +201,7 @@ const RecommendationGrid = ({
                           <div
                             className={`${styles.landingimage6}  d-flex align-center  m-0`}
                             style={{
-                              backgroundImage: `url(${recentRecommendations[1]?.images[0]})`,
+                              backgroundImage: `url(${Files_URL}${recentRecommendations[1]?.images[0]})`,
                             }}
                           >
                             <div
@@ -236,7 +237,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage6}  d-flex align-center  m-0`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[6]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[6]?.images[0]})`,
                         }}
                       >
                         <div
@@ -245,7 +246,7 @@ const RecommendationGrid = ({
                           <p
                             className={`mb-0 letter-spac ${styles.letterspac}`}
                           >
-                            EVENT
+                            EVENT 
                           </p>
                           <p
                             className={`mb-0 ${styles.matchheader} mt-1 white fw-600`}
@@ -268,7 +269,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage2} d-flex align-center light-dark`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[7]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[7]?.images[0]})`,
                         }}
                       >
                         <div
@@ -300,7 +301,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage2} d-flex align-center light-dark`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[8]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[8]?.images[0]})`,
                         }}
                       >
                         <div
@@ -337,7 +338,7 @@ const RecommendationGrid = ({
                         <div
                           className={`${styles.landingimage5} d-flex align-center p-0 m-0`}
                           style={{
-                            backgroundImage: `url(${recentRecommendations[9]?.images[0]})`,
+                            backgroundImage: `url(${Files_URL}${recentRecommendations[9]?.images[0]})`,
                           }}
                         >
                           <div
@@ -371,7 +372,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage1}   d-flex align-center text-align-center  m-0`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[10]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[10]?.images[0]})`,
                         }}
                       >
                         <div
@@ -406,7 +407,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage6}  d-flex align-center  m-0`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[1]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[1]?.images[0]})`,
                         }}
                       >
                         <div
@@ -438,7 +439,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage2} d-flex align-center light-dark`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[7]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[7]?.images[0]})`,
                         }}
                       >
                         <div
@@ -470,7 +471,7 @@ const RecommendationGrid = ({
                       <div
                         className={`${styles.landingimage2} d-flex align-center light-dark`}
                         style={{
-                          backgroundImage: `url(${recentRecommendations[8]?.images[0]})`,
+                          backgroundImage: `url(${Files_URL}${recentRecommendations[8]?.images[0]})`,
                         }}
                       >
                         <div

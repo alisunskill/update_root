@@ -62,4 +62,29 @@ const deleteSavePost = async (req, res) => {
   }
 };
 
-module.exports = { saveAllPost, getSavePosts, deleteSavePost };
+const getAllSavePosts = async (req, response) => {
+  try {
+      // Find all questions
+      const posts = await SavePosts.find();
+
+      if (posts.length === 0) {
+          return response.status(200).json({
+              status: false,
+              message: "No Save Posts"
+          });
+      }
+
+      return response.status(200).json({
+          status: true,
+          message: "All save posts are retrieved successfully",
+          data: posts
+      });
+  } catch (error) {
+      return response.status(500).json({
+          status: false,
+          message: "Something went wrong in the backend",
+          error: error.message
+      });
+  }
+};
+module.exports = { saveAllPost, getSavePosts, deleteSavePost,getAllSavePosts };

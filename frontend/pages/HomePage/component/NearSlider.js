@@ -9,6 +9,7 @@ import { Navigation, Thumbs } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecommendations } from "../../../store/actions/recommendationActions";
 import { useRouter } from "next/router";
+import { Files_URL } from "../../../apiConfig";
 
 export default function NearSlider() {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ export default function NearSlider() {
           >
             <img
               className={`${styles.scenery2} object-cover`}
-              src={post.image}
+              src={`${Files_URL}${post.image}`}
               alt=""
             />
             <div

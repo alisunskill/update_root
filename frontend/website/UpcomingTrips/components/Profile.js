@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import profileicon from "../../../public/images/men.svg";
 import styles from "../../../styles/profile.module.css";
@@ -25,12 +25,23 @@ export default function Profile({ trips }) {
   const [user, setUser] = useState(null);
   const recData = recommendations?.Recommendations;
   const [isEditing, setIsEditing] = useState(false);
+  const [count, setCount] = useState(0);
   const [profileData, setProfileData] = useState({
     username: "",
     region: "",
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    const fetchTrips=async()=>{
+      const uid=await localStorage.getItem("userID")
+      const filteredTrips = trips.filter(trip => trip.userID == uid);
+      setCount(filteredTrips.length)
+
+    }
+    fetchTrips();
+  }, [trips]);
 
   return (
     <div className=" align-items-center gap-2 ">
@@ -51,7 +62,7 @@ export default function Profile({ trips }) {
       <p className="pt-3">
         Where you’ve been: {recommendations?.Recommendations?.length} countries
       </p>
-      <h6 className="fw-600 mb-3 mb-lg-4">Total Trips: {trips?.length} </h6>
+      <h6 className="fw-600 mb-3 mb-lg-4">Total Trips: {count} </h6>
       <Link
         href="/editprofile"
         className={` fw-600 cursor-pointer text-decoration-none fw-600 ${styles.editbtn}`}

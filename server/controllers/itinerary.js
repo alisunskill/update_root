@@ -4,33 +4,13 @@ const Itinerary = require("../models/itinerary");
 const createItineraryPost = async (req, res) => {
   try {
     const {
-      title,
-      images,
-      cost,
-      hours,
-      experience,
-      descriptor,
-      location,
-      region,
-      description,
+      userID,
+      posts,
     } = req.body;
-    if (
-      !location ||
-      !location.coordinates ||
-      location.coordinates.length !== 2
-    ) {
-      return res.status(400).json({ error: "Invalid location format" });
-    }
+    
     const itinerary = await Itinerary.create({
-      title,
-      images,
-      cost,
-      hours,
-      experience,
-      descriptor,
-      location,
-      region,
-      description,
+      userID,
+      posts,
     });
     res.status(201).json(itinerary);
   } catch (err) {

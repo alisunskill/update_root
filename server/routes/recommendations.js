@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const middleware = require("../middleware");
+const upload = require("../middleware/multer");
 const multer = require("multer");
+const Recommendation = require("../models/recommendation");
+
 // const jwtKey = process.env.JWT_SECRET;
 // const upload = require("../upload");
 
 const {
   getAllRecommendations,
   getAllRecommendationsTesting,
-  createRecommendation,
   deleteRecommendation,
   updateRecommendation,
   likeRecommendation,
@@ -28,16 +29,79 @@ router.route("/:recommendationId/like").post(likeRecommendation);
 // total likes
 router.route("/:recommendationId").get(getTotalLikes);
 
+router.post('/createrecommendation', upload.array('images'), async (req, res) => {
+  const {
+    userID,
+    title,
+    cost,
+    hours,
+    experience,
+    description,
+    location,
+    descriptors,
+    region,
+    links,
+    longitude,
+    latitude
+  } = req.body;
 
-router.route("/").post(
-  (req, res, next) => {
-    if (!req.body.descriptor) {
-      req.body.descriptor = "food";
+  try {
+    // Check for missing required fields
+    if (!userID || !title || !cost || !hours || !experience || !description || !location || !descriptors || !region || !links) {
+      return res.status(400).json({ error: "Missing required fields in the request." });
     }
-    next();
-  },
-  middleware,
-  createRecommendation
-);
+
+    // Check if files were uploaded
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No files were uploaded." });
+    }
+
+    // Process uploaded files
+    const files = req.files; // This will contain an array of uploaded files
+
+    // Your logic to store and process the files (e.g., save to disk, database, etc.)
+    // For simplicity, let's assume you save them to a folder
+    const fileUrls = [];
+    for (const file of files) {
+      fileUrls.push(`/uploads/${file.filename}`);
+    }
+
+    // Create a new recommendation with the file URLs
+    const newRecommendation = await Recommendation.create({
+      userID,
+      title,
+      images: fileUrls, // Store the file URLs
+      cost,
+      hours,
+      experience,
+      description,
+      location,
+      descriptors,
+      region,
+      links,
+      longitude,
+      latitude
+    });
+
+    console.log("New Recommendation:", newRecommendation);
+
+    res.status(201).json(newRecommendation);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to create recommendation. " + error.message });
+  }
+});
+
+
+// router.route("/").post(
+//   (req, res, next) => {
+//     if (!req.body.descriptor) {
+//       req.body.descriptor = "food";
+//     }
+//     next();
+//   },
+//   middleware,
+//   createRecommendation
+// );
 
 module.exports = router;

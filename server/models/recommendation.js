@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
-
 const recommendationSchema = new mongoose.Schema({
+  userID: {
+    type: String,
+    required: [true, "User must be provided"],
+  },
   title: {
     type: String,
     required: [true, "Title must be provided"],
@@ -47,17 +50,21 @@ const recommendationSchema = new mongoose.Schema({
   },
 
   location: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: true,
-    },
-    coordinates: {
-      type: [Number],
-      required: true,
-    },
+    type: String,
+    required: true,
   },
-
+  location: {
+    type: String,
+    required: true,
+  },
+  longitude: {
+    type: String,
+    required: true,
+  },
+  latitude: {
+    type: String,
+    required: true,
+  },
   links: {
     type: String,
     required: true,
@@ -66,6 +73,8 @@ const recommendationSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+}, {
+  timestamps: true
 });
 
 const Recommendation = mongoose.model("Recommendation", recommendationSchema);

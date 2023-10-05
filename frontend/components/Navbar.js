@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import logo from "../public/images/logo.svg";
-import men from "../public/Images/men.svg";
-import plusicon from "../public/Images/plusicon.svg";
-import earth from "../public/Images/earth.webp";
-import logout from "../public/Images/logout.png";
+import men from "../public/images/men.svg";
+import plusicon from "../public/images/plusicon.svg";
+import earth from "../public/images/earth.webp";
+import logout from "../public/images/logout.png";
 import styles from "../styles/home.module.css";
 import Image from "next/image";
 import Link from "next/link";

@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const staticItems = require("./models/staticData");
 const connectDB = require("./db/connect");
+const path = require('path');
 
 const app = express();
 
@@ -12,6 +13,11 @@ app.use(express.json());
 var cors = require("cors");
 
 app.use(cors());
+
+// Get the directory path using fileURLToPath function
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 
 const PORT = process.env.PORT || 8000;
 

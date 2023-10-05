@@ -48,7 +48,7 @@ function ForgotPassword() {
             <h1 className={styles.signupheading1}>Get back</h1>
 
             <Image width={160} src={wlogo} alt="wlogo" />
-            <p className="text-light pt-lg-4 ">Let’s find your account!</p>
+            <p className="text-light pt-lg-4 ">Let's find your account!</p>
 
             <div className="row gy-3 d-flex justify-content-center align-center">
               <Formik

@@ -69,8 +69,8 @@ const Globes = ({ data }) => {
         uniqueRegions.add(recommendation.region);
         acc.push({
           label: recommendation.region,
-          lat: recommendation.location.coordinates[0],
-          lng: recommendation.location.coordinates[1],
+          lat: recommendation.latitude,
+          lng: recommendation.longitude,
           size: 18,
           color: "white",
           descriptor: recommendation.descriptor,

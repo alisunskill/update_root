@@ -7,7 +7,7 @@ import NewTrip from "./NewTrip";
 // import { setTripId } from "../../../store/actions/tripsAction";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-
+ 
 export default function Trip(props) {
   const router = useRouter();
   const { setModalShow } = props;
@@ -30,7 +30,7 @@ export default function Trip(props) {
   };
   const fetchTrips = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/trips");
+      const response = await axios.get(`${API_URL}api/trips`);
       setTrips(response.data);
       setFullList(response.data);
     } catch (error) {
@@ -39,6 +39,9 @@ export default function Trip(props) {
   };
   const handleRemoveTrips = async (tripId) => {
     try {
+      // const response = await axios.delete(
+      //   `http://localhost:8000/api/trips/${tripId}`
+      // );
       const response = await axios.delete(`${API_URL}api/trips/${tripId}`);
       console.log(response.data);
       fetchTrips();
@@ -89,7 +92,7 @@ export default function Trip(props) {
       const response = await axios.post(`${API_URL}api/savetrip`, {
         tripId: selectedIds,
         userID: userIDPerson,
-    });
+      });
       // dispatch(setTripId(selectedIds));
       localStorage.setItem("selectedIds", selectedIds);
       console.log("Updated backend with new favList:", response.data);
@@ -109,6 +112,17 @@ export default function Trip(props) {
   }, [favList]);
 
   console.log(favList, "favList");
+
+  const [userId, setUserId] = useState('')
+
+  useEffect(() => {
+    const fetchUserIdData = async () => {
+      const uid = localStorage.getItem("userID");
+      setUserId(uid)
+    }
+    fetchUserIdData()
+
+  }, []);
 
   return (
     <div className="">
@@ -144,35 +158,40 @@ export default function Trip(props) {
                 localStorage.setItem("tripsLength", tripsLength);
 
                 return (
-                  <div
-                    key={item._id}
-                    className={`form-check d-flex align-items-center justify-content-between  gap-3 ${styles.herosaves}`}
-                  >
-                    <div>
-                      <input
-                        className={`form-check-input ${styles.radiobtn}`}
-                        type="radio"
-                        name="exampleRadios"
-                        id={`exampleRadios${item._id}`}
-                        value="option1"
-                        onChange={() => handleFavoriteTrips(item._id)}
-                      />
-                      <label
-                        className={`form-check-label fw-500 h4 text-dark ${styles.titleheader}`}
-                        for="exampleRadios1"
+                  <div>
+                    {item.userID == userId && (
+                      <div
+                        key={item._id}
+                        className={`form-check d-flex align-items-center justify-content-between  gap-3 ${styles.herosaves}`}
                       >
-                        {item.title}
-                      </label>
-                    </div>
-                    <div>
-                      {/* <button
+                        <div>
+                          <input
+                            className={`form-check-input ${styles.radiobtn}`}
+                            type="radio"
+                            name="exampleRadios"
+                            id={`exampleRadios${item._id}`}
+                            value="option1"
+                            onChange={() => handleFavoriteTrips(item._id)}
+                          />
+                          <label
+                            className={`form-check-label fw-500 h4 text-dark ${styles.titleheader}`}
+                            for="exampleRadios1"
+                          >
+                            {item.title}
+                          </label>
+                        </div>
+                        <div>
+                          {/* <button
                         onClick={() => handleRemoveTrips(item._id)}
                         className="bg-transparent border-0 text-dark"
                         style={{ fontSize: "25px" }}
                       >
                         x
                       </button> */}
-                    </div>
+                        </div>
+                      </div>
+
+                    )}
                   </div>
                 );
               })}
@@ -214,17 +233,18 @@ export default function Trip(props) {
               Trip to “EUROPE”
             </label>
           </div> */}
+          
           <button className={`fw-500 ${styles.herobtn}`} onClick={handleClick}>
             + New Trip
           </button>
-          <div className="d-flex justify-content-center">
+          {/* <div className="d-flex justify-content-center">
             <button
               className={`fw-500 savebtn mt-3 mt-lg-4 text-light`}
               onClick={handleSaveBtn}
             >
               Save Trips
             </button>
-          </div>
+          </div> */}
         </Modal.Body>
       </Modal>
       {/* New Trip */}

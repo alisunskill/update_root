@@ -127,7 +127,7 @@ export default function Trip(props) {
             id="contained-modal-title-vcenter"
             className={`text-center w-100 ${styles.thumbnail}`}
           >
-            Upcoming Trips 
+            Upcoming Trips
           </h3>
         </div>
         <div style={{ padding: "20px 40px 40px 40px" }}>

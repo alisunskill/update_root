@@ -124,17 +124,19 @@ export const fetchCreateRecommendations = (formData, token) => {
       dispatch(fetchCreateRecommendationsRequest());
 
       const response = await axios.post(
-        `${API_URL}api/createrecommendation`,
+        `${API_URL}api/recommendations/createrecommendation`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       dispatch(fetchCreateRecommendationsSuccess(response.data));
+      return response.data;
+
     } catch (error) {
       dispatch(fetchCreateRecommendationsFailure(error.message));
     }

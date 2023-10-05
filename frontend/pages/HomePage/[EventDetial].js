@@ -21,6 +21,7 @@ import { fetchUserData } from "../../store/actions/userAction";
 import axios from "axios";
 import Trip from "../../website/ViewSaves/components/Trip";
 import NearSlider from "./component/NearSlider";
+import { GoogleMapApiKey } from "../../apiConfig";
 
 export default function EventDetail() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function EventDetail() {
   const { recommendations, loading, error } = recommendationsData;
 
   const recData = recommendations.Recommendations;
+  
 
   const handleIconClick = () => {
     router.back();
@@ -441,43 +443,16 @@ export default function EventDetail() {
                   onClick={handleIconClick}
                 />
               </div>
-              <GoogleMapReact
-                bootstrapURLKeys={{
-                  key: "AIzaSyAX815OLgYZi7EbfQOgbBn6XeyCzwexMlM",
-                  libraries: ["places"],
-                }}
-                defaultCenter={{ lat: 31.5204, lng: 74.3587 }}
-                defaultZoom={7}
-                yesIWantToUseGoogleMapApiInternals
-                onGoogleApiLoaded={({ map, maps }) =>
-                  handleApiLoaded(map, maps)
-                }
-                // center={{
-                //   lat: filterLoc,
-                //   lng: filterLoc,
-                // }}
-                center={{
-                  lat: 31.5204,
-                  lng: 74.3587,
-                }}
-                // center={mapCenter}
-              >
-                {filteredData?.arrayProperty?.map((form, index) => (
-                  <RedMarker
-                    key={index}
-                    lat={form.location.coordinates[1]}
-                    lng={form.location.coordinates[0]}
-                  />
-                ))}
 
-                {filterLoc?.coordinates && (
-                  <RedMarker
-                    lat={staticMarkerPosition.lat}
-                    lng={staticMarkerPosition.lng}
-                    text={filteredData?.region}
-                  />
-                )}
-              </GoogleMapReact>
+              <iframe
+                        title="Current Location Map"
+                        width="600"
+                        height="450"
+                        frameBorder="0"
+                        style={{ border: "0" }}
+                        src={`https://www.google.com/maps/embed/v1/place?q=${filteredData?.latitude},${filteredData?.longitude}&key=${GoogleMapApiKey}`}
+                        allowFullScreen
+                      ></iframe>
               {/* <div className={styles.mapbox}>
              <div className="mapouter">
                 <div className="gmap_canvas">

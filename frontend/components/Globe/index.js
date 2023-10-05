@@ -62,8 +62,8 @@ export default (props) => {
         uniqueRegions.add(recommendation.region);
         acc.push({
           label: recommendation.region.slice(0, 9),
-          lat: recommendation.location.coordinates[0],
-          lng: recommendation.location.coordinates[1],
+          lat: recommendation.latitude,
+          lng: recommendation.longitude,
           size: 18,
           color: "white",
           descriptor: recommendation.descriptor,

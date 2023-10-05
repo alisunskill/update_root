@@ -1,51 +1,62 @@
-import React, { useState } from "react";
-import Modal from "react-bootstrap/Modal";
-import styles from "../../../styles/viewsave.module.css";
-import Form from "react-bootstrap/Form";
 import axios from "axios";
-import { API_URL } from "../../../apiConfig";
-import FileBase64 from "react-file-base64";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import { API_URL } from "../../../apiConfig";
+// import moment from "moment";
+import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import DatePicker from "react-datepicker"; // Import DatePicker component
-import "react-datepicker/dist/react-datepicker.css";
-
+import styles from "../../../styles/viewsave.module.css";
 export default function NewTrip(props) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    image: "",
     region: "",
     email: "",
     sdate: "",
     edate: "",
+    userID: "",
   });
-  const onSelectImage = (file) => {
-    const imageBase64 = file.base64.toString();
-    setFormData((prevData) => ({
-      ...prevData,
-      image: imageBase64,
-    }));
-  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-  const handleCreate = async () => {
+  const handleCreate = async (event) => {
+    event.preventDefault();
+    if (
+      !formData.title ||
+      !formData.region ||
+      !formData.email ||
+      !formData.sdate ||
+      !formData.edate
+    ) {
+      Swal.fire({
+        text: "Please fill in all the required fields",
+        icon: "info",
+      });
+      return;
+    }
     try {
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/trips",
+      //   formData
+      // );
       const response = await axios.post(`${API_URL}api/trips`, formData);
-      router.push("/createdtrips");
-
-      console.log(response.data);
-
+      router.push("/");
       props.onHide();
     } catch (error) {
       console.error("Error creating trip:", error);
     }
   };
-
+  useEffect(() => {
+    const userID = localStorage.getItem("userID");
+    setFormData((prevData) => ({ ...prevData, userID }));
+  }, []);
   return (
     <div>
       <Modal
@@ -60,63 +71,23 @@ export default function NewTrip(props) {
         >
           <Modal.Title
             id="contained-modal-title-vcenter"
-            className={`text-center w-100 ${styles.thumbnail}`}
+            className={`text-center fw-600 w-100 ${styles.thumbnail}`}
           >
-            Create Trip
+            Create a new trip{" "}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ padding: "20px 40px 20px 40px" }}>
-          {/* <img
-                  src={props.selectedImage}
-                  alt="tripimg"
-                  className={styles.smallimg1}
-                /> */}
-          {formData.image ? (
-            <img
-              src={formData.image}
-              alt="tripimg"
-              className={styles.smallimg1}
-            />
-          ) : (
-            ""
-          )}
+        <Modal.Body style={{ padding: "0px 40px 20px 40px" }}>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <h5>Choose an Image</h5>
-              <div
-                style={{
-                  border: "0.5px solid #dee2e6",
-                  borderRadius: "4px",
-                  padding: "10px",
-                  height: "50px",
-                }}
-              >
-                <div className="placeholder-text">Choose an image</div>
-                <div
-                  style={{
-                    fontSize: "20px",
-                    height: "42px",
-                    position: "relative",
-                    top: "-25px",
-                    color: "transparent",
-                  }}
-                >
-                  <FileBase64
-                    name="image"
-                    value={formData.image}
-                    onDone={onSelectImage}
-                  />
-                </div>
-              </div>
               <Form.Control
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="py-lg-3 py-md-2 mt-3"
-                placeholder="Enter the Title of the Trip"
+                className="py-lg-3 py-md-2 mt-3 rounded-5"
+                placeholder="Enter the Title"
               />
-              {/* 
+              {/*
               <Form.Control
                 type="text"
                 name="region"
@@ -152,7 +123,7 @@ export default function NewTrip(props) {
                     <Form.Control
                       {...getInputProps({
                         placeholder: "Enter the Region",
-                        className: "py-lg-3 py-md-2 mt-3",
+                        className: "py-lg-3 py-md-2 mt-3 rounded-5",
                       })}
                     />
                     <div className="autocomplete-dropdown-container">
@@ -160,7 +131,7 @@ export default function NewTrip(props) {
                       {suggestions.map((suggestion) => {
                         const style = {
                           backgroundColor: suggestion.active
-                            ? "#41b6e6"
+                            ? "#41B6E6"
                             : "#fff",
                         };
                         return (
@@ -178,16 +149,14 @@ export default function NewTrip(props) {
                   </div>
                 )}
               </PlacesAutocomplete>
-
               <Form.Control
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="py-lg-3 py-md-2 mt-3"
+                className="py-lg-3 py-md-2 mt-3 rounded-5"
                 placeholder="Add Collaborators (Email)"
               />
-
               {/* <Form.Control
                 type="date"
                 name="sdate"
@@ -196,7 +165,6 @@ export default function NewTrip(props) {
                 className="py-lg-3 py-md-2 mt-3"
                 placeholder="Start Date"
               />
-
               <Form.Control
                 type="date"
                 name="edate"
@@ -205,13 +173,13 @@ export default function NewTrip(props) {
                 className="py-lg-3 py-md-2 mt-3"
                 placeholder="Start Date"
               /> */}
-
               <DatePicker
                 selected={formData.sdate}
                 onChange={(date) =>
                   setFormData((prevData) => ({ ...prevData, sdate: date }))
                 }
-                className={`py-lg-3 py-md-2 mt-3 form-control ${styles.datepicke_wrapper}`}
+                minDate={new Date()}
+                className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
                 placeholderText="Start Date"
               />
               <br />
@@ -220,15 +188,15 @@ export default function NewTrip(props) {
                 onChange={(date) =>
                   setFormData((prevData) => ({ ...prevData, edate: date }))
                 }
-                className={`py-lg-3 py-md-2 mt-3 form-control ${styles.datepicke_wrapper}`}
+                minDate={formData.sdate || new Date()}
+                className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
                 placeholderText="End Date"
               />
-
               <button
-                className={`text-center fw-500 ${styles.herobtn}`}
+                className={`text-center fw-500 rounded-5 ${styles.herobtn}`}
                 onClick={handleCreate}
               >
-                Create Trip
+                Finish
               </button>
             </Form.Group>
           </Form>

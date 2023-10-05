@@ -8,6 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { fetchRecommendations } from "../../store/actions/recommendationActions";
 import styles from "../../styles/viewsave.module.css";
+import { Files_URL } from "../../apiConfig";
 
 const InfiniteScrollComponent = () => {
   const router = useRouter();
@@ -246,7 +247,7 @@ const InfiniteScrollComponent = () => {
                         >
                           <img
                             className={styles.uploadimg}
-                            src={item.images[0]}
+                            src={`${Files_URL}${item.images[0]}`}
                             alt="Uploaded Image"
                           />
 
@@ -296,7 +297,7 @@ const InfiniteScrollComponent = () => {
                         >
                           <img
                             className={styles.uploadimg}
-                            src={item.images[0]}
+                            src={`${Files_URL}${item.images[0]}`}
                             alt="Uploaded Image"
                           />
                           <div style={{ position: "absolute", zIndex: 9999 }}>
@@ -326,7 +327,7 @@ const InfiniteScrollComponent = () => {
                         >
                           <img
                             className={styles.uploadimg}
-                            src={item.images[0]}
+                            src={`${Files_URL}${item.images[0]}`}
                             alt="Uploaded Image"
                           />
                           <div style={{ position: "absolute", zIndex: 9999 }}>

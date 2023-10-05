@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
-import { API_URL } from "../../apiConfig";
 import Sliderm from "@mui/material/Slider";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
@@ -31,13 +30,15 @@ function valuetext(value) {
 }
 
 export default ({ data1 }) => {
+  console.log(data1, "data");
   const dispatch = useDispatch();
   const recommendationsData = useSelector((state) => state.recommendation);
   const [searchTerm, setSearchTerm] = useState("");
   const { recommendations, loading, error } = recommendationsData;
-  const [modalShow, setModalShow] = useState(false);
+  const [modalShow, setModalShow] = React.useState(false);
   const [selectedDescriptors, setSelectedDescriptors] = useState([]);
 
+  // const loading = true;
   useEffect(() => {
     dispatch(fetchRecommendations());
   }, [dispatch]);
@@ -69,8 +70,7 @@ export default ({ data1 }) => {
   useEffect(() => {
     if (region) {
       axios
-        // .get(`http://localhost:8000/api/recommendations?region=${region}`)
-        .get(`${API_URL}api/recommendations?region=${region}`)
+        .get(`http://localhost:8000/api/recommendations?region=${region}`)
         .then((response) => {
           const data = response.data;
           const cregion = data.Recommendations;
@@ -81,9 +81,6 @@ export default ({ data1 }) => {
         });
     }
   }, [region]);
-
-
-
   const recommendationData =
     (recommendations && recommendations.Recommendations) || [];
   useEffect(() => {
@@ -339,18 +336,10 @@ export default ({ data1 }) => {
               </div>
 
               <div className="d-flex justify-content-center gap-3 mb-3 py-3">
-                <button
-                  type=""
-                  className="savebtn text-light"
-                  onClick={resetHandle}
-                >
+                <button type="" className="savebtn" onClick={resetHandle}>
                   Reset
                 </button>
-                <button
-                  onClick={handleApply}
-                  type=""
-                  className="savebtn text-light"
-                >
+                <button onClick={handleApply} type="" className="savebtn">
                   Apply
                 </button>
               </div>

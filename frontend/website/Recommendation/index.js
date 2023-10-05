@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import styles from "../../styles/home.module.css";
 import { API_URL } from "../../apiConfig"
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Box } from "@mui/material";
 import { Masonry } from "@mui/lab";
 import axios from "axios";
+import { setUserID } from "../../store/actions/recommendationActions";
 
 const itemData = [
   {
@@ -28,6 +29,16 @@ export default () => {
   console.log(postIds, "postIds");
   const [trigger, setTrigger] = useState(new Date());
   const [editData, setEditData] = useState({});
+  const [userID,setUserIDD]=useState('')
+
+  useEffect(() => {
+    const FetchId=async()=>{
+    const uid =await localStorage.getItem("userID");
+    setUserIDD(uid)
+    }
+    FetchId()
+
+  }, [])
   const [ediData, setEdiData] = useState({
     title: "",
     cost: "",

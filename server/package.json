@@ -27,6 +27,8 @@
     "multer": "*",
     "nodemailer": "^6.9.4",
     "nodemailer-smtp-transport": "^2.7.4",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "path": "^0.12.7",
+    "url": "^0.11.3"
   }
 }

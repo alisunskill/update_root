@@ -18,6 +18,7 @@ import {
   fetchSavePosts,
   deleteSavePost,
 } from "../../store/actions/savePostAction";
+import { Files_URL } from "../../apiConfig";
 
 function ViewSaves() {
   const router = useRouter();
@@ -215,7 +216,7 @@ function ViewSaves() {
 
                               <img
                                 className={styles.uploadimg}
-                                src={post.images[0]}
+                                src={`${Files_URL}${post.images[0]}`}
                                 alt="Uploaded Image"
                               />
 

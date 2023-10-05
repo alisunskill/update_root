@@ -12,6 +12,7 @@ import { fetchRecommendations } from "../store/actions/recommendationActions";
 import { Box } from "@mui/material";
 import { Masonry } from "@mui/lab";
 import { searchData } from "../store/actions/recommendationActions";
+import { Files_URL } from "../apiConfig";
 
 const Searchbar = () => {
   const router = useRouter();
@@ -22,9 +23,10 @@ const Searchbar = () => {
   const recommendationsData = useSelector((state) => state.recommendation);
   const { recommendations, loading, error } = recommendationsData;
 
-  // useEffect(() => {
-  //   dispatch(fetchRecommendations());
-  // }, [dispatch]);
+  // const loading = true;
+  useEffect(() => {
+    dispatch(fetchRecommendations());
+  }, [dispatch]);
 
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -35,6 +37,7 @@ const Searchbar = () => {
   const [showAll, setShowAll] = useState(false);
   const [regionData, setRegion] = useState([]);
   useEffect(() => {
+    console.count("search useeffect");
     setPosts(filteredPosts);
     setHasMore(false);
   }, [router.query.region]);
@@ -57,7 +60,7 @@ const Searchbar = () => {
   };
   useEffect(() => {
     fetchPosts();
-  }, [fetchPosts]);
+  }, []);
   useEffect(() => {
     const filteredCards = posts.filter((card) =>
       card.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -66,11 +69,11 @@ const Searchbar = () => {
   }, [searchTerm, posts]);
 
   // api
-  // useEffect(() => {
-  //   fetchRecommendations();
-  // }, [fetchRecommendations]);
+  useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
 
-  const recommendationData = recommendations?.Recommendations || [];
+  const recommendationData = recommendations.Recommendations || [];
   // warning
   useEffect(() => {
     setRegion(recommendationData);
@@ -182,6 +185,46 @@ const Searchbar = () => {
   const regionp = regionData.map((item) => {
     return item.region;
   });
+  const data = [
+    {
+      bgImg:
+        "https://images.unsplash.com/photo-1566438480900-0609be27a4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=394&q=80",
+      city: regionp[0],
+      country: "USA",
+    },
+    {
+      bgImg:
+        "https://images.unsplash.com/photo-1689072503598-638956beee7d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=660&q=80",
+      city: regionp[1],
+      country: "USA",
+    },
+    {
+      bgImg:
+        "https://images.unsplash.com/photo-1593593595698-de9e5f682a14?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=834&q=80",
+      city: regionp[2],
+      country: "USA",
+    },
+    {
+      bgImg:
+        "https://images.unsplash.com/photo-1595112729465-942dafaa4e98?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=886&q=80",
+      city: regionp[2],
+      country: "USA",
+    },
+    {
+      bgImg:
+        "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80",
+      city: regionp[1],
+
+      country: "USA",
+    },
+    {
+      bgImg:
+        "https://images.unsplash.com/photo-1519638399535-1b036603ac77?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1031&q=80",
+      city: regionp[0],
+
+      country: "USA",
+    },
+  ];
 
   return (
     <>
@@ -258,11 +301,24 @@ const Searchbar = () => {
                               query: { region: item.region },
                             }}
                           >
+                            <img
+                              layout="fill"
+                              objectFit="cover"
+                              src={`${Files_URL}${item.images[0]}`}
+                              alt={item.region}
+                              loading="lazy"
+                              style={{
+                                display: "block",
+                                width: "5%",
+                                height: "5%",
+                                borderRadius: "5px",
+                              }}
+                            />
                             <h6
                               className="text-dark text-end mb-0 d-flex align-items-end"
                               // style={{ width: "15%" }}
                             >
-                              {item.region.slice(0, 11)}
+                              {item.region}
                             </h6>
                           </Link>
                         </div>
@@ -297,16 +353,14 @@ const Searchbar = () => {
   );
 };
 
-// const mapStateToProps = (state) => ({
-//   recommendations: state.recommendation.recommendations,
-//   loading: state.recommendation.loading,
-//   error: state.recommendation.error,
-// });
+const mapStateToProps = (state) => ({
+  recommendations: state.recommendation.recommendations,
+  loading: state.recommendation.loading,
+  error: state.recommendation.error,
+});
 
-// const mapDispatchToProps = {
-//   fetchRecommendations,
-// };
+const mapDispatchToProps = {
+  fetchRecommendations,
+};
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Searchbar);
-
-export default Searchbar;
+export default connect(mapStateToProps, mapDispatchToProps)(Searchbar);

@@ -14,9 +14,7 @@ import { useRouter } from "next/router";
 
 export default () => {
   const router = useRouter();
-  const userIDPerson1 =
-    typeof window !== "undefined" ? localStorage.getItem("userID") : null;
-  console.log(userIDPerson1, "userIDPerson");
+
   // const { setModalShow } = props;
   const dispatch = useDispatch();
   const [modalTrip, setModalTrip] = useState(false);
@@ -26,6 +24,8 @@ export default () => {
   const [fullList, setFullList] = useState([]);
   const [showAllImages, setShowAllImages] = useState(false);
   const [selectedTrips, setSelectedTrips] = useState([]);
+  const userIDPerson1 =
+    typeof window !== "undefined" ? localStorage.getItem("userID") : null;
 
   useEffect(() => {
     fetchTrips();
@@ -48,16 +48,23 @@ export default () => {
 
   const handleRemoveTrips = async (tripId) => {
     try {
-      // const response = await axios.delete(
-      //   `http://localhost:8000/api/trips/${tripId}`
-      // );
+      // Send a request to delete the trip by tripId
       const response = await axios.delete(`${API_URL}api/trips/${tripId}`);
-      console.log(response.data);
-      fetchTrips();
+
+      // Check if the deletion was successful (you might need to check the response status code)
+      if (response.status === 200) {
+        console.log("Trip deleted successfully.");
+
+        // Update the trips state by filtering out the deleted trip
+        setTrips((prevTrips) => prevTrips.filter((trip) => trip._id !== tripId));
+      } else {
+        console.error("Failed to delete trip. Server returned an error.");
+      }
     } catch (error) {
       console.error("Error deleting trip:", error);
     }
   };
+
 
   // trips
   const handleFavoriteTrips = (id, postTitle) => {
@@ -129,20 +136,21 @@ export default () => {
   console.log(favList, "favList");
 
   const addPlan = async (trip) => {
+    console.log("addPlan called with trip:", trip);
     router.push({
       pathname: "/tripPlans",
       query: {
-        id: trip._id,
+        id: JSON.stringify(trip._id),
       },
     });
   };
+
 
   return (
     <div className={`row ${styles.tripsherobox}`}>
       <div className="col-lg-4">
         <Profile trips={trips} />
       </div>
-      {console.log(trips, "ali")}
 
       <div className="col-lg-8">
         <div className={styles.tripbox}>
@@ -155,7 +163,6 @@ export default () => {
                 Upcoming Trips
               </h3>
             </div>
-
             <div style={{ padding: "20px 40px 40px 40px" }}>
               {trips.length === 0 || trips === undefined ? (
                 <div className="d-flex justify-content-center">
@@ -166,28 +173,37 @@ export default () => {
               ) : (
                 <div className="cursor-pointer">
                   {trips?.map((item) => {
-                    console.log(item, "item.userID");
-                    if (item.userID === userIDPerson1) {
+                    // Check if item.userID exists
+                    if (item.userID) {
+                      const isFav = favList.some(
+                        (favItem) => favItem._id === item.id
+                      );
+                      const tripsLength = trips.length;
+                      localStorage.setItem("tripsLength", tripsLength);
+
                       return (
+                        <div>
+                          {item.userID===userIDPerson1 && (
                         <div
                           key={item._id}
                           className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves}`}
                         >
                           <label
-                            onClick={() =>
-                              handleFavoriteTrips(item._id, item.title)
-                            }
                             className={`form-check-label cursor-pointer f-16 fw-600 h4 text-dark thirty mb-0 ${styles.titleheader}`}
                             for="exampleRadios1"
                           >
                             {item.title}
                           </label>
                           <label className="thirty">
-                            {item && item.sdate
-                              ? item.sdate.slice(0, 7)
-                              : item
-                              ? item.sdate
-                              : "No item available"}
+                            {new Date(item?.sdate).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "2-digit",
+                            })} to {new Date(item?.edate).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "2-digit",
+                            })}
                           </label>
                           <button
                             onClick={() => handleRemoveTrips(item._id)}
@@ -197,11 +213,21 @@ export default () => {
                             x
                           </button>
                           <button
+                            onClick={() =>
+                              handleFavoriteTrips(item._id, item.title)
+                            } className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
+                            style={{ fontSize: "25px" }}
+                          >
+                            ♥
+                          </button>
+                          <button
                             onClick={() => addPlan(item)}
                             className=" border-0 text-dark px-3 fw-600 py-1 bg-gray1 rounded-5 z-1"
                           >
-                            PLans
+                            Plans
                           </button>
+                        </div>
+                        )}
                         </div>
                       );
                     } else {

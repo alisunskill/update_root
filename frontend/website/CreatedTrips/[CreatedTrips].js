@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchSingleTrip } from "../../store/actions/singleTripAction";
+import { fetchSingleTrip } from "../../store/actions/singleTripAction";///
 import {
   updateTripAction,
   removeTripAction,
@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { Files_URL } from "../../apiConfig";
 
 function CreatedTrips() {
   const router = useRouter();
@@ -59,6 +60,15 @@ function CreatedTrips() {
     if (selectedIdsFromLocalStorage) {
       setPostId(selectedIdsFromLocalStorage);
     }
+  }, []);
+  const [userId, setUserId] = useState('')
+  useEffect(() => {
+    const fetchTrips = async () => {
+      const uid = await localStorage.getItem("userID")
+      setUserId(uid)
+
+    }
+    fetchTrips();
   }, []);
 
   // const filteredData = recData?.find((item) => item._id === postid);
@@ -199,6 +209,9 @@ function CreatedTrips() {
     );
   };
 
+  const userIDPerson1 =
+    typeof window !== "undefined" ? localStorage.getItem("userID") : null;
+
   return (
     <>
       <div className="container-fluid">
@@ -268,9 +281,17 @@ function CreatedTrips() {
               <div className="col-lg-4 d-flex justify-content-end">
                 {matchingTrip ? (
                   <div>
-                    {matchingTrip?.sdate.slice(0, 7)} &nbsp;{" "}
+                    {new Date(matchingTrip?.sdate).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "2-digit",
+                            })} &nbsp;{" "}
                     <span className="fw-600">to</span> &nbsp;
-                    {matchingTrip?.edate.slice(0, 7)}
+                    {new Date(matchingTrip?.edate).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "2-digit",
+                            })}
                   </div>
                 ) : (
                   <div className="spinner-border text-primary" role="status">
@@ -303,7 +324,7 @@ function CreatedTrips() {
                               >
                                 <img
                                   className={styles.uploadimg}
-                                  src={trip.images[0]}
+                                  src={`${Files_URL}${trip.images[0]}`}
                                   alt="Uploaded Image"
                                 />
 
@@ -345,45 +366,51 @@ function CreatedTrips() {
                   <div className={`col-lg-7 col-md-6 col-12`}>
                     <div className={styles.tripsscrolled}>
                       {trips?.map((item) => {
+
                         return (
-                          <div
-                            key={item._id}
-                            // onChange={() => handleFavoriteTrips(item._id)}
-                            // onClick={() =>
-                            //   handleFavoriteTrips(item._id, item.title)
-                            // }
-                            className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves1}`}
-                          >
-                            {/* <input
+                          <div>
+                            {item.userID === userIDPerson1 && (
+                              <div
+                                key={item._id}
+                                // onChange={() => handleFavoriteTrips(item._id)}
+                                // onClick={() =>
+                                //   handleFavoriteTrips(item._id, item.title)
+                                // }
+                                className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves1}`}
+                              >
+                                {/* <input
                             className={`form-check-input ${styles.radiobtn}`}
                             type="radio"
                             name="exampleRadios"
                             id="exampleRadios1"
                             value="option1"
                           /> */}
-                            <div className="">
-                              <label
-                                className={`form-check-label f-16 fw-600 h4 text-light ${styles.titleheader}`}
-                                for="exampleRadios1"
-                              >
-                                {item.title}
-                              </label>
-                              {/* <label>{item.sdate.slice(0, 7)}</label> */}
-                              <label className="mx-3 text-light">
-                                {item && item.sdate
-                                  ? item.sdate.slice(0, 7)
-                                  : item
-                                  ? item.sdate
-                                  : "No item available"}
-                              </label>
-                            </div>
-                            <button
-                              onClick={() => handleRemoveTrips(item._id)}
-                              className="bg-transparent border-0 text-light"
-                              style={{ fontSize: "25px" }}
-                            >
-                              x
-                            </button>
+                                <div className="">
+                                  <label
+                                    className={`form-check-label f-16 fw-600 h4 text-light ${styles.titleheader}`}
+                                    for="exampleRadios1"
+                                  >
+                                    {item.title}
+                                  </label>
+                                  {/* <label>{item.sdate.slice(0, 7)}</label> */}
+                                  <label className="mx-3 text-light">
+                                    {item && item.sdate
+                                      ? item.sdate.slice(0, 7)
+                                      : item
+                                        ? item.sdate
+                                        : "No item available"}
+                                  </label>
+                                </div>
+                                <button
+                                  onClick={() => handleRemoveTrips(item._id)}
+                                  className="bg-transparent border-0 text-light"
+                                  style={{ fontSize: "25px" }}
+                                >
+                                  x
+                                </button>
+                              </div>
+                            )}
+
                           </div>
                         );
                       })}
@@ -394,44 +421,51 @@ function CreatedTrips() {
                         <>
                           {recData?.map((trip, index) => {
                             return (
-                              <div
-                                key={trip?._id}
-                                className={styles.trillistpost}
-                              >
-                                <div
-                                  className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                                  onClick={() =>
-                                    handleLinkClick(trip?._id, trip.title)
-                                  }
-                                >
-                                  <img
-                                    className={styles.uploadimg}
-                                    src={trip.images[0]}
-                                    alt="Uploaded Image"
-                                  />
+                              <div>
+                                {trip.userID === userIDPerson1 && (
 
                                   <div
-                                    style={{
-                                      position: "absolute ",
-                                      zIndex: 999,
-                                    }}
+                                    key={trip?._id}
+                                    className={styles.trillistpost}
                                   >
-                                    <div className="text-center">
-                                      <p
-                                        className={`mb-0 letterspac text-white`}
+
+                                    <div
+                                      className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
+                                      onClick={() =>
+                                        handleLinkClick(trip?._id, trip.title)
+                                      }
+                                    >
+                                      <img
+                                        className={styles.uploadimg}
+                                        src={`${Files_URL}${trip.images[0]}`}
+                                        alt="Uploaded Image"
+                                      />
+
+                                      <div
+                                        style={{
+                                          position: "absolute ",
+                                          zIndex: 999,
+                                        }}
                                       >
-                                        Event
-                                      </p>
-                                      <h3 className="w-700 text-white">
-                                        {trip.title}
-                                      </h3>
-                                      <p className={`mb-0 m1 text-white`}>
-                                        {/* {trip.region} */}
-                                        Paris, France
-                                      </p>
+                                        <div className="text-center">
+                                          <p
+                                            className={`mb-0 letterspac text-white`}
+                                          >
+                                            Event
+                                          </p>
+                                          <h3 className="w-700 text-white">
+                                            {trip.title}
+                                          </h3>
+                                          <p className={`mb-0 m1 text-white`}>
+                                            {/* {trip.region} */}
+                                            Paris, France
+                                          </p>
+                                        </div>
+                                      </div>
                                     </div>
+
                                   </div>
-                                </div>
+                                )}
                               </div>
                             );
                           })}

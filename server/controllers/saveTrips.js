@@ -2,6 +2,8 @@ const SaveTrips = require("../models/saveTrips");
 
 const saveAllTrips = async (req, res) => {
   const { tripId, userID } = req.body;
+
+  console.log('Abss')
   console.log(tripId, "tripId");
   console.log(userID, "userID");
 
