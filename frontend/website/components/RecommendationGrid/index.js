@@ -80,8 +80,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[5].title}
                           </p>
                           <p className={`mb-0 m1`}>
-                            {/* {recentRecommendations[5].region} */}
-                            Paris, France
+                            {recentRecommendations[5].location}
                           </p>
                         </div>
                       </div>
@@ -114,7 +113,8 @@ const RecommendationGrid = ({
                             </p>
                             <p className={`mb-0 m1`}>
                               {/* {recentRecommendations[4].region} */}
-                              Paris, France
+
+                              {recentRecommendations[4].location}
                             </p>
                           </div>
                         </div>
@@ -154,7 +154,7 @@ const RecommendationGrid = ({
                               </p>
                               <p className={`mb-0`}>
                                 {/* {recentRecommendations[0].region} */}
-                                Paris, France
+                                {recentRecommendations[0].location}
                               </p>
                             </div>
                           </div>
@@ -186,7 +186,7 @@ const RecommendationGrid = ({
                                 {recentRecommendations[2].title}
                               </p>
                               <p className={`mb-0`}>
-                                {recentRecommendations[2].region}
+                                {recentRecommendations[2].location}
                               </p>
                             </div>
                           </div>
@@ -218,7 +218,7 @@ const RecommendationGrid = ({
                                 {recentRecommendations[1].title}
                               </p>
                               <p className={`mb-0 m1`}>
-                                {recentRecommendations[1].region}
+                                {recentRecommendations[1].location}
                               </p>
                             </div>
                           </div>
@@ -246,7 +246,7 @@ const RecommendationGrid = ({
                           <p
                             className={`mb-0 letter-spac ${styles.letterspac}`}
                           >
-                            EVENT 
+                            EVENT
                           </p>
                           <p
                             className={`mb-0 ${styles.matchheader} mt-1 white fw-600`}
@@ -254,8 +254,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[6].title}
                           </p>
                           <p className={`mb-0 m1`}>
-                            {/* {recentRecommendations[6].region} */}
-                            Paris, France
+                            {recentRecommendations[6].location}
                           </p>
                         </div>
                       </div>
@@ -287,7 +286,7 @@ const RecommendationGrid = ({
                           </p>
                           <p className={`mb-0`}>
                             {/* {recentRecommendations[7]?.region} */}
-                            Paris, France
+                            {recentRecommendations[7].location}
                           </p>
                         </div>
                       </div>
@@ -318,8 +317,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[8]?.title}
                           </p>
                           <p className={`mb-0`}>
-                            {/* {recentRecommendations[8]?.region} */}
-                            Paris, France
+                            {recentRecommendations[8].location}
                           </p>
                         </div>
                       </div>
@@ -355,8 +353,7 @@ const RecommendationGrid = ({
                               {recentRecommendations[9]?.title}
                             </p>
                             <p className={`mb-0 m1`}>
-                              {/* {recentRecommendations[9]?.region} */}
-                              Paris, France
+                              {recentRecommendations[9].location}
                             </p>
                           </div>
                         </div>
@@ -389,8 +386,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[10]?.title}
                           </p>
                           <p className={`mb-0 m1`}>
-                            {/* {recentRecommendations[10]?.region} */}
-                            Paris, France
+                            {recentRecommendations[10].location}
                           </p>
                         </div>
                       </div>
@@ -424,8 +420,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[1].title}
                           </p>
                           <p className={`mb-0 m1`}>
-                            {/* {recentRecommendations[1].region} */}
-                            Paris, France
+                            {recentRecommendations[1].location}
                           </p>
                         </div>
                       </div>
@@ -456,8 +451,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[7]?.title}
                           </p>
                           <p className={`mb-0`}>
-                            {/* {recentRecommendations[7]?.region} */}
-                            Paris, France
+                            {recentRecommendations[7].location}
                           </p>
                         </div>
                       </div>
@@ -488,8 +482,7 @@ const RecommendationGrid = ({
                             {recentRecommendations[8]?.title}
                           </p>
                           <p className={`mb-0`}>
-                            {/* {recentRecommendations[8]?.region} */}
-                            Paris, France
+                            {recentRecommendations[8].location}
                           </p>
                         </div>
                       </div>
