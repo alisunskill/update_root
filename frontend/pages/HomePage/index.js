@@ -213,8 +213,9 @@ export default ({ data1 }) => {
             size="xl"
             aria-labelledby="contained-modal-title-vcenter"
             centered
+            className={styles.filteredboxhero}
           >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className="border-0 mt-2 px-4">
               <Modal.Title
                 id="contained-modal-title-vcenter "
                 className="amgray text-center w-100 fw-600"
@@ -240,7 +241,7 @@ export default ({ data1 }) => {
                       min={minValue}
                       max={maxValue}
                     />
-                    <div>
+                    <div className="lgray">
                       Min: ${value[0]} &#160; &#160; Max: ${value[1]}
                     </div>
                   </Box>
@@ -249,9 +250,11 @@ export default ({ data1 }) => {
 
               {/* REgions */}
               <div className="row w-100 p-0 mb-4 mt-3">
-                <h5 className="amgray py-3">Filtered By Region</h5>
+                <h5 className="amgray pt-3 fw-600">Filtered By Region</h5>
 
-                <div className="d-flex gap-3 flex-wrap">
+                <div
+                  className={`d-flex gap-3 flex-wrap ${styles.filteredregion}`}
+                >
                   <RadioGroup
                     aria-label="radio-buttons"
                     name="radio-buttons"
@@ -262,8 +265,10 @@ export default ({ data1 }) => {
                     {regionData.map((item, index) => (
                       <div key={index} className={styles.regionbox}>
                         <FormControlLabel
+                          className="lgray"
                           control={
                             <Checkbox
+                              className="lgray fw-500"
                               checked={selectedRegions.includes(item.title)}
                               onChange={() => handleRegionChange(item.title)}
                             />
@@ -277,9 +282,9 @@ export default ({ data1 }) => {
               </div>
 
               {/* Descriptors */}
-              <h5 className="amgray mt-3">Descriptors</h5>
+              <h5 className="amgray mt-3 fw-600">Descriptors</h5>
 
-              <div className="py-3 py-lg-5">
+              <div className="py-3">
                 <div
                   className={`btn-group px-2 d-flex w-100 d-flex align-center justify-content-between `}
                 >
@@ -335,11 +340,19 @@ export default ({ data1 }) => {
                 </div>
               </div>
 
-              <div className="d-flex justify-content-center gap-3 mb-3 py-3">
-                <button type="" className="savebtn" onClick={resetHandle}>
+              <div className="d-flex justify-content-center gap-3 mb-3 py-3 mt-3">
+                <button
+                  type=""
+                  className="savebtn1 text-light"
+                  onClick={resetHandle}
+                >
                   Reset
                 </button>
-                <button onClick={handleApply} type="" className="savebtn">
+                <button
+                  onClick={handleApply}
+                  type=""
+                  className="savebtn1 text-light"
+                >
                   Apply
                 </button>
               </div>

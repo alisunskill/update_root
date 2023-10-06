@@ -257,12 +257,10 @@ const InfiniteScrollComponent = () => {
                                 Event
                               </p>
                               <h3 className="w-700 text-white">
-                                {" "}
                                 {item.title}
                               </h3>
                               <p className={`mb-0 m1 text-white`}>
-                                {" "}
-                                {item.region.slice(0, 9)}
+                                {item.location}
                               </p>
                             </div>
                           </div>

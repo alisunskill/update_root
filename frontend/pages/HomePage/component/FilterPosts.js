@@ -154,7 +154,7 @@ const FilterModalComponent = () => {
         className={`d-flex align-content-center px-3 ${styles.filterhero}`}
         onClick={() => setModalShow(true)}
       >
-        <h6 className="fw-600 mb-0">Filters</h6>
+        <h6 className="fw-600 mb-0 flhc">Filters</h6>
         <Image width={30} height={20} src={filter} alt="filter" />
       </div>
 
@@ -176,7 +176,7 @@ const FilterModalComponent = () => {
         </Modal.Header>
         <Modal.Body className="px-lg-5 px-3">
           {/* region */}
-          <h5 className="amgray">Price Range</h5>
+          <h5 className="amgray fw-600">Price Range</h5>
           <div className="d-flex gap-3 flex-wrap">
             {/* <RangeSlider /> */}
             <div className="d-flex justify-content-center">
@@ -201,7 +201,7 @@ const FilterModalComponent = () => {
 
           {/* REgions */}
           <div className="row w-100 p-0 mb-4 mt-3">
-            <h5 className="amgray py-3">Filtered By Region</h5>
+            <h5 className="amgray py-3 fw-600">Filtered By Region</h5>
 
             <div className="d-flex gap-3 flex-wrap">
               <RadioGroup
@@ -216,7 +216,7 @@ const FilterModalComponent = () => {
                     <div key={index} className={styles.regionbox}>
                       <FormControlLabel
                         control={
-                          <Checkbox
+                          <Checkbox className="lgray"
                             checked={selectedRegions.includes(item.title)}
                             onChange={() => handleRegionChange(item.title)}
                           />
@@ -288,7 +288,11 @@ const FilterModalComponent = () => {
             <button type="" className="savebtn" onClick={resetHandle}>
               Reset
             </button>
-            <button onClick={handleApply} type="" className="savebtn text-light">
+            <button
+              onClick={handleApply}
+              type=""
+              className="savebtn text-light"
+            >
               Apply
             </button>
           </div>
