@@ -60,7 +60,7 @@ const RecommendationGrid = ({
               next={loadMoreRecommendations}
               hasMore={hasMore}
             >
-              <Box sx={{ minHeight: 829 }}>
+              <Box sx={{ minHeight: 400 }}>
                 <Masonry columns={3} spacing={2}>
                   {currentRecommendations.map((item, index) => {
                     return (
