@@ -6,9 +6,12 @@ const {
   deleteTripPost,
   getTripsPost,
   updateTripPost,
+  userVisitedCountriesRegions
 } = require("../controllers/trips");
 
 router.route("/").post(createTripsPost);
+
+router.route("/userVisitedCountriesRegions").post(userVisitedCountriesRegions);
 
 router.route("/").get(getTripsPost);
 

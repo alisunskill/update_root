@@ -60,8 +60,8 @@ const RecommendationGrid = ({
               next={loadMoreRecommendations}
               hasMore={hasMore}
             >
-              <Box sx={{ minHeight: 400 }}>
-                <Masonry columns={3} spacing={2}>
+              <Box sx={{ minHeight: 829 }}>
+                <Masonry columns={4} spacing={1}>
                   {currentRecommendations.map((item, index) => {
                     return (
                       <div key={index} className="">
@@ -84,10 +84,12 @@ const RecommendationGrid = ({
 
                           <div style={{ position: "absolute ", zIndex: 999 }}>
                             <div className="text-center">
-                              <p className={`mb-0 letterspac text-white`}>
+                              {/* <p className={`mb-0 letterspac text-white`}>
                                 Event
-                              </p>
-                              <h3 className="w-700 text-white">{item.title}</h3>
+                              </p> */}
+                              <h3 className="w-700 text-white">{item.title.length <= 40
+                                    ? item.title
+                                    : `${item.title.slice(0, 40)}...`}</h3>
                               <p className={`mb-0 m1 text-white`}>
                                 {item.location}
                               </p>

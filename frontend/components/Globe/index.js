@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { SizeMe } from "react-sizeme";
 import { renderToString } from "react-dom/server";
+import { API_URL } from "../../apiConfig";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
@@ -51,7 +52,7 @@ export default (props) => {
   const { region } = router.query;
 
   if (region) {
-    router.push(`http://localhost:3000/infinitescroll?region=${region}`);
+    router.push(`${API_URL}infinitescroll?region=${region}`);
   }
 
   let cityData = [];

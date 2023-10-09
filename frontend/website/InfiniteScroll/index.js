@@ -141,6 +141,13 @@ const InfiniteScrollComponent = () => {
   }, [router.query.descriptor]);
 
   useEffect(() => {
+   const getUserFilterPosts=async()=>{
+
+   }
+   getUserFilterPosts()
+  }, []);
+
+  useEffect(() => {
     const fetchPosts = async () => {
       // Fetch the posts based on the min and max cost values
       const response = await fetch(
@@ -174,7 +181,8 @@ const InfiniteScrollComponent = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-
+  const userIDPerson1 =
+    typeof window !== "undefined" ? localStorage.getItem("userID") : null;
   return (
     <div>
       <div></div>
@@ -231,41 +239,44 @@ const InfiniteScrollComponent = () => {
             >
               <Box sx={{ minHeight: 829 }}>
                 {filteredPosts ? (
-                  <Masonry columns={3} spacing={2}>
+                  <Masonry columns={5} spacing={1}>
                     {(filteredPosts.length > 0
                       ? filteredPosts
                       : searchResults.length > 0
-                      ? searchResults
-                      : filterPrice.length > 0
-                      ? filterPrice
-                      : recommendationData
+                        ? searchResults
+                        : filterPrice.length > 0
+                          ? filterPrice
+                          : recommendationData
                     ).map((item, index) => (
-                      <div key={index} className="">
-                        <div
-                          className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                          onClick={() => handleLinkClick(item._id, item.title)}
-                        >
-                          <img
-                            className={styles.uploadimg}
-                            src={`${Files_URL}${item.images[0]}`}
-                            alt="Uploaded Image"
-                          />
-
-                          <div style={{ position: "absolute ", zIndex: 999 }}>
-                            <div className="text-center">
-                              <p className={`mb-0 letterspac text-white`}>
-                                Event
-                              </p>
-                              <h3 className="w-700 text-white">
-                                {item.title}
-                              </h3>
-                              <p className={`mb-0 m1 text-white`}>
-                                {item.location}
-                              </p>
+                      
+                      
+                        <div key={index} className="">
+                          <div
+                            className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
+                            onClick={() => handleLinkClick(item._id, item.title)}
+                          >
+                            <img
+                              className={styles.uploadimg}
+                              src={`${Files_URL}${item.images[0]}`}
+                              alt="Uploaded Image"
+                            />
+                    
+                            <div style={{ position: "absolute", zIndex: 999 }}>
+                              <div className="text-center">
+                                <h3 className="w-700 text-white">
+                                  {item.title.length <= 45
+                                    ? item.title
+                                    : `${item.title.slice(0, 45)}...`}
+                                </h3>
+                                <p className={`mb-0 m1 text-white`}>
+                                  {item.region.split(" ")[0]}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                    
+                    
                     ))}
                   </Masonry>
                 ) : filtereDescriptor ? (
@@ -273,10 +284,10 @@ const InfiniteScrollComponent = () => {
                     {(filtereDescriptor.length > 0
                       ? filtereDescriptor
                       : searchResults.length > 0
-                      ? searchResults
-                      : filterPrice.length > 0
-                      ? filterPrice
-                      : recommendationData
+                        ? searchResults
+                        : filterPrice.length > 0
+                          ? filterPrice
+                          : recommendationData
                     ).map((item, index) => (
                       <div key={index}>
                         {console.log(item, "des")}

@@ -14,11 +14,21 @@ exports.createUser = async (req, res) => {
     const { firstName, lastName, region, email, username, language, password } =
       req.body;
 
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res
-        .status(409)
-        .json({ message: "Email or username already exists" });
+    // const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existingEmailUser = await User.findOne({ email });
+    const existingUsernameUser = await User.findOne({ username });
+    // if (existingUser) {
+    //   return res
+    //     .status(409)
+    //     .json({ message: "Email or username already exists" });
+    // }
+
+    if (existingEmailUser) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    if (existingUsernameUser) {
+      return res.status(409).json({ message: "Username already exists" });
     }
 
     console.log(req.body);
@@ -350,6 +360,24 @@ exports.deleteProfile = async (req, res) => {
     await User.findByIdAndDelete(userID);
 
     res.status(200).json({ message: "Profile deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting profile:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+exports.userInfo = async (req, res) => {
+  try {
+    const { userID } = req.body;
+
+    const user = await User.findById(userID);
+
+    if (!user) {
+      return res.status(404).json({status:false, message: "User not found" });
+    }
+
+    
+
+    res.status(200).json({status:true, message: "successfully",data:user });
   } catch (error) {
     console.error("Error deleting profile:", error);
     res.status(500).json({ message: "Internal server error" });

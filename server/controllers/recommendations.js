@@ -12,7 +12,6 @@ const getAllRecommendations = async (req, res) => {
     queryObject.region = region;
   }
 
-
   if (descriptors) {
     if (typeof descriptors === "string") {
       queryObject.descriptor = descriptors;
@@ -163,7 +162,7 @@ const updateRecommendation = async (req, res) => {
     }
 
     if (title) existingRecommendation.title = title;
-    if (images) existingRecommendation.images = images;
+    // if (images) existingRecommendation.images = images;
     if (hours) existingRecommendation.hours = hours;
     if (cost) existingRecommendation.cost = cost;
     if (experience) existingRecommendation.experience = experience;
@@ -237,6 +236,26 @@ const getTotalLikes = async (req, res) => {
   }
 };
 
+const UserTotalRecommendations = async (req, res) => {
+  try {
+    const { userID } = req.body;
+    console.log(userID);
+
+    const count = await Recommendation.countDocuments({ userID: userID });
+
+    res
+      .status(200)
+      .json({
+        status: true,
+        message: "successfully",
+        totalRecommendations: count,
+      });
+  } catch (error) {
+    console.error("Error getting total recommendations:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllRecommendations,
   getAllRecommendationsTesting,
@@ -244,5 +263,6 @@ module.exports = {
   updateRecommendation,
   deleteRecommendation,
   likeRecommendation,
-  getTotalLikes
+  getTotalLikes,
+  UserTotalRecommendations,
 };

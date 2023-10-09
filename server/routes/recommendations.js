@@ -13,10 +13,13 @@ const {
   deleteRecommendation,
   updateRecommendation,
   likeRecommendation,
-  getTotalLikes
+  getTotalLikes,
+  UserTotalRecommendations,
 } = require("../controllers/recommendations");
 
 router.route("/").get(getAllRecommendations);
+
+router.route("/UserTotalRecommendations").post(UserTotalRecommendations);
 router.route("/testing").get(getAllRecommendationsTesting);
 
 router.route("/:recommendationId").delete(deleteRecommendation);
@@ -29,48 +32,13 @@ router.route("/:recommendationId/like").post(likeRecommendation);
 // total likes
 router.route("/:recommendationId").get(getTotalLikes);
 
-router.post('/createrecommendation', upload.array('images'), async (req, res) => {
-  const {
-    userID,
-    title,
-    cost,
-    hours,
-    experience,
-    description,
-    location,
-    descriptors,
-    region,
-    links,
-    longitude,
-    latitude
-  } = req.body;
-
-  try {
-    // Check for missing required fields
-    if (!userID || !title || !cost || !hours || !experience || !description || !location || !descriptors || !region || !links) {
-      return res.status(400).json({ error: "Missing required fields in the request." });
-    }
-
-    // Check if files were uploaded
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ error: "No files were uploaded." });
-    }
-
-    // Process uploaded files
-    const files = req.files; // This will contain an array of uploaded files
-
-    // Your logic to store and process the files (e.g., save to disk, database, etc.)
-    // For simplicity, let's assume you save them to a folder
-    const fileUrls = [];
-    for (const file of files) {
-      fileUrls.push(`/uploads/${file.filename}`);
-    }
-
-    // Create a new recommendation with the file URLs
-    const newRecommendation = await Recommendation.create({
+router.post(
+  "/createrecommendation",
+  upload.array("images"),
+  async (req, res) => {
+    const {
       userID,
       title,
-      images: fileUrls, // Store the file URLs
       cost,
       hours,
       experience,
@@ -80,18 +48,71 @@ router.post('/createrecommendation', upload.array('images'), async (req, res) =>
       region,
       links,
       longitude,
-      latitude
-    });
+      latitude,
+    } = req.body;
 
-    console.log("New Recommendation:", newRecommendation);
+    try {
+      // Check for missing required fields
+      if (
+        !userID ||
+        !title ||
+        !cost ||
+        !hours ||
+        !experience ||
+        !description ||
+        !location ||
+        !descriptors ||
+        !region ||
+        !links
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Missing required fields in the request." });
+      }
 
-    res.status(201).json(newRecommendation);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to create recommendation. " + error.message });
+      // Check if files were uploaded
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: "No files were uploaded." });
+      }
+
+      // Process uploaded files
+      const files = req.files; // This will contain an array of uploaded files
+
+      // Your logic to store and process the files (e.g., save to disk, database, etc.)
+      // For simplicity, let's assume you save them to a folder
+      const fileUrls = [];
+      for (const file of files) {
+        fileUrls.push(`/uploads/${file.filename}`);
+      }
+
+      // Create a new recommendation with the file URLs
+      const newRecommendation = await Recommendation.create({
+        userID,
+        title,
+        images: fileUrls, // Store the file URLs
+        cost,
+        hours,
+        experience,
+        description,
+        location,
+        descriptors,
+        region,
+        links,
+        longitude,
+        latitude,
+      });
+
+      console.log("New Recommendation:", newRecommendation);
+
+      res.status(201).json(newRecommendation);
+    } catch (error) {
+      console.error("Error:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to create recommendation. " + error.message });
+    }
   }
-});
-
+);
 
 // router.route("/").post(
 //   (req, res, next) => {

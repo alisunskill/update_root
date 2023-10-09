@@ -155,13 +155,13 @@ const Searchbar = () => {
   if (loading) {
     return (
       <div
-        className={`col-xl-5 col-lg-5 col-md-5 col-sm-5  ${styles.inputgroup}`}
+        className={`col-lg-7  ${styles.inputgroup}`}
       >
-        <Form>
+        <Form className="w-100">
           <FormControl
             type="text"
             aria-describedby="button-addon5"
-            className={`form-control ${styles.searchvally}`}
+            className={`form-control w-100 ${styles.searchvally}`}
             list="itemList"
           />
           {/* <FontAwesomeIcon className={styles.inputgroupicon} icon={faSearch} /> */}
@@ -228,9 +228,7 @@ const Searchbar = () => {
 
   return (
     <>
-      <div
-        className={`col-xl-5 col-lg-5 col-md-5 col-sm-5  ${styles.inputgroup}`}
-      >
+      <div className={`col-lg-7  ${styles.inputgroup}`}>
         <Form>
           <FormControl
             type="text"
@@ -238,117 +236,121 @@ const Searchbar = () => {
             onChange={handleSearch}
             onKeyPress={handleKeyPress}
             aria-describedby="button-addon5"
-            className={`form-control ${styles.searchvally}`}
+            className={`form-control rounded-5 ${styles.searchvally}`}
             list="itemList"
+            placeholder="Explore With Us..."
+            style={{
+              backgroundColor:'#F9F9F9'
+            }}
           />
-          <datalist id="itemList">
+          <datalist id="itemList" className="w-100">
             {itemData.map((item) => (
               <option key={item.id} value={item.title} />
             ))}
           </datalist>
           <FontAwesomeIcon className={styles.inputgroupicon} icon={faSearch} />
         </Form>
-      </div>
-      {show && (
-        <div className={styles.boxed}>
-          {searchTerm && (
-            <div className={`container-fluid pt-3 pb-2 ${styles.boldedhero}`}>
-              <div
-                className="row d-flex btn scroll-hidden border-0"
-                data-toggle="collapse"
-                href="#multiCollapseExample1"
-                role="button"
-                aria-expanded="false"
-                aria-controls="multiCollapseExample1"
-              >
-                <InfiniteScroll
-                  className="w-100 overflow-hidden"
-                  dataLength={searchResults.length || posts.length}
-                  next={recommendationData}
-                  hasMore={hasMore}
-                  loader={<h4>Loading...</h4>}
+        {show && (
+          <div className={styles.boxed}>
+            {searchTerm && (
+              <div className={`container-fluid pt-3 pb-2 ${styles.boldedhero}`}>
+                <div
+                  className="row d-flex btn scroll-hidden border-0"
+                  data-toggle="collapse"
+                  href="#multiCollapseExample1"
+                  role="button"
+                  aria-expanded="false"
+                  aria-controls="multiCollapseExample1"
                 >
-                  <Masonry columns={4} spacing={2}>
-                    <div
-                      className={`w-100 border-0 ${styles.masonery_data}`}
-                      data-toggle="collapse"
-                      href="#multiCollapseExample1"
-                      role="button"
-                      aria-expanded="false"
-                      aria-controls="multiCollapseExample1"
-                    >
-                      {(showAll
-                        ? filteredPosts.length > 0
-                          ? filteredPosts
+                  <InfiniteScroll
+                    className="w-100 overflow-hidden"
+                    dataLength={searchResults.length || posts.length}
+                    next={recommendationData}
+                    hasMore={hasMore}
+                    loader={<h4>Loading...</h4>}
+                  >
+                    <Masonry columns={4} spacing={2}>
+                      <div
+                        className={`w-100 border-0 ${styles.masonery_data}`}
+                        data-toggle="collapse"
+                        href="#multiCollapseExample1"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="multiCollapseExample1"
+                      >
+                        {(showAll
+                          ? filteredPosts.length > 0
+                            ? filteredPosts
+                            : searchResults.length > 0
+                            ? searchResults
+                            : posts
+                          : filteredPosts.length > 0
+                          ? filteredPosts.slice(0, 2)
                           : searchResults.length > 0
-                          ? searchResults
-                          : posts
-                        : filteredPosts.length > 0
-                        ? filteredPosts.slice(0, 2)
-                        : searchResults.length > 0
-                        ? searchResults.slice(0, 2)
-                        : posts.slice(0, 2)
-                      ).map((item, index) => (
-                        <div key={index}>
-                          <Link
-                            className="d-flex align-items-bottom text-decoration-none justify-content-flex-start gap-5  mt-2"
-                            style={{
-                              borderBottom: "1px solid gray",
-                              width: "500px",
-                            }}
-                            href={{
-                              pathname: "/infinitescroll",
-                              query: { region: item.region },
-                            }}
-                          >
-                            <img
-                              layout="fill"
-                              objectFit="cover"
-                              src={`${Files_URL}${item.images[0]}`}
-                              alt={item.region}
-                              loading="lazy"
+                          ? searchResults.slice(0, 2)
+                          : posts.slice(0, 2)
+                        ).map((item, index) => (
+                          <div key={index}>
+                            <Link
+                              className="d-flex align-items-bottom text-decoration-none justify-content-flex-start gap-5  mt-2"
                               style={{
-                                display: "block",
-                                width: "5%",
-                                height: "5%",
-                                borderRadius: "5px",
+                                borderBottom: "1px solid gray",
                               }}
-                            />
-                            <h6
-                              className="text-dark text-end mb-0 d-flex align-items-end"
-                              // style={{ width: "15%" }}
+                              href={{
+                                pathname: "/infinitescroll",
+                                query: { region: item.region },
+                              }}
                             >
-                              {item.region}
-                            </h6>
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                    <Link
-                      href="/infinitescroll"
-                      className="btn text-light bold w-100"
-                      style={{ background: "#7CC5E5" }}
-                    >
-                      Show All
-                    </Link>
-                  </Masonry>
-                </InfiniteScroll>
-                {!showAll && (
-                  <div className="text-center mt-3">
-                    {/* <button
+                              <img
+                                layout="fill"
+                                objectFit="cover"
+                                src={`${Files_URL}${item.images[0]}`}
+                                alt={item.region}
+                                loading="lazy"
+                                style={{
+                                  display: "block",
+                                  width: "100%",
+                                  maxWidth: "50px",
+                                  height: "50px",
+                                  borderRadius: "5px",
+                                }}
+                              />
+                              <h6
+                                className="text-dark text-end mb-0 d-flex align-items-end"
+                                // style={{ width: "15%" }}
+                              >
+                                {item.region}
+                              </h6>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                      <Link
+                        href="/infinitescroll"
+                        className="btn text-light bold w-100"
+                        style={{ background: "#7CC5E5" }}
+                      >
+                        Show All
+                      </Link>
+                    </Masonry>
+                  </InfiniteScroll>
+                  {!showAll && (
+                    <div className="text-center mt-3">
+                      {/* <button
                     onClick={toggleShowAll}
                     className="btn text-light bold"
                     style={{ background: "#7CC5E5" }}
                   >
                     Show All
                   </button> */}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 };

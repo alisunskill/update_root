@@ -21,7 +21,17 @@ function Signup() {
   const recaptchaValueRef = useRef("");
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
-
+    const emptyFields = Object.keys(values).filter((key) => !values[key]);
+    if (emptyFields.length > 0) {
+      const fieldNames = emptyFields.join(", ");
+      Swal.fire({
+        title: "Empty Fields",
+        text: `Please fill out the following fields: ${fieldNames}`,
+        icon: "error",
+      });
+      setSubmitting(false);
+      return;
+    }
     if (!recaptchaValueRef.current) {
       setRecaptchaError("Please complete the reCAPTCHA challenge.");
       Swal.fire({
@@ -34,17 +44,6 @@ function Signup() {
 
     try {
       const token = localStorage.getItem("token");
-      console.log(token, "token he ye");
-      // const response = await axios.post(
-      //   "http://localhost:8000/api/users",
-      //   values,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
       const response = await axios.post(`${API_URL}api/users`, values, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -55,25 +54,46 @@ function Signup() {
       console.log("Response Data:", response.data);
 
       if (response.data.user) {
-        const { email, _id } = response.data.user;
+        const { email, username, _id } = response.data.user;
         localStorage.setItem("userID", _id);
         Cookies.set("userID", _id);
         localStorage.setItem("email", email);
+        Swal.fire({
+          title: "Account Created",
+          text: `Welcome, ${username}! Your account has been successfully created.`,
+          icon: "success",
+        });
+        resetForm();
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        setSubmitting(false);
+        router.push("/confirmsignup");
       }
-
-      resetForm();
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
-      setSubmitting(false);
-      router.push("/confirmsignup");
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        showAccountExistsAlert();
+        if (error.response.data.message === "Email already exists") {
+          Swal.fire({
+            title: "Account Exists",
+            text: "Provided Email is Already Exists.",
+            icon: "warning",
+          });
+        } else if (error.response.data.message === "Username already exists") {
+          Swal.fire({
+            title: "Account Exists",
+            text: "Provided Username is Already Exists.",
+            icon: "warning",
+          });
+        }
       } else {
         console.error("Error sending data to backend:", error);
+        Swal.fire({
+          title: "Error",
+          text: "An error occurred while processing your request.",
+          icon: "error",
+        });
       }
+      setSubmitting(false);
     }
   };
 

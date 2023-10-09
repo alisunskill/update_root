@@ -8,6 +8,8 @@ import { API_URL } from "../../../apiConfig";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Alert from '@mui/material/Alert';
+ 
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -16,6 +18,8 @@ import styles from "../../../styles/viewsave.module.css";
 
 export default function NewTrip(props) {
   const router = useRouter();
+  const [hasError,setHasError]=useState(false)
+  
   const [formData, setFormData] = useState({
     region: "",
     email: "",
@@ -51,8 +55,17 @@ export default function NewTrip(props) {
       //   formData
       // );
       const response = await axios.post(`${API_URL}api/trips`, formData);
-      router.push("/");
-      props.onHide();
+      // router.push("/");
+      if(response.data.status){
+        location.reload();      props.onHide();
+        setHasError(false)
+
+      }
+      else {
+        //alert(response.data.message)
+        setHasError(true)
+      }
+      
     } catch (error) {
       console.error("Error creating trip:", error);
     }
@@ -82,7 +95,13 @@ export default function NewTrip(props) {
           >
             Create a new trip{" "}
           </Modal.Title>
+          
         </Modal.Header>
+        {hasError && (
+          <Alert variant="filled" severity="error">
+          A trip already exists for this date range.
+        </Alert>
+          )}
         <Modal.Body style={{ padding: "0px 40px 20px 40px" }}>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">

@@ -13,8 +13,12 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import styles from "../../../styles/viewsave.module.css";
+import Alert from '@mui/material/Alert';
+
 export default function NewTrip(props) {
   const router = useRouter();
+
+  const [hasError,setHasError]=useState(false)
   const [formData, setFormData] = useState({
     region: "",
     email: "",
@@ -22,6 +26,7 @@ export default function NewTrip(props) {
     edate: "",
     userID: "",
   });
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -47,8 +52,13 @@ export default function NewTrip(props) {
       //   formData
       // );
       const response = await axios.post(`${API_URL}api/trips`, formData);
-      router.push("/");
+      if(response.data.status){
+      router.push("/upcomingtrips");
       props.onHide();
+      }
+      else {
+        setHasError(true)
+      }
     } catch (error) {
       console.error("Error creating trip:", error);
     }
@@ -76,6 +86,11 @@ export default function NewTrip(props) {
             Create a new trip{" "}
           </Modal.Title>
         </Modal.Header>
+        {hasError && (
+          <Alert variant="filled" severity="error">
+          A trip already exists for this date range.
+        </Alert>
+          )}
         <Modal.Body style={{ padding: "0px 40px 20px 40px" }}>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">

@@ -585,9 +585,9 @@ function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
   };
 
   return (
-    <Modal size="md" show={show} onHide={onHide}>
+    <Modal style={{marginTop:30}} size="md" show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title className="fw-600 d-flex justify-content-center">
+        <Modal.Title className="fw-600 d-flex  justify-content-center">
           Edit Trip
         </Modal.Title>
       </Modal.Header>

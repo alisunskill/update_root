@@ -1,3 +1,39 @@
+/* navbar */
+.rightsidebar {
+  position: fixed;
+  top: 0;
+  right: 0px; /* Initial position off-screen */
+  height: 100vh;
+  width: 300px;
+  background-color: #7cc5e5;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 9999;
+}
+.dropdownprofile {
+  padding: 7px 20px !important;
+}
+.dropdownprofile:hover {
+  background-color: #4562b2 !important;
+  border-radius: 7px;
+}
+
+.rightsidebar.open {
+  right: 0;
+}
+
+.togglebutton {
+  margin: 10px;
+}
+
+.sidebarcontent {
+  padding: 20px;
+}
+
+/* navbar end */
+
 /* header */
 .headerhero {
   padding: 30px 0px 35px 0px;
@@ -52,6 +88,7 @@
 }
 .filteredboxhero {
   overflow-y: auto;
+  border-radius: 20px !important;
 }
 .filteredboxhero::-webkit-scrollbar {
   width: 0em;
@@ -131,9 +168,10 @@
 }
 .searchvally {
   height: auto;
-  border-radius: 50px;
-  border: 1px solid #000000 !important;
+  border: 0 !important;
   border-radius: 50px !important;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.3); /* Adjust the shadow properties as needed */
+
 }
 .fa-search:before {
   content: "\f002";
@@ -361,6 +399,16 @@
   align-items: end;
   text-align: center;
 }
+.crossdownbtn {
+  border: 2px solid #4562b2;
+  border-radius: 50px;
+  padding: 10px 10px !important;
+  width: 40px;
+  height: 40px;
+}
+.crossdownbtn:hover {
+  background-color: #4562b2 !important;
+}
 
 .landingimage1:hover {
   transform: scale(1.1);
@@ -529,10 +577,7 @@
   z-index: 9999 !important;
 }
 .masonery_data {
-  /* width: 100%; */
-  /* max-width: 500px; */
   padding: 10px 0px;
-  /* background-color: #f3f3f3; */
 }
 
 .input1 {
@@ -575,7 +620,9 @@
 }
 .boxed {
   position: absolute;
-  z-index: 999;
+  width: 100%;
+  z-index: 9999999;
+  margin-top: 3px;
 }
 @media only screen and (max-width: 1440px) {
   .boxmajor {
@@ -596,7 +643,7 @@
     padding: 10px 0px 10px 0px;
   }
   .plusicon {
-    width: 30px;
+    width: 27px;
   }
 
   .menicon {

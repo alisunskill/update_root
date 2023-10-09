@@ -24,6 +24,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Modal from "react-bootstrap/Modal";
 import { miniSerializeError } from "@reduxjs/toolkit";
+import { API_URL } from "../../apiConfig";
 
 function valuetext(value) {
   return `${value}°C`;
@@ -70,7 +71,7 @@ export default ({ data1 }) => {
   useEffect(() => {
     if (region) {
       axios
-        .get(`http://localhost:8000/api/recommendations?region=${region}`)
+        .get(`${API_URL}api/recommendations?region=${region}`)
         .then((response) => {
           const data = response.data;
           const cregion = data.Recommendations;
@@ -250,7 +251,7 @@ export default ({ data1 }) => {
 
               {/* REgions */}
               <div className="row w-100 p-0 mb-4 mt-3">
-                <h5 className="amgray pt-3 fw-600">Filtered By Region</h5>
+                <h5 className="amgray pt-3 fw-600">Regions</h5>
 
                 <div
                   className={`d-flex gap-3 flex-wrap ${styles.filteredregion}`}

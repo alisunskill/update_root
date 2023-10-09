@@ -26,6 +26,9 @@ router.put("/profile/:userID", userController.updateProfile);
 // Delete user profile
 router.delete("/profile/:userID", userController.deleteProfile);
 
+//User Info
+router.post("/userInfo", userController.userInfo);
+
 
 
 module.exports = router;

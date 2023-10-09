@@ -9,6 +9,7 @@ import profileicon from "../../public/images/men.svg";
 import { fetchRecommendations } from "../../store/actions/recommendationActions";
 import { fetchUserData } from "../../store/actions/userAction";
 import styles from "../../styles/profile.module.css";
+import { API_URL } from "../../apiConfig";
 
 const itemData = [
   {
@@ -46,6 +47,10 @@ function Profile() {
   const [user, setUser] = useState(null);
   const recData = recommendations.Recommendations;
   const [isEditing, setIsEditing] = useState(false);
+  const [userTotalExperience, setUserTotalExperience] = useState(0);
+
+  const [totalCountries, setTotalCountries] = useState(0);
+  const [totalCities, setTotalCities] = useState(0);
   const [profileData, setProfileData] = useState({
     username: "",
     region: "",
@@ -68,6 +73,76 @@ function Profile() {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+     const fetchTotalExp=async()=>{
+      const userIDPerson =  localStorage.getItem("userID"); // Use "userID" key
+      if(userIDPerson){
+     
+        try {
+          const url = `${API_URL}api/recommendations/UserTotalRecommendations`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userID: userIDPerson,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.status) {
+              setUserTotalExperience(data.totalRecommendations);
+            } else {
+              // Handle error if needed
+            }
+          } else {
+            // Handle HTTP error if needed
+          }
+        } catch (error) {
+          // Handle fetch or other errors
+          console.error(error);
+        }
+      }
+     
+
+     }
+     fetchTotalExp()
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalCountryCitiesVisited=async()=>{
+      const uid=await localStorage.getItem("userID")
+      try {
+        const url = `${API_URL}api/trips/userVisitedCountriesRegions`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: uid,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setTotalCities(data.totalSimilarCities)
+          setTotalCountries(data.totalSimilarCountries)
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+
+    }
+    fetchTotalCountryCitiesVisited();
+  }, []);
+
+
   return (
     <>
       <div className="row px-5 py-3">
@@ -86,8 +161,13 @@ function Profile() {
             </p>
           </div>
           <h6 className="fw-600 mb-0 mt-4">{user?.userId?.username}</h6>
-          <p className="pt-3">Where you’ve been: 30 countries, 112 cities</p>
-          <h6 className="fw-600 mb-3 mb-lg-4">Total shared experiences: 20 </h6>
+          <p className="pt-3">Where you've been:
+  {totalCities === 0 && totalCountries === 0 && " Nowhere yet"}
+  {totalCities === 1 && totalCountries === 1 && ` ${totalCities} city and ${totalCountries} country`}
+  {totalCities === 1 && totalCountries > 1 && ` ${totalCities} city and ${totalCountries} countries`}
+  {totalCities > 1 && totalCountries === 1 && ` ${totalCities} cities and ${totalCountries} country`}
+  {totalCities > 1 && totalCountries > 1 && ` ${totalCities} cities and ${totalCountries} countries`}</p>
+          <h6 className="fw-600 mb-3 mb-lg-4">Total shared experiences: {userTotalExperience} </h6>
           <Link
             href="/editprofile"
             className={` fw-600 cursor-pointer text-decoration-none fw-600 ${styles.editbtn}`}

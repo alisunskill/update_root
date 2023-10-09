@@ -188,7 +188,10 @@ export default () => {
                           key={item._id}
                           className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves}`}
                         >
-                          <label
+                           <label
+                            onClick={() =>
+                              handleFavoriteTrips(item._id, item.title)
+                            }
                             className={`form-check-label cursor-pointer f-16 fw-600 h4 text-dark thirty mb-0 ${styles.titleheader}`}
                             for="exampleRadios1"
                           >
@@ -212,14 +215,14 @@ export default () => {
                           >
                             x
                           </button>
-                          <button
+                          {/* <button
                             onClick={() =>
                               handleFavoriteTrips(item._id, item.title)
                             } className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
                             style={{ fontSize: "25px" }}
                           >
                             ♥
-                          </button>
+                          </button> */}
                           <button
                             onClick={() => addPlan(item)}
                             className=" border-0 text-dark px-3 fw-600 py-1 bg-gray1 rounded-5 z-1"

@@ -75,11 +75,11 @@ export default function NearSlider() {
           <SwiperSlide
             key={index}
             className={` d-flex justify-content-center align-items-center ${styles.savelink1}`}
-            onClick={() => handleLinkClick(post.id, post.title)}
+            onClick={() => handleLinkClick(post.id, post?.title)}
           >
             <img
               className={`${styles.scenery2} object-cover`}
-              src={`${Files_URL}${post.image}`}
+              src={`${Files_URL}${post?.image}`}
               alt=""
             />
             <div
@@ -88,8 +88,8 @@ export default function NearSlider() {
             >
               <div className="text-center">
                 <p className={`mb-0 letterspac text-white f-16`}>ITINERARY</p>
-                <h5 className="w-700 text-white"> {post.title}</h5>
-                <p className={`mb-0 m1 text-white f-16`}>{post.region.slice(0, 9)}</p>
+                <h5 className="w-700 text-white"> {post?.title}</h5>
+                <p className={`mb-0 m1 text-white f-16`}>{post?.region.slice(0, 9)}</p>
               </div>
             </div>
           </SwiperSlide>

@@ -9,8 +9,6 @@ import styles from "../styles/home.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -24,15 +22,6 @@ import { fetchLoginUser } from "../store/actions/recommendationActions";
 const Navbar = () => {
   const router = useRouter();
   const [modalShow, setModalShow] = React.useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-  const toggleSidebarclosed = () => {
-    setIsOpen(false);
-  };
-
   const handleReload = () => {
     router.push("/");
   };
@@ -88,10 +77,10 @@ const Navbar = () => {
       <div>
         <header className="container-fluid">
           <div
-            className={`row d-flex align-items-center justify-content-between position-relative ${styles.headerhero}`}
+            className={`row d-flex align-items-center position-relative ${styles.headerhero}`}
           >
             <div
-              className={`col-lg-3 d-flex justify-content-start ${styles.logo}`}
+              className={`col-xl-6 col-lg-6 col-md-6 col-sm-6  d-flex justify-content-start ${styles.logo}`}
             >
               {/* logo */}
               <Link href="/" className="mx-3">
@@ -108,9 +97,27 @@ const Navbar = () => {
               <div
                 className={`icons-right col-xl-3 col-lg-3 col-md-3 col-sm-3 position-absolute d-flex justify-content-end align-items-center ${styles.right_box}`}
               >
+                {userIDs && (
+                  <div className="mx-3">
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Pages"
+                      variant="info"
+                    >
+                      <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                      <Dropdown.Item href="/globemap">Globe</Dropdown.Item>
+                      <Dropdown.Item href="/upcomingtrips">
+                        Upcoming Trips
+                      </Dropdown.Item>
+                      <Dropdown.Item href="/viewsave">
+                        Saves Posts
+                      </Dropdown.Item>
+                    </DropdownButton>
+                  </div>
+                )}
                 <Button
                   className="bg-transparent border-0 outline-none"
-                // onClick={() => setModalShow(true)}
+                  // onClick={() => setModalShow(true)}
                 >
                   <a href="/globemap">
                     <Image
@@ -119,7 +126,7 @@ const Navbar = () => {
                       src={earth}
                       alt="earth"
                       style={{ objectFit: "contain" }}
-                      className={`mx-3" ${styles.plusicon}`}
+                      className={`mx-4" ${styles.plusicon}`}
                     />
                   </a>
                 </Button>
@@ -151,19 +158,42 @@ const Navbar = () => {
                   </div>
                 )}
 
-                <div>
-                  <div className="mx-3">
-                    <FontAwesomeIcon
-                      icon={faBars}
-                      onClick={toggleSidebar}
-                      style={{
-                        fontSize:'25px'
-                      }}
-                    />{" "}
-                    {/* Render the menu icon */}
-                  </div>
-                </div>
+                {userIDs ? (
+                  <>
+                    <Image
+                      src={logout}
+                      width={50}
+                      height={50}
+                      alt=""
+                      onClick={handleLogout1}
+                      className={`mx-3 object-fit-contain cursor-pointer ${styles.menicon}`}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div onClick={handleCreateItinerary}>
+                      {/* Show "Create Itinerary" icon */}
+                    </div>
+                    <Link href="/login">
+                      <Image
+                        width={50}
+                        height={50}
+                        src={men} // Show "Profile" icon for logged-out user
+                        alt=""
+                        className={`mx-3 ${styles.menicon}`}
+                      />
+                    </Link>
+                  </>
+                )}
 
+                {/* <Image
+                  src={logout}
+                  width={50}
+                  height={50}
+                  alt=""
+                  onClick={handleLogout1}
+                  className={`mx-3 object-fit-contain cursor-pointer ${styles.menicon}`}
+                /> */}
               </div>
             </div>
             {/* searchbar */}
@@ -171,95 +201,6 @@ const Navbar = () => {
               <Searchbar />
             </div>
           </div>
-
-          {/* sidebar */}
-
-          {isOpen && (
-            <div className={` ${styles.rightsidebar}`}>
-              <div className="position-relative w-100 d-flex justify-content-between">
-                <div>
-                  {userIDs ? (
-                    <div>
-                      <Image
-                        src={logout}
-                        width={50}
-                        height={50}
-                        alt=""
-                        onClick={handleLogout1}
-                        className={`mx-3 object-fit-contain cursor-pointer ${styles.menicon}`}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div onClick={handleCreateItinerary}>
-                        {/* Show "Create Itinerary" icon */}
-                      </div>
-                      <Link href="/login">
-                        <Image
-                          width={50}
-                          height={50}
-                          src={men} // Show "Profile" icon for logged-out user
-                          alt=""
-                          className={`mx-3 ${styles.menicon}`}
-                        />
-                      </Link>
-                    </>
-                  )}
-                </div>
-                <button
-                  className={`rounded-5 fw-600 text-info bg-light my-1 mx-3 d-flex justify-content-center align-items-center h4 mb-0 ${styles.crossdownbtn}`}
-                  onClick={toggleSidebarclosed}
-                >
-                  x
-                </button>
-              </div>
-              {userIDs && (
-
-                <div className="">
-
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    href="/profile"
-                  >
-                    Profile
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    href="/globemap"
-                  >
-                    Globe
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    href="/upcomingtrips"
-                  >
-                    Upcoming Trips
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    href="/viewsave"
-                  >
-                    Saved Posts
-                  </Dropdown.Item>
-                </div>
-              )}
-
-              {!userIDs && (
-
-                <div className="">
-
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    href="/login"
-                  >
-                    Login
-                  </Dropdown.Item>
-
-                </div>
-              )}
-
-            </div>
-          )}
         </header>
       </div>
     </>

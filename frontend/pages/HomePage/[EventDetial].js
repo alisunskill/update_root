@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "../../styles/singular.module.css";
 import plusicon2 from "../../public/images/plusicon2.svg";
 import profile from "../../public/images/men.svg";
@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 import burger from "../../public/images/burger.svg";
 import money from "../../public/images/moneyicon.svg";
 import clock from "../../public/images/clockicon.svg";
+import calender from "../../public/images/calender.svg";
+import moneyicon from "../../public/images/moneyicon.svg";
 import painticon from "../../public/images/painticon.svg";
 import { useRouter } from "next/router";
 import travelicon from "../../public/images/travelicon.svg";
@@ -22,10 +24,12 @@ import axios from "axios";
 import Trip from "../../website/ViewSaves/components/Trip";
 import NearSlider from "./component/NearSlider";
 import { GoogleMapApiKey } from "../../apiConfig";
+import EditPost from "../../website/CreateItinerary/EditPost";
 
 export default function EventDetail() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
   const { id } = router.query;
   const userData = useSelector((state) => state?.userId);
   const [postCounts, setPostCounts] = useState({});
@@ -40,8 +44,11 @@ export default function EventDetail() {
   const recommendationsData = useSelector((state) => state.recommendation);
   const { recommendations, loading, error } = recommendationsData;
 
+  const [userInfo, setUserInfo] = useState({});
+  const [userTotalExp, setuserTotalExp] = useState(0);
+  const [editPost, setEditPost] = useState(null);
+
   const recData = recommendations.Recommendations;
-  
 
   const handleIconClick = () => {
     router.back();
@@ -66,16 +73,159 @@ export default function EventDetail() {
     }
   }, []);
 
+  // useEffect(() => {
+
+  //   getUserInfo();
+  // }, [filteredData]);
+
   const filteredData =
     recData?.find((item) => item._id === postid) ||
     recData?.find((item) => item._id === id);
 
+  // edit post
+
+  const [title, setTitle] = useState(filteredData?.title || "");
+  const [cost, setCost] = useState(filteredData?.cost || "");
+  const [hours, setHours] = useState(filteredData?.hours || "");
+  const [experience, setExperience] = useState(filteredData?.experience || "");
+  const [location, setLocation] = useState(filteredData?.location || "");
+  const [region, setRegion] = useState(filteredData?.region || "");
+  const [description, setDescription] = useState(
+    filteredData?.description || ""
+  );
+  const [descriptors, setDescriptors] = useState(
+    filteredData?.descriptors || []
+  );
+  const [links, setLinks] = useState(filteredData?.links || "");
+  const [images, setImages] = useState(filteredData?.images || []);
+
   const filteredd = recData?.find((item) => item._id === id);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedFields, setEditedFields] = useState({
+    title: "",
+    cost: "",
+    hours: "",
+    experience: "",
+    location: "",
+    region: "",
+    description: "",
+    descriptors: "",
+    links: "",
+  });
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditedFields({
+      title: filteredd.title,
+      cost: filteredd.cost,
+      hours: filteredd.hours,
+      experience: filteredd.experience,
+      location: filteredd.location,
+      region: filteredd.region,
+      description: filteredd.description,
+      descriptors: filteredd.descriptors,
+      links: filteredd.links,
+    });
+  };
+
+  const handleSaveClick = (recommendationId) => {
+    const editedPost = {
+      title: editedFields.title,
+      cost: editedFields.cost,
+      hours: editedFields.hours,
+      experience: editedFields.experience,
+      location: editedFields.location,
+      region: editedFields.region,
+      description: editedFields.description,
+      descriptors: editedFields.descriptors,
+      links: editedFields.links,
+      // images: images,
+    };
+
+    axios
+      .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
+      .then((response) => {
+        console.log("Post edited successfully:", response.data);
+        setIsEditing(false);
+        router.push("/");
+      })
+      .catch((error) => {
+        console.error("Error editing post:", error);
+      });
+  };
+
+  // end edit post
+
   useEffect(() => {
     const selectedIdFromFilteredData = filteredd?._id || id;
     if (selectedIdFromFilteredData) {
       localStorage.setItem("filterPostId", selectedIdFromFilteredData);
     }
+    const getUserInfo = async () => {
+      if (filteredData) {
+        try {
+          const url = `${API_URL}api/users/userInfo`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userID: filteredData.userID,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.status) {
+              setUserInfo(data.data);
+            } else {
+              // Handle error if needed
+            }
+          } else {
+            // Handle HTTP error if needed
+          }
+        } catch (error) {
+          // Handle fetch or other errors
+          console.error(error);
+        }
+      }
+    };
+    const getTotalExperiencesOfUser = async () => {
+      if (filteredData) {
+        try {
+          const url = `${API_URL}api/recommendations/UserTotalRecommendations`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userID: filteredData.userID,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.status) {
+              setuserTotalExp(data.totalRecommendations);
+            } else {
+              // Handle error if needed
+            }
+          } else {
+            // Handle HTTP error if needed
+          }
+        } catch (error) {
+          // Handle fetch or other errors
+          console.error(error);
+        }
+      }
+    };
+    getUserInfo();
+    getTotalExperiencesOfUser();
   }, [filteredData, id]);
 
   const filterLoc = filteredData?.location;
@@ -174,12 +324,6 @@ export default function EventDetail() {
 
   const sendFavListToBackend = async (selectedIds) => {
     const userID = localStorage.getItem("userID");
-
-    // try {
-    //   const response = await axios.post("http://localhost:8000/api/savepost", {
-    //     postId: selectedIds,
-    //     userID: userID,
-    //   });
     try {
       const response = await axios.post(`${API_URL}api/savepost`, {
         postId: selectedIds,
@@ -197,9 +341,6 @@ export default function EventDetail() {
 
   const totalLikes = async () => {
     try {
-      // const response = await axios.get(
-      //   `http://localhost:8000/api/recommendations/${filteredData._id}`
-      // );
       const response = await axios.get(
         `${API_URL}api/recommendations/${filteredData._id}`
       );
@@ -258,6 +399,20 @@ export default function EventDetail() {
       });
     }
   }, [filterLoc?.coordinates]);
+
+  useEffect(() => {
+    if (editPost) {
+      setTitle(editPost.title);
+      setCost(editPost.cost);
+      setHours(editPost.hours);
+      setExperience(editPost.experience);
+      setLocation(editPost.location);
+      setRegion(editPost.region);
+      setDescription(editPost.description);
+      setDescriptors(editPost.descriptors);
+      setLinks(editPost.links);
+    }
+  }, [editPost]);
 
   const handleApiLoaded = (map, maps) => {
     if (loading || !filteredData) {
@@ -331,6 +486,9 @@ export default function EventDetail() {
 
   const handleLikeCount = (recommendationId) => {
     console.log("Clicked Like for recommendationId:", recommendationId);
+
+    setTotalLikesData(totalLikesData + 1);
+
     axios
       // .post(
       //   `http://localhost:8000/api/recommendations/${recommendationId}/like`
@@ -340,7 +498,7 @@ export default function EventDetail() {
         if (response) {
           const updatedLikeCount = response.data.likes;
           console.log("Updated Like Count:", updatedLikeCount);
-          setLikeCount(updatedLikeCount);
+          //setLikeCount(updatedLikeCount);
         }
       })
       .catch((error) => {
@@ -348,242 +506,611 @@ export default function EventDetail() {
       });
   };
 
+  // edit post
+  const editHandlePost = (recommendationId) => {
+    const editedPost = {
+      title,
+      hours,
+      cost,
+      experience,
+      description,
+      location,
+      descriptors,
+      region,
+      links,
+    };
+
+    axios
+      .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
+      .then((response) => {
+        console.log("Post edited successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error editing post:", error);
+      });
+  };
+
   return (
     <>
-      <div className={`container-fluid pb-5 ${styles.singleventhero}`}>
-        <div className={`row `}>
-          <div
-            className={`col-lg-7 col-12 col-md-12 mt-3 ${styles.scenerypara}`}
-          >
-            <div className={`row align-items-center ${styles.eventtopsection}`}>
-              <div className=" col-9 col-md-6 col-lg-12 mt-2">
-                <h4 className="fw-600">{filteredData?.title}</h4>
-              </div>
-              {/* profile men */}
-              <div className="d-flex align-items-center justify-content-start gap-3 mt-3">
-                <Image
-                  className={`${styles.menicon} `}
-                  src={profile}
-                  alt="profile"
-                />
-                <div>
-                  <h6 className="fw-600 mb-0">{user?.userId?.username}</h6>
-                  <p className="fw-600 mb-0 f-14">{user?.userId?.location} </p>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-12 col-md-12 mt-4">
-                <SliderApps images1={filteredData?.images} />
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-1 col-12">
-            <div className="row">
-              <div
-                className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
-              >
-                {filteredData && filteredData.descriptors && (
+      {isEditing ? (
+        <div className={`row ${styles.createdhero}`}>
+          <div className={`col-12 ${styles.scenerypara}`}>
+            <form>
+              <div className="row d-flex justify-content-end px-lg-5  px-2 pb-2">
+                {isEditing ? (
                   <>
-                    {filteredData.descriptors.includes("food") && (
-                      <div className={styles.eventicons}>
-                        <Image
-                          className={`h-auto ${styles.foodIcons}`}
-                          src={burger}
-                          alt=""
-                          style={{
-                            border: "2px solid green",
-                            borderRadius: "50px",
-                          }}
-                        />
-                      </div>
-                    )}
+                    {/* Input fields for editing */}
+                    <div className="form-group pt-4">
+                      <input
+                        type="text"
+                        name="title"
+                        placeholder="Title"
+                        className="form-control py-2"
+                        value={editedFields.title}
+                        onChange={(e) =>
+                          setEditedFields({
+                            ...editedFields,
+                            title: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
 
-                    {filteredData.descriptors.includes("Art") && (
-                      <div className={` ${styles.eventicons}`}>
-                        <Image
-                          className={`h-auto ${styles.foodIcons}`}
-                          src={painticon}
-                          alt=""
-                          style={{
-                            border: "2px solid green",
-                            borderRadius: "50px",
-                          }}
-                        />
-                      </div>
-                    )}
+                    <div>
+                      <div className="row">
+                        <div className="col-lg-7 col-md-6 col-12">
+                          <div className="form-group pt-5">
+                            <input
+                              type="text"
+                              name="location"
+                              className="form-control py-2"
+                              value={editedFields.location}
+                              onChange={(e) =>
+                                setEditedFields({
+                                  ...editedFields,
+                                  location: e.target.value,
+                                })
+                              }
+                              required
+                              placeholder="Provide a Location"
+                            />
+                          </div>
+                          <div className="form-group pt-5">
+                            <textarea
+                              type="text"
+                              name="region"
+                              className="form-control "
+                              id="exampleFormControlTextarea5"
+                              value={editedFields.region}
+                              onChange={(e) =>
+                                setEditedFields({
+                                  ...editedFields,
+                                  region: e.target.value,
+                                })
+                              }
+                              required
+                              rows="5"
+                              placeholder="General information you’d like to share..."
+                            />
+                          </div>
+                          <div className="form-group pt-5">
+                            <textarea
+                              placeholder="Personal anecdote of experience..."
+                              className="form-control"
+                              id="exampleFormControlTextarea1"
+                              name="experience"
+                              value={editedFields.experience}
+                              onChange={(e) =>
+                                setEditedFields({
+                                  ...editedFields,
+                                  experience: e.target.value,
+                                })
+                              }
+                              required
+                              rows="5"
+                            ></textarea>
+                          </div>
+                          <div className="form-group pt-5">
+                            <textarea
+                              placeholder="List some important tips..."
+                              className="form-control p-3"
+                              id="exampleFormControlTextarea2"
+                              rows="4"
+                              name="description"
+                              value={editedFields.description}
+                              onChange={(e) =>
+                                setEditedFields({
+                                  ...editedFields,
+                                  description: e.target.value,
+                                })
+                              }
+                              required
+                            ></textarea>
+                          </div>
+                          <div className="form-group pt-5">
+                            <textarea
+                              placeholder="Additional Links..."
+                              className="form-control p-3"
+                              id="exampleFormControlTextarea3"
+                              rows="4"
+                              value={editedFields.links}
+                              name="links"
+                              onChange={(e) =>
+                                setEditedFields({
+                                  ...editedFields,
+                                  links: e.target.value,
+                                })
+                              }
+                              required
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div className="col-12 col-lg-1">
+                          <div className="row">
+                            <div
+                              className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
+                            >
+                              <DescriptorRadio
+                                descriptor="food"
+                                descriptors={editedFields.descriptors}
+                                setDescriptors={setEditedFields}
+                                iconSrc={burger}
+                              />
+                              <DescriptorRadio
+                                descriptor="Art"
+                                descriptors={editedFields.descriptors}
+                                setDescriptors={setEditedFields}
+                                setEditedFields={painticon}
+                              />
+                              <DescriptorRadio
+                                descriptor="Hiking"
+                                descriptors={editedFields.descriptors}
+                                setEditedFields={setEditedFields}
+                                iconSrc={travelicon}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-lg-4 col-md-4 col-12">
+                          <div style={{ height: "100vh", width: "100%" }}>
+                            {/* <div class="responsive-map">
+                      <GoogleMapReact
+                        bootstrapURLKeys={{ key: `${GoogleMapApiKey}` }} // Replace with your actual API key
+                        defaultCenter={
+                          currentLocation ? currentLocation : null
+                        }
+                        defaultZoom={defaultProps.zoom}
+                        center={currentLocation ? currentLocation : null}
+                        onClick={handleMapClick}
+                        style={{
+                          width: "12%",
+                          height: "15%",
+                        }}
+                      >
+                        {currentLocation && (
+                          <RoomIcon
+                            lat={currentLocation.lat}
+                            lng={currentLocation.lng}
+                            style={{
+                              color: "#EA4335",
+                            }}
+                          />
+                        )}
+                      </GoogleMapReact>
+                    </div> */}
 
-                    {filteredData.descriptors.includes("Hiking") && (
-                      <div className={` ${styles.eventicons}`}>
-                        <Image
-                          className={`h-auto ${styles.foodIcons}`}
-                          src={travelicon}
-                          alt=""
-                          style={{
-                            border: "2px solid green",
-                            borderRadius: "50px",
-                          }}
-                        />
+                            <div className="col-lg-12 col-12 w-100 pt-2 pt-lg-2 d-flex flex-column align-items-center justify-content-center">
+                              <Image
+                                width="40"
+                                height="30"
+                                src={calender}
+                                className="mt-3 mb-3 object-fit-cover"
+                                alt="calender"
+                              />
+                              <h5 className="fw-600">Hours of Operation</h5>
+
+                              <div className="">
+                                <input
+                                  type="text"
+                                  name="hours"
+                                  className="form-control py-2 w-100"
+                                  value={editedFields.hours}
+                                  onChange={(e) =>
+                                    setEditedFields({
+                                      ...editedFields,
+                                      hours: e.target.value,
+                                    })
+                                  }
+                                  required
+                                  placeholder="Hours of Operation"
+                                />
+                              </div>
+                            </div>
+                            <div className="col-lg-12 col-12  pt-2 pt-lg-2 d-flex flex-column align-items-center justify-content-center">
+                              <Image
+                                width="45"
+                                height="30"
+                                src={moneyicon}
+                                className="mt-3 mb-3"
+                                alt="calender"
+                              />
+                              <h5 className="fw-600">Cost to Attend</h5>
+                              <input
+                                type="number"
+                                name="cost"
+                                className="form-control py-2 w-100"
+                                value={editedFields.cost}
+                                onChange={(e) =>
+                                  setEditedFields({
+                                    ...editedFields,
+                                    cost: e.target.value,
+                                  })
+                                }
+                                required
+                                placeholder="Cost to Attend"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="d-flex justify-content-end align-items-end">
+                            <button
+                              className="savebtn1 text-light"
+                              onClick={() => handleSaveClick(filteredData._id)}
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className={` col-6 col-md-2 col-lg-1 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
+                    >
+                      {/* ... (existing JSX for edit, favorite, like buttons) */}
+                      <button
+                        onClick={handleEditClick}
+                        className="bgdark border-0 py-1 px-3 rounded-5 fw-600"
+                      >
+                        Edit
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
-            </div>
+            </form>
           </div>
-          <div className="col-lg-4 col-12 text-align-right p-0">
+        </div>
+      ) : (
+        <div className={`container-fluid pb-5 ${styles.singleventhero}`}>
+          <div className={`row `}>
             <div
-              className={styles.mapbox}
-              style={{ height: "100vh", width: "100%" }}
+              className={`col-lg-7 col-12 col-md-12 mt-3 ${styles.scenerypara}`}
             >
-              <div className="d-flex justify-content-end w-100 pb-5 px-1">
-                <FontAwesomeIcon
-                  className="cursor-pointer"
-                  icon={faX}
-                  onClick={handleIconClick}
-                />
-              </div>
-
-              <iframe
-                        title="Current Location Map"
-                        width="600"
-                        height="450"
-                        frameBorder="0"
-                        style={{ border: "0" }}
-                        src={`https://www.google.com/maps/embed/v1/place?q=${filteredData?.latitude},${filteredData?.longitude}&key=${GoogleMapApiKey}`}
-                        allowFullScreen
-                      ></iframe>
-              {/* <div className={styles.mapbox}>
-             <div className="mapouter">
-                <div className="gmap_canvas">
-                  <iframe
-                    width="770"
-                    height="590"
-                    id="gmap_canvas"
-                    src="https://maps.google.com/maps?q=california&t=&z=10&ie=UTF8&iwloc=&output=embed"
-                    frameborder="0"
-                    scrolling="no"
-                    marginheight="0"
-                    marginwidth="0"
-                  ></iframe>
-                  <a href="https://2yu.co"></a>
-                  <br />
-                  <a href="https://embedgooglemap.2yu.co"></a>
+              <div
+                className={`row align-items-center ${styles.eventtopsection}`}
+              >
+                <div className=" col-9 col-md-6 col-lg-12 mt-2">
+                  <h4 className="fw-600">{filteredData?.title}</h4>
+                </div>
+                {/* profile men */}
+                <div className="d-flex align-items-center justify-content-start gap-3 mt-3">
+                  <Image
+                    className={`${styles.menicon} `}
+                    src={profile}
+                    alt="profile"
+                  />
+                  <div>
+                    <h6 className="fw-600 mb-0">{userInfo?.username}</h6>
+                    <p className="mb-0" style={{ fontSize: "14px" }}>
+                      {userTotalExp > 0
+                        ? `${userTotalExp} ${
+                            userTotalExp === 1
+                              ? "experience"
+                              : "shared experiences"
+                          }`
+                        : ""}
+                    </p>
+                  </div>
                 </div>
               </div>
-             </div> */}
-              {/* hours and cost */}
-              <div></div>
-            </div>
-          </div>
-        </div>
-        {/* General info */}
-        <div className="row mt-3 py-3">
-          <div className="col-12 col-md-7 col-lg-7 ">
-            {/* General Information / Highlights */}
-            <h5 className="fw-600 mt-4">General Information / Highlights</h5>
-            <p className={styles.eventtitlepara}>
-              General Information / Highlights
-            </p>
-
-            {/* My Experience */}
-            <h5 className="fw-600 mt-4">My Experience</h5>
-            <p className={styles.eventtitlepara}>{filteredData?.experience}</p>
-
-            {/* Tips */}
-            <h5 className="fw-600 mt-4">Tips</h5>
-            <ul>
-              <li className={styles.eventtitlepara}>
-                {filteredData?.description}
-              </li>
-            </ul>
-
-            {/* Useful Links */}
-            <h5 className="fw-600 mt-4">Useful Links</h5>
-            <p className={styles.eventtitlepara}>
-              {filteredData?.links
-                ? filteredData?.links
-                : "This Post have no Links"}
-            </p>
-          </div>
-          <div className="col-12 col-md-5 col-lg-5 d-flex flex-column pt-lg-5 pt-4 align-items-center text-center">
-            <div className="mt-3">
-              <Image width={50} height={50} src={clock} />
-              <h5 className="fw-600 mt-3">Hours of Operation</h5>
-              <p className={styles.eventtitlepara}>{filteredData?.hours}</p>
-            </div>
-            <div className="mt-5">
-              <Image width={50} height={50} src={money} />
-
-              <h5 className="fw-600 mt-3">Cost to Attend</h5>
-              <p className={styles.eventtitlepara}>{filteredData?.cost} </p>
-            </div>
-          </div>
-        </div>
-
-        {/* extra */}
-        <div className="row d-flex justify-content-end mt-lg-5 mt-3 pt-lg-4 pt-3 px-lg-5  px-2 pb-2">
-          <div
-            className={` col-6 col-md-2 col-lg-1 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
-          >
-            <div
-              className={`d-flex align-items-center justify-content-center ${styles.eventicondiv}`}
-            >
-              <Image
-                onClick={() => setModalShow(true)}
-                className={`${styles.eventtopicons} animated1`}
-                src={plusicon2}
-                alt=""
-              />
-            </div>
-            <div className="text-center w-100  d-flex justify-content-center align-items-center">
-              <Trip
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-                setModalShow={setModalShow}
-                images1={filteredData?.images}
-              />
-            </div>
-            <div
-              className={`d-flex align-items-center justify-content-center bold1 ${styles.eventicondiv}`}
-            >
-              <div className="animated">
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className="heartbeat"
-                  onClick={() => handleFavoriteClick(filteredData?._id)}
-                  style={{
-                    color: selectedItems[filteredData?._id] ? "red" : "black",
-                    cursor: "pointer",
-                  }}
-                />
+              <div className="row">
+                <div className="col-lg-12 col-md-12 mt-4">
+                  <SliderApps images1={filteredData?.images} />
+                </div>
               </div>
             </div>
-            {/* LIKE LOGIC  */}
+            <div className="col-lg-1 col-12 mt-5">
+              <div className="row ">
+                <div
+                  className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
+                >
+                  {filteredData && filteredData.descriptors && (
+                    <>
+                      {filteredData.descriptors.includes("food") && (
+                        <div className={styles.eventicons}>
+                          <Image
+                            className={`h-auto ${styles.foodIcons}`}
+                            src={burger}
+                            alt=""
+                            style={{
+                              border: "2px solid green",
+                              borderRadius: "50px",
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {filteredData.descriptors.includes("Art") && (
+                        <div className={` ${styles.eventicons}`}>
+                          <Image
+                            className={`h-auto ${styles.foodIcons}`}
+                            src={painticon}
+                            alt=""
+                            style={{
+                              border: "2px solid green",
+                              borderRadius: "50px",
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {filteredData.descriptors.includes("Hiking") && (
+                        <div className={` ${styles.eventicons}`}>
+                          <Image
+                            className={`h-auto ${styles.foodIcons}`}
+                            src={travelicon}
+                            alt=""
+                            style={{
+                              border: "2px solid green",
+                              borderRadius: "50px",
+                            }}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-12 text-align-right p-0 ]">
+              <div
+                className={styles.mapbox}
+                style={{ height: "100vh", width: "100%" }}
+              >
+                <div className="d-flex justify-content-end align-items-center gap-5 w-100 pb-5 px-1">
+                  <div>
+                    {/* <button
+            className="bgdark border-0 py-1 px-3 rounded-5 fw-600"
+            onClick={() => editHandlePost(filteredData._id)}
+          >
+            {" "}
+            Edit
+          </button> */}
+                    <div
+                      className={` col-6 col-md-2 col-lg-1 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
+                    >
+                      {/* ... (existing JSX for edit, favorite, like buttons) */}
+                      <button
+                        onClick={handleEditClick}
+                        className="bgdark border-0 py-1 px-3 rounded-5 fw-600"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+
+                  <FontAwesomeIcon
+                    className="cursor-pointer"
+                    icon={faX}
+                    onClick={handleIconClick}
+                    style={{
+                      color: "#818A91",
+                    }}
+                  />
+                </div>
+
+                <iframe
+                  title="Current Location Map"
+                  width="100%"
+                  height="470"
+                  frameBorder="0"
+                  style={{ border: "10px", marginTop: "30px" }}
+                  src={`https://www.google.com/maps/embed/v1/place?q=${filteredData?.latitude},${filteredData?.longitude}&key=${GoogleMapApiKey}`}
+                  allowFullScreen
+                ></iframe>
+                {/* <div className={styles.mapbox}>
+   <div className="mapouter">
+      <div className="gmap_canvas">
+        <iframe
+          width="770"
+          height="590"
+          id="gmap_canvas"
+          src="https://maps.google.com/maps?q=california&t=&z=10&ie=UTF8&iwloc=&output=embed"
+          frameborder="0"
+          scrolling="no"
+          marginheight="0"
+          marginwidth="0"
+        ></iframe>
+        <a href="https://2yu.co"></a>
+        <br />
+        <a href="https://embedgooglemap.2yu.co"></a>
+      </div>
+    </div>
+   </div> */}
+                {/* hours and cost */}
+                <div></div>
+              </div>
+            </div>
+          </div>
+          {/* General info */}
+          <div className="row mt-3 py-3">
+            <div className="col-12 col-md-7 col-lg-7 ">
+              {/* General Information / Highlights */}
+              <h5 className="fw-600 mt-4">General Information / Highlights</h5>
+              <p className={styles.eventtitlepara}>
+                General Information / Highlights
+              </p>
+
+              {/* My Experience */}
+              <h5 className="fw-600 mt-4">My Experience</h5>
+              <p className={styles.eventtitlepara}>
+                {filteredData?.experience}
+              </p>
+
+              {/* Tips */}
+              <h5 className="fw-600 mt-4">Tips</h5>
+              <ul>
+                <li className={styles.eventtitlepara}>
+                  {filteredData?.description}
+                </li>
+              </ul>
+
+              {/* Useful Links */}
+              <h5 className="fw-600 mt-4">Useful Links</h5>
+              <p className={styles.eventtitlepara}>
+                {filteredData?.links
+                  ? filteredData?.links.split("\n").map((link, index) => (
+                      <a
+                        key={index}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link}
+                        <br />
+                      </a>
+                    ))
+                  : "This Post has no Links"}
+              </p>
+            </div>
+            <div className="col-12 col-md-5 col-lg-5 d-flex flex-column pt-lg-5 pt-4 align-items-center text-center">
+              <div className="mt-3">
+                <Image width={50} height={50} src={clock} />
+                <h5 className="fw-600 mt-3">Hours of Operation</h5>
+                <p className={styles.eventtitlepara}>{filteredData?.hours}</p>
+              </div>
+              <div className="mt-5">
+                <Image width={50} height={50} src={money} />
+
+                <h5 className="fw-600 mt-3">Cost to Attend</h5>
+                <p className={styles.eventtitlepara}>{filteredData?.cost} </p>
+              </div>
+            </div>
+          </div>
+
+          {/* extra */}
+          <div className="row d-flex justify-content-end mt-lg-5 mt-3 pt-lg-4 pt-3 px-lg-5  px-2 pb-2">
             <div
-              className={`d-flex align-items-center justify-content-center bold1 ${styles.eventiconbox}`}
+              className={` col-6 col-md-2 col-lg-1 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
             >
-              <FontAwesomeIcon
-                icon={faHeart}
-                className="heartbeat text-danger"
-                onClick={() => handleLikeCount(filteredData._id)}
-                // style={{
-                //   color: selectedItems[filteredData?._id] ? "red" : "black",
-                //   cursor: "pointer",
-                // }}
-              />
-              {totalLikesData} Likes
+              <div
+                className={`d-flex align-items-center justify-content-center ${styles.eventicondiv}`}
+              >
+                <Image
+                  onClick={() => setModalShow(true)}
+                  className={`${styles.eventtopicons} animated1`}
+                  src={plusicon2}
+                  alt=""
+                />
+              </div>
+              <div className="text-center w-100  d-flex justify-content-center align-items-center">
+                <Trip
+                  show={modalShow}
+                  onHide={() => setModalShow(false)}
+                  setModalShow={setModalShow}
+                  images1={filteredData?.images}
+                />
+              </div>
+              <div
+                className={`d-flex align-items-center justify-content-center bold1 ${styles.eventicondiv}`}
+              >
+                <div className="animated">
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    className="heartbeat"
+                    onClick={() => handleFavoriteClick(filteredData?._id)}
+                    style={{
+                      color: selectedItems[filteredData?._id] ? "red" : "black",
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+              </div>
+              {/* LIKE LOGIC  */}
+              <div
+                className={`d-flex align-items-center justify-content-center bold1 ${styles.eventiconbox}`}
+              >
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className="heartbeat text-danger"
+                  onClick={() => handleLikeCount(filteredData._id)}
+                  // style={{
+                  //   color: selectedItems[filteredData?._id] ? "red" : "black",
+                  //   cursor: "pointer",
+                  // }}
+                />
+                {totalLikesData === 1
+                  ? `${totalLikesData} Like`
+                  : totalLikesData === 0
+                  ? ""
+                  : `${totalLikesData} Likes`}{" "}
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div>
+            <h6 className="fw-600 pt-2">Places of Interest Nearby</h6>
+            <div className="pt-3">
+              <NearSlider />
             </div>
           </div>
         </div>
-        <hr />
-        <div>
-          <h6 className="fw-600 pt-2">Places of Interest Nearby</h6>
-          <div className="pt-3">
-            <NearSlider />
-          </div>
-        </div>
-      </div>
+      )}
     </>
   );
 }
+
+const DescriptorRadio = ({
+  descriptor,
+  descriptors,
+  setDescriptors,
+  iconSrc,
+}) => {
+  return (
+    <div className={styles.eventicons}>
+      <label>
+        <input
+          type="radio"
+          value={descriptor}
+          checked={descriptors.includes(descriptor)}
+          onChange={() => {
+            setDescriptors((prevDescriptors) => {
+              if (prevDescriptors.includes(descriptor)) {
+                return prevDescriptors.filter((d) => d !== descriptor);
+              } else {
+                return [...prevDescriptors, descriptor];
+              }
+            });
+          }}
+          style={{ display: "none" }}
+        />
+        <Image
+          className={`h-auto cursor-pointer ${styles.foodIcons}`}
+          src={iconSrc}
+          alt=""
+          style={
+            descriptors.includes(descriptor)
+              ? {
+                  border: "2px solid green",
+                  borderRadius: "50px",
+                }
+              : { border: "none" }
+          }
+        />
+      </label>
+    </div>
+  );
+};
