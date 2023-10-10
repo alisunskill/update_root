@@ -23,6 +23,7 @@ import { fetchUserData } from "../../store/actions/userAction";
 import axios from "axios";
 import Trip from "../../website/ViewSaves/components/Trip";
 import NearSlider from "./component/NearSlider";
+import RoomIcon from "@mui/icons-material/Room";
 import { GoogleMapApiKey } from "../../apiConfig";
 import EditPost from "../../website/CreateItinerary/EditPost";
 
@@ -96,10 +97,54 @@ export default function EventDetail() {
   const [descriptors, setDescriptors] = useState(
     filteredData?.descriptors || []
   );
+  console.log(descriptors, "descriptorsdescriptorsdescriptors");
   const [links, setLinks] = useState(filteredData?.links || "");
   const [images, setImages] = useState(filteredData?.images || []);
 
   const filteredd = recData?.find((item) => item._id === id);
+
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [address, setAddress] = useState("");
+
+  const defaultProps = {
+    center: {
+      lat: 33.572423,
+      lng: 73.14675,
+    },
+    zoom: 11,
+  };
+
+  const handleMapClick = ({ lat, lng }) => {
+    setCurrentLocation({ lat, lng });
+  };
+  useEffect(() => {
+    // Function to fetch the street address based on the current location
+    const fetchAddress = async (lat, lng) => {
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GoogleMapApiKey}`
+        );
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          setAddress(data.results[0].formatted_address);
+        } else {
+          setAddress("Address not found");
+        }
+      } catch (error) {
+        setAddress("Error fetching address");
+      }
+    };
+
+    if (currentLocation) {
+      fetchAddress(currentLocation.lat, currentLocation.lng);
+    }
+  }, [currentLocation]);
+
+  const [isFormFilled, setIsFormFilled] = useState(false);
+
+  //itineraries
+  const [itineraries, SetItineraries] = useState([]);
+  console.log("ITS", itineraries);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedFields, setEditedFields] = useState({
@@ -110,9 +155,10 @@ export default function EventDetail() {
     location: "",
     region: "",
     description: "",
-    descriptors: "",
+    descriptors: [],
     links: "",
   });
+  console.log(filteredd, "filteredd");
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -142,13 +188,17 @@ export default function EventDetail() {
       links: editedFields.links,
       // images: images,
     };
+    console.log(setEditedFields, "editedFields");
 
     axios
       .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
       .then((response) => {
         console.log("Post edited successfully:", response.data);
+        setDescriptors(response.data.descriptors); // Update descriptors state with data from API response
+
+        // router.push("/");
+        setDescriptors(response.data.descriptors); // Update descriptors state with data from API response
         setIsEditing(false);
-        router.push("/");
       })
       .catch((error) => {
         console.error("Error editing post:", error);
@@ -652,52 +702,58 @@ export default function EventDetail() {
                             >
                               <DescriptorRadio
                                 descriptor="food"
-                                descriptors={editedFields.descriptors}
-                                setDescriptors={setEditedFields}
+                                descriptors={descriptors}
+                                setDescriptors={setDescriptors}
                                 iconSrc={burger}
                               />
+
                               <DescriptorRadio
                                 descriptor="Art"
-                                descriptors={editedFields.descriptors}
-                                setDescriptors={setEditedFields}
-                                setEditedFields={painticon}
+                                descriptors={descriptors}
+                                setDescriptors={setDescriptors}
+                                iconSrc={painticon}
                               />
+
                               <DescriptorRadio
                                 descriptor="Hiking"
-                                descriptors={editedFields.descriptors}
-                                setEditedFields={setEditedFields}
+                                descriptors={descriptors}
+                                setDescriptors={setDescriptors}
                                 iconSrc={travelicon}
                               />
+
+                              {/* Add more DescriptorRadio components for other descriptors */}
                             </div>
                           </div>
                         </div>
                         <div className="col-lg-4 col-md-4 col-12">
-                          <div style={{ height: "100vh", width: "100%" }}>
-                            {/* <div class="responsive-map">
-                      <GoogleMapReact
-                        bootstrapURLKeys={{ key: `${GoogleMapApiKey}` }} // Replace with your actual API key
-                        defaultCenter={
-                          currentLocation ? currentLocation : null
-                        }
-                        defaultZoom={defaultProps.zoom}
-                        center={currentLocation ? currentLocation : null}
-                        onClick={handleMapClick}
-                        style={{
-                          width: "12%",
-                          height: "15%",
-                        }}
-                      >
-                        {currentLocation && (
-                          <RoomIcon
-                            lat={currentLocation.lat}
-                            lng={currentLocation.lng}
-                            style={{
-                              color: "#EA4335",
-                            }}
-                          />
-                        )}
-                      </GoogleMapReact>
-                    </div> */}
+                          <div>
+                            <div class="responsive-map">
+                              <GoogleMapReact
+                                bootstrapURLKeys={{ key: `${GoogleMapApiKey}` }} // Replace with your actual API key
+                                defaultCenter={
+                                  currentLocation ? currentLocation : null
+                                }
+                                defaultZoom={defaultProps.zoom}
+                                center={
+                                  currentLocation ? currentLocation : null
+                                }
+                                onClick={handleMapClick}
+                                style={{
+                                  width: "12%",
+                                  height: "100%",
+                                }}
+                              >
+                                {currentLocation && (
+                                  <RoomIcon
+                                    lat={currentLocation.lat}
+                                    lng={currentLocation.lng}
+                                    style={{
+                                      color: "#EA4335",
+                                    }}
+                                  />
+                                )}
+                              </GoogleMapReact>
+                            </div>
 
                             <div className="col-lg-12 col-12 w-100 pt-2 pt-lg-2 d-flex flex-column align-items-center justify-content-center">
                               <Image
@@ -709,7 +765,7 @@ export default function EventDetail() {
                               />
                               <h5 className="fw-600">Hours of Operation</h5>
 
-                              <div className="">
+                              <div className="w-100">
                                 <input
                                   type="text"
                                   name="hours"
@@ -750,15 +806,16 @@ export default function EventDetail() {
                                 placeholder="Cost to Attend"
                               />
                             </div>
-                          </div>
-
-                          <div className="d-flex justify-content-end align-items-end">
-                            <button
-                              className="savebtn1 text-light"
-                              onClick={() => handleSaveClick(filteredData._id)}
-                            >
-                              Save
-                            </button>
+                            <div className="d-flex justify-content-end align-items-end mt-5">
+                              <button
+                                className="savebtn1 text-light"
+                                onClick={() =>
+                                  handleSaveClick(filteredData._id)
+                                }
+                              >
+                                Save
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1083,16 +1140,18 @@ const DescriptorRadio = ({
     <div className={styles.eventicons}>
       <label>
         <input
-          type="radio"
+          type="checkbox"
           value={descriptor}
           checked={descriptors.includes(descriptor)}
           onChange={() => {
             setDescriptors((prevDescriptors) => {
-              if (prevDescriptors.includes(descriptor)) {
-                return prevDescriptors.filter((d) => d !== descriptor);
-              } else {
-                return [...prevDescriptors, descriptor];
-              }
+              const updatedDescriptors = prevDescriptors.includes(descriptor)
+                ? prevDescriptors.filter((d) => d !== descriptor)
+                : [...prevDescriptors, descriptor];
+
+              console.log("Selected Descriptors:", updatedDescriptors); // Log selected descriptors
+
+              return updatedDescriptors;
             });
           }}
           style={{ display: "none" }}

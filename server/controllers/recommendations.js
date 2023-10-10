@@ -243,13 +243,11 @@ const UserTotalRecommendations = async (req, res) => {
 
     const count = await Recommendation.countDocuments({ userID: userID });
 
-    res
-      .status(200)
-      .json({
-        status: true,
-        message: "successfully",
-        totalRecommendations: count,
-      });
+    res.status(200).json({
+      status: true,
+      message: "successfully",
+      totalRecommendations: count,
+    });
   } catch (error) {
     console.error("Error getting total recommendations:", error);
     res.status(500).json({ message: "Internal server error" });

@@ -168,8 +168,14 @@ export default ({ data1 }) => {
         ? `descriptor=${selectedDescriptors.join(",")}`
         : "";
 
+    // const regionQuery =
+    //   selectedRegions.length > 0 ? `region=${selectedRegions.join(",")}` : "";
     const regionQuery =
-      selectedRegions.length > 0 ? `region=${selectedRegions.join(",")}` : "";
+      selectedRegions.length > 0
+        ? `region=${selectedRegions
+            .map((region) => encodeURIComponent(region))
+            .join(",")}`
+        : "";
     const minQuery = `min=${value[0]}`;
     const maxQuery = `max=${value[1]}`;
 
@@ -178,6 +184,7 @@ export default ({ data1 }) => {
       .join("&");
 
     const url = `/infinitescroll?${queryParams}`;
+    console.log("Generated URL:", url);
     router.push(url);
   };
 
