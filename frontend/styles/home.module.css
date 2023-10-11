@@ -12,6 +12,13 @@
   transition: right 0.3s ease;
   z-index: 9999;
 }
+.modaldetailbox::-webkit-scrollbar {
+  width: 8px; /* Set your desired scrollbar width */
+}
+
+.modaldetailbox::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Hide the scrollbar thumb */
+}
 .dropdownprofile {
   padding: 7px 20px !important;
 }
@@ -154,9 +161,8 @@
 .inputgroup {
   height: 40px;
   border-radius: 50px;
-  position: absolute;
-  /* right: 11rem; */
-  top: 1rem;
+  position: relative;
+    top: -37px;
   text-align: center;
 }
 .searchbarbox {
@@ -171,7 +177,6 @@
   border: 0 !important;
   border-radius: 50px !important;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.3); /* Adjust the shadow properties as needed */
-
 }
 .fa-search:before {
   content: "\f002";

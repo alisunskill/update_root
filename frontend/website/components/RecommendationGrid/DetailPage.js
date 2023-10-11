@@ -1,37 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
-import styles from "../../styles/singular.module.css";
-import plusicon2 from "../../public/images/plusicon2.svg";
-import profile from "../../public/images/men.svg";
+import styles from "../../../styles/singular.module.css";
+import plusicon2 from "../../../public/images/plusicon2.svg";
+import profile from "../../../public/images/men.svg";
 import Swal from "sweetalert2";
-import burger from "../../public/images/burger.svg";
-import money from "../../public/images/moneyicon.svg";
-import clock from "../../public/images/clockicon.svg";
-import calender from "../../public/images/calender.svg";
-import moneyicon from "../../public/images/moneyicon.svg";
-import painticon from "../../public/images/painticon.svg";
+import burger from "../../../public/images/burger.svg";
+import money from "../../../public/images/moneyicon.svg";
+import clock from "../../../public/images/clockicon.svg";
+import calender from "../../../public/images/calender.svg";
+import moneyicon from "../../../public/images/moneyicon.svg";
+import painticon from "../../../public/images/painticon.svg";
 import { useRouter } from "next/router";
-import travelicon from "../../public/images/travelicon.svg";
+import travelicon from "../../../public/images/travelicon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { API_URL } from "../../apiConfig";
-import SliderApps from "./SliderApps";
+import { API_URL } from "../../../apiConfig";
+import SliderApps from "../../../pages/HomePage/SliderApps";
 import { useDispatch, useSelector } from "react-redux";
 import GoogleMapReact from "google-map-react";
-import { fetchUserData } from "../../store/actions/userAction";
+import { fetchUserData } from "../../../store/actions/userAction";
 import axios from "axios";
-import Trip from "../../website/ViewSaves/components/Trip";
-import NearSlider from "./component/NearSlider";
+import Trip from "../../../website/ViewSaves/components/Trip";
+import NearSlider from "../../../pages/HomePage/component/NearSlider";
 import RoomIcon from "@mui/icons-material/Room";
-import { GoogleMapApiKey } from "../../apiConfig";
-import EditPost from "../../website/CreateItinerary/EditPost";
+import { GoogleMapApiKey } from "../../../apiConfig";
+import EditPost from "../../../website/CreateItinerary/EditPost";
 
-export default function EventDetail() {
+export default function DetailPage({ id }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
-  const { id } = router.query;
+  //   const { id } = router.query;
   const userData = useSelector((state) => state?.userId);
   const [postCounts, setPostCounts] = useState({});
   const [modalShow, setModalShow] = useState(false);
@@ -51,9 +51,9 @@ export default function EventDetail() {
 
   const recData = recommendations.Recommendations;
 
-  const handleIconClick = () => {
-    router.back();
-  };
+//   const handleIconClick = () => {
+//     router.back();
+//   };
 
   useEffect(() => {
     if (userData) {
@@ -963,7 +963,7 @@ export default function EventDetail() {
                       </button>
                     </div>
                   </div>
-
+{/* 
                   <FontAwesomeIcon
                     className="cursor-pointer"
                     icon={faX}
@@ -971,7 +971,7 @@ export default function EventDetail() {
                     style={{
                       color: "#818A91",
                     }}
-                  />
+                  /> */}
                 </div>
 
                 <iframe

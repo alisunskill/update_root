@@ -277,11 +277,11 @@ export default ({ data1 }) => {
                           control={
                             <Checkbox
                               className="lgray fw-500"
-                              checked={selectedRegions.includes(item.title)}
-                              onChange={() => handleRegionChange(item.title)}
+                              checked={selectedRegions.includes(item.location)}
+                              onChange={() => handleRegionChange(item.location)}
                             />
                           }
-                          label={item.title}
+                          label={item.location}
                         />
                       </div>
                     ))}

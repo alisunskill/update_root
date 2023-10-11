@@ -54,9 +54,9 @@ const FilterModalComponent = () => {
   };
 
   useEffect(() => {
-    if (router.query.region) {
+    if (router.query.location) {
       axios
-        .get(`${API_URL}api/recommendations?region=${router.query.region}`)
+        .get(`${API_URL}api/recommendations?location=${router.query.location}`)
         .then((response) => {
           const data = response.data;
           const cregion = data.Recommendations;
@@ -66,7 +66,7 @@ const FilterModalComponent = () => {
           console.error(error);
         });
     }
-  }, [router.query.region]);
+  }, [router.query.location]);
 
   const recommendationData =
     (recommendations && recommendations.Recommendations) || [];
@@ -75,9 +75,9 @@ const FilterModalComponent = () => {
   }, [regionData]);
   // Filter and update data based on region and descriptors
   useEffect(() => {
-    if (router.query.region && recommendations) {
+    if (router.query.location && recommendations) {
       const filteredRegionData = recommendations.Recommendations.filter(
-        (item) => item.region === router.query.region
+        (item) => item.location === router.query.location
       );
 
       const filteredDescriptorData = filteredRegionData.filter((item) =>
@@ -88,13 +88,15 @@ const FilterModalComponent = () => {
 
       const filteredDataByRegionAndDescriptors = filteredDescriptorData.filter(
         (item) =>
-          selectedRegions.length ? selectedRegions.includes(item.region) : true
+          selectedRegions.length
+            ? selectedRegions.includes(item.location)
+            : true
       );
 
       setFilteredData(filteredDataByRegionAndDescriptors);
     }
   }, [
-    router.query.region,
+    router.query.location,
     recommendations,
     selectedDescriptors,
     selectedRegions,
@@ -110,11 +112,11 @@ const FilterModalComponent = () => {
   };
 
   // Handle region selection
-  const handleRegionChange = (region) => {
+  const handleRegionChange = (location) => {
     setSelectedRegions((prevRegions) =>
-      prevRegions.includes(region)
-        ? prevRegions.filter((r) => r !== region)
-        : [...prevRegions, region]
+      prevRegions.includes(location)
+        ? prevRegions.filter((r) => r !== location)
+        : [...prevRegions, location]
     );
   };
 
@@ -129,7 +131,7 @@ const FilterModalComponent = () => {
         : "";
 
     const regionQuery =
-      selectedRegions.length > 0 ? `region=${selectedRegions.join(",")}` : "";
+      selectedRegions.length > 0 ? `location=${selectedRegions.join(",")}` : "";
     const minQuery = `min=${value[0]}`;
     const maxQuery = `max=${value[1]}`;
 
@@ -217,11 +219,11 @@ const FilterModalComponent = () => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={selectedRegions.includes(item.title)}
-                            onChange={() => handleRegionChange(item.title)}
+                            checked={selectedRegions.includes(item.location)}
+                            onChange={() => handleRegionChange(item.location)}
                           />
                         }
-                        label={item.title}
+                        label={item.location}
                       />
                     </div>
                   ))}
@@ -288,7 +290,11 @@ const FilterModalComponent = () => {
             <button type="" className="savebtn" onClick={resetHandle}>
               Reset
             </button>
-            <button onClick={handleApply} type="" className="savebtn text-light">
+            <button
+              onClick={handleApply}
+              type=""
+              className="savebtn text-light"
+            >
               Apply
             </button>
           </div>
