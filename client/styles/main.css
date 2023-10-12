@@ -1,0 +1,2179 @@
+/* Page 1 Landing page */
+
+
+  .landing_btn_color {
+    background-color: white;
+    border: none;
+    color: black;
+    font-family: "Poppins", sans-serif;
+    text-align: left;
+    border-radius: 60px;
+  }
+  .landing_btn_width {
+    width: 40px;
+  }
+  
+  /* forall */
+  .mb-0 {
+    margin-bottom: 0;
+  }
+  
+  .letterspac {
+    letter-spacing: 0.59em;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+  }
+  
+  .fw-700 {
+    font-weight: 700;
+  }
+  .fw-600 {
+    font-weight: 600;
+  }
+  
+  .white {
+    color: #ffffff;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .align-center {
+    align-items: center;
+  }
+  
+  .light-dark {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.4) 58.85%
+    );
+  }
+  
+  .m1 {
+    margin-top: 5px;
+  }
+  
+  .flex-column {
+    flex-direction: column;
+  }
+  
+  .flex-center {
+    justify-content: center;
+  }
+  
+  .fw-400 {
+    font-weight: 400;
+  }
+  
+  /* for all end */
+  
+  .landing_central1 {
+    width: 100%;
+    height: 100%;
+    background-color: #7cc5e5;
+    margin-bottom: 30px;
+    padding: 35px 20px;
+  }
+  .landing_button-divs {
+    padding: 0px;
+    margin-left: 40px;
+  }
+  .landing_font {
+    font-size: large;
+    font-weight: bolder;
+  }
+  .landing_font1 {
+    font-size: small;
+  }
+  @media (max-width: 321px) {
+    .landing_button-divs {
+      width: 310px;
+    }
+  }
+  .landing_globe {
+    height: 500px;
+    width: 100%;
+  }
+  
+  .globe {
+    width: 100%;
+    height: 600px;
+  }
+  
+  .landing_heading {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .landing_central {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .landing_text {
+    max-width: 430px;
+    width: 100%;
+    padding: 50px 20px;
+    text-align: center;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.4) 58.85%
+    );
+  }
+  .landing_text-mid-grid {
+    padding: 20px;
+    text-align: center;
+  }
+  .landing_text-final-grid {
+    text-align: center;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.4) 58.85%
+    );
+  }
+  .landing_image1 {
+    border-radius: 20px;
+    padding: 20px 0px;
+    height: 600px;
+    background-image: url("../Images/card-one.svg");
+    background-size: cover;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    padding-bottom: 25px;
+  }
+  .landing_image2 {
+    border-radius: 20px;
+    background-image: url("../Images/card-two.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .landing_image3 {
+    border-radius: 20px;
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .landing_image4 {
+    border-radius: 20px;
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .landing_image5 {
+    border-radius: 20px;
+    background-image: url("../Images/card-fove.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .landing_image6 {
+    border-radius: 20px;
+    background-image: url("../Images/card-four.svg");
+    background-size: cover;
+    height: 390px;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    flex-direction: column;
+    padding-bottom: 60px;
+  }
+  .landing_next-button {
+    padding: 20px 40px;
+    background-color: #0f3d95;
+    color: white;
+    border-radius: 60px;
+    margin-top: 10px;
+    font-size: 22px;
+    border: none;
+  }
+  .landing_div-end-heading {
+    display: flex;
+    justify-content: center;
+    margin-top: 90px;
+    margin-bottom: 10px;
+  }
+  .landing_end-heading {
+    font-weight: bolder;
+    font-family: "Poppins", sans-serif;
+    font-size: 30px;
+  }
+  .landing_div-sub-heading {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .landing_sub-heading {
+    font-size: 20px;
+  }
+  .landing_city-card1 {
+    background-image: url("../Images/usa.svg");
+    background-size: cover;
+  }
+  
+  .landing_city-card2 {
+    background-image: url("../Images/card-two.svg");
+    background-size: cover;
+  }
+  .landing_city-card3 {
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+  }
+  .landing_city-card4 {
+    background-image: url("../Images/kuala.png");
+    background-size: cover;
+  }
+  .landing_city-card5 {
+    background-image: url("../Images/natar.svg");
+    background-size: cover;
+  }
+  .landing_city-card6 {
+    background-image: url("../Images/card-four.svg");
+    background-size: cover;
+  }
+  .landing_main-card {
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin: 10px 0px;
+  }
+  .landing_end-card1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .landing_end-card2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .landing_icon1 {
+    background-color: white;
+    height: 55px;
+    width: 55px;
+    border-radius: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .landing_icon1:hover {
+    background-color: #b2e1f5;
+  }
+  .landing_section3_icon {
+    height: 35px;
+  }
+  .landing_section3_content {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  
+  .landing_section2_right_container {
+    padding: 49px 78px;
+    text-align: center;
+  }
+  form {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    border: 1px solid grey;
+    width: 100%;
+    padding: 1px;
+    border-radius: 20px;
+  }
+  
+  input {
+    border: none;
+  }
+  input:focus {
+    outline: none;
+  }
+  form:focus-within {
+    outline: 1px solid blue;
+  }
+  
+  .landing_input1 {
+    border-radius: 20px;
+  }
+  .landing_btn-last {
+    font-size: 15px;
+    padding: 8px 10px;
+    text-transform: capitalize;
+    border-radius: 10rem;
+    background-color: #1264fa;
+    color: white;
+    transition: all 0.3s linear;
+  }
+  .landing_btn-last:hover,
+  .landing_btn-last:active {
+    transform: scale(1.05);
+    color: white;
+  }
+  @media only screen and (max-width: 700px) and (min-width: 300px) {
+    .landing_main-card {
+      border-radius: 46px;
+    }
+    .landing_next-button {
+      width: 35%;
+    }
+    .landing_button-divs {
+      width: 111px;
+    }
+  }
+  
+  /* Page 2 Singular event info page */
+  
+  .event_icon1 {
+    height: 60px;
+  }
+  .event_top-text1 {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+    padding: 20px 28px;
+  }
+  .event_icon-div {
+    width: 40px;
+    border: 1px solid rgb(67, 63, 63);
+    border-radius: 30px;
+    text-align: center;
+    padding: 5px;
+  }
+  .event_icon-div:hover {
+    background-color: rgb(142, 94, 94);
+  }
+  .event_icon {
+    padding: 0px 40px;
+  }
+  .event_icon-div1 {
+    margin-left: 5px;
+  }
+  .event_topicons {
+    width: 30px;
+    padding: 6px;
+  }
+  .event_toprighticon {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .event_toplefticon {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+  .event_midicons {
+    margin-top: 118px;
+  }
+  .event_icons {
+    padding-top: 35px;
+    padding-right: 40px;
+  }
+  .event_mapimage {
+    padding-top: 95px;
+    width: 100%;
+  }
+  .carousel-indicators {
+    position: static;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+  .carousel-indicators li {
+    width: 300px;
+    height: 100%;
+    opacity: 0.8;
+    border-bottom: 0px;
+    border-radius: 0px;
+    margin-left: 0px;
+    margin-right: 2px;
+  }
+  .carousel-item {
+    border-radius: 0px;
+  }
+  
+  .event_titlepara {
+    font-family: "Poppins", sans-serif;
+    padding-top: 20px;
+  }
+  .event_midsection {
+    background-image: url("../Images/page2midimage.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 600px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .event_operation-hours {
+    width: 350px;
+    height: 250px;
+    background-color: white;
+    border-radius: 40px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .event_cost-attend {
+    width: 350px;
+    height: 250px;
+    background-color: white;
+    border-radius: 40px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .event_clockicon {
+    width: 50px;
+    margin-bottom: 10px;
+  }
+  .event_hourstext {
+    font-family: "Poppins", sans-serif;
+  }
+  .event_moneyicon {
+    width: 50px;
+    margin-bottom: 30px;
+  }
+  
+  .event_div-end-heading {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+  .event_end-heading {
+    font-weight: bolder;
+    font-family: "Poppins", sans-serif;
+    font-size: 30px;
+  }
+  .event_city-card1 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .event_city-card2 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .event_city-card3 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .event_city-card4 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .event_city-card5 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .event_city-card6 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .event_main-card {
+    padding: 90px 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin: 10px 0px;
+  }
+  .event_end-card1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .event_end-card2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @media only screen and (max-width: 600px) and (min-width: 300px) {
+    .event_titleimage {
+      width: 220px;
+    }
+    .event_top-text1 {
+      font-size: smaller;
+      padding: 0px;
+    }
+    .event_icon {
+      display: flex;
+      flex-direction: column;
+      padding: 7px 14px;
+    }
+    .event_icon-div1 {
+      margin-left: 0px;
+      margin-top: 5px;
+    }
+    .event_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .event_mapimage {
+      padding-top: 60px;
+    }
+    .event_midsection {
+      display: flex;
+      flex-direction: column;
+    }
+    .event_operation-hours {
+      width: 240px;
+      margin-left: 10px;
+      margin-bottom: 10px;
+    }
+    .event_cost-attend {
+      width: 240px;
+      margin-left: -3px;
+    }
+  }
+  @media only screen and (max-width: 991px) and (min-width: 600px) {
+    .event_topsection {
+      display: flex;
+      flex-direction: row;
+    }
+    .event_icon {
+      padding: 0px 20px;
+    }
+    .event_top-text1 {
+      padding: 20px 15px;
+      font-size: smaller;
+    }
+    .event_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -60px;
+      padding: 0px 270px;
+    }
+  }
+  
+  /* Page 3  Singular Iterinary Info Page */
+  
+  .singular_city-card {
+    height: 150px;
+    padding: 100px 80px;
+    border-radius: 20px;
+  }
+  .singular_icon1 {
+    height: 60px;
+  }
+  .singular_top-text1 {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+    padding: 26px 16px;
+  }
+  .singular_icon-div {
+    width: 40px;
+    border: 1px solid rgb(67, 63, 63);
+    border-radius: 30px;
+    text-align: center;
+    padding: 5px;
+  }
+  .singular_icon-div:hover {
+    background-color: rgb(142, 94, 94);
+  }
+  .singular_icon {
+    padding: 0px 25px;
+  }
+  .singular_icon-div1 {
+    margin-left: 5px;
+  }
+  .singular_topicons {
+    width: 30px;
+    padding: 6px;
+  }
+  
+  .singular_image1 {
+    background-image: url("../Images/image1.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .singular_image2 {
+    background-image: url("../Images/image2.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .singular_image3 {
+    background-image: url("../Images/image3.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .singular_top-text {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: medium;
+    word-spacing: 10px;
+  }
+  .singular_event-heading {
+    font-family: "Poppins", sans-serif;
+    color: white;
+  }
+  .singular_location-text {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: medium;
+  }
+  .singular_cardtext {
+    text-align: center;
+    position: relative;
+    top: -50px;
+  }
+  .singular_cardtext1 {
+    text-align: center;
+  }
+  .singular_card-container {
+    padding: 0px 100px;
+  }
+  .singular_midicons {
+    margin-top: 150px;
+  }
+  .singular_icons {
+    padding-top: 35px;
+    padding-right: 40px;
+  }
+  .singular_mapimage {
+    padding-top: 95px;
+    width: 100%;
+  }
+  
+  .singular_card {
+    border: none;
+  }
+  .singular_card-title {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+  }
+  .mb-3 {
+    font-family: "Poppins", sans-serif;
+  }
+  .singular_slider {
+    font-family: "Poppins", sans-serif;
+    font-size: x-large;
+    font-weight: bolder;
+  }
+  .singular_img-fluid {
+    border-radius: 30px;
+  }
+  .singular_third-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+  .singular_side-image {
+    object-fit: cover;
+    width: 60%;
+  }
+  .singular_side-imagediv {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 10px;
+  }
+  .singular_highlights {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+    width: 50%;
+    margin-top: 60px;
+  }
+  .singular_highlights-heading1 {
+    font-family: "Poppins", sans-serif;
+    font-size: x-large;
+    font-weight: bolder;
+  }
+  .singular_div-end-heading {
+    display: flex;
+    justify-content: center;
+  }
+  .singular_end-heading {
+    font-weight: bolder;
+    font-family: "Poppins", sans-serif;
+    font-size: x-large;
+    margin-bottom: 50px;
+  }
+  .singular_city-card1 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .singular_city-card2 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .singular_city-card3 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .singular_city-card4 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .singular_city-card5 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .singular_city-card6 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .singular_main-card {
+    padding: 80px 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin: 10px 0px;
+  }
+  .singular_end-card1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .singular_end-card2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @media only screen and (max-width: 450px) and (min-width: 300px) {
+    .singular_titleimage {
+      width: 220px;
+    }
+    .singular_top-text1 {
+      font-size: smaller;
+      padding: 0px;
+    }
+    .singular_icon {
+      display: flex;
+      flex-direction: column;
+      padding: 7px 14px;
+    }
+    .singular_icon-div1 {
+      margin-left: 0px;
+      margin-top: 5px;
+    }
+    .singular_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .singular_mapimage {
+      padding-top: 60px;
+    }
+    .singular_city-card {
+      padding: 111px 3px;
+    }
+    .singular_highlights-heading1 {
+      padding: 5px 105px;
+    }
+    .singular_highlights-text {
+      text-align: center;
+      padding: 20px 10px;
+    }
+    .singular_side-image {
+      padding: 10px 10px;
+      margin-right: 39px;
+    }
+  }
+  
+  @media only screen and (max-width: 600px) and (min-width: 450px) {
+    .singular_titleimage {
+      width: 220px;
+    }
+    .singular_top-text1 {
+      font-size: smaller;
+      padding: 0px;
+    }
+    .singular_icon {
+      display: flex;
+      flex-direction: column;
+      padding: 7px 14px;
+    }
+    .singular_icon-div1 {
+      margin-left: 0px;
+      margin-top: 5px;
+    }
+    .singular_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .singular_mapimage {
+      padding-top: 60px;
+    }
+    .singular_city-card {
+      padding: 111px 3px;
+    }
+    .singular_midicons {
+      padding: 0px 102px;
+    }
+    .singular_highlights-heading1 {
+      padding: 5px 206px;
+    }
+    .singular_highlights-text {
+      text-align: center;
+      padding: 20px 10px;
+    }
+  }
+  @media only screen and (max-width: 991px) and (min-width: 600px) {
+    .singular_topsection {
+      display: flex;
+      flex-direction: row;
+    }
+    .singular_icon {
+      padding: 0px 20px;
+    }
+    .singular_top-text1 {
+      padding: 20px 30px;
+      font-size: medium;
+    }
+    .singular_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -60px;
+      padding: 0px 270px;
+    }
+    .singular_mapimage {
+      padding-top: 60px;
+    }
+    .singular_city-card {
+      padding: 111px 3px;
+    }
+    .singular_midicons {
+      padding: 0px 270px;
+    }
+    .singular_highlights-heading1 {
+      padding: 5px 315px;
+    }
+    .singular_highlights-text {
+      text-align: center;
+      padding: 20px 10px;
+    }
+    .singular_side-image {
+      padding: 10px 10px;
+      margin-right: 120px;
+    }
+  }
+  
+  /* Page 4 sign up */
+  
+  .signup_heading1 {
+    font-size: 30px;
+    color: #ffffff;
+    margin: 0%;
+    text-align: center;
+    font-weight: 700;
+  }
+  
+  .signup_my-container {
+    height: 100vh;
+    width: 100%;
+    background-image: url("../Images/bgimage.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+  }
+  .signup_signup-container {
+    height: 450px;
+    width: 35%;
+    background-image: url("../Images/Rectangle\ 103.png");
+    background-size: cover;
+    border-radius: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .signup_input-field {
+    text-align: center;
+  }
+  .signup_input {
+    text-align: center;
+    width: 30%;
+    padding: 10px;
+    border-radius: 10px;
+    border-color: white;
+    margin-top: 10px;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+    border: 0px;
+    font-weight: 400;
+  }
+  .signup_input_info {
+    width: 66%;
+  }
+  .signup_button {
+    padding: 10px;
+    width: 66%;
+    background-color: #7cc5e5;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  @media only screen and (max-width: 600px) and (min-width: 300px) {
+    .signup_signup-container {
+      width: 90%;
+    }
+    .signup_input_info {
+      width: 86%;
+    }
+    .signup_input {
+      width: 42%;
+    }
+  }
+  
+  /* Page 4 login */
+  
+  .login_heading1 {
+    font-size: 30px;
+    color: #ffffff;
+    margin: 0%;
+    text-align: center;
+    font-weight: 700;
+  }
+  
+  .login_my-container {
+    height: 100vh;
+    width: 100%;
+    background-image: url("../Images/bgimage.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+  }
+  .login_container {
+    height: max-content;
+    width: 35%;
+    background-image: url("../Images/Rectangle\ 103.png");
+    background-size: cover;
+    border-radius: 20px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .login_input-field {
+    text-align: center;
+  }
+  .login_input {
+    text-align: center;
+    width: 30%;
+    padding: 10px;
+    border-radius: 10px;
+    border-color: white;
+    margin-top: 10px;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+    border: 0px;
+    font-weight: 700;
+  }
+  .login_input_info {
+    width: 66%;
+  }
+  
+  .login_font {
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    padding-top: 15px;
+  }
+  .login_button {
+    padding: 10px;
+    width: 66%;
+    background-color: #7cc5e5;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: 700;
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+  }
+  @media only screen and (max-width: 600px) and (min-width: 300px) {
+    .login_container {
+      width: 90%;
+    }
+    .login_input_info {
+      width: 86%;
+    }
+  }
+  
+  /* Page 4 forget password */
+  
+  .forget_heading1 {
+    font-size: 30px;
+    color: #ffffff;
+    margin: 0%;
+    text-align: center;
+    font-weight: 700;
+  }
+  
+  .forget_my-container {
+    height: 100vh;
+    width: 100%;
+    background-image: url("../Images/bgimage.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+  }
+  .forget_container {
+    height: max-content;
+    width: 35%;
+    background-image: url("../Images/Rectangle\ 103.png");
+    background-size: cover;
+    border-radius: 20px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .forget_input-field {
+    text-align: center;
+  }
+  .forget_input {
+    text-align: center;
+    width: 30%;
+    padding: 10px;
+    border-radius: 10px;
+    border-color: white;
+    margin-top: 10px;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+    border: 0px;
+    font-weight: 700;
+  }
+  .forget_input_info {
+    width: 66%;
+  }
+  .forget_button {
+    padding: 10px;
+    width: 66%;
+    background-color: #7cc5e5;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: 700;
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+  }
+  @media only screen and (max-width: 600px) and (min-width: 300px) {
+    .forget_container {
+      width: 70%;
+    }
+  }
+  
+  /* Page 5 signup confirmation */
+  
+  .confirm_my-container {
+    height: 100vh;
+    width: 100%;
+    background-image: url("../Images/bgimage.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+  }
+  .confirm_container {
+    height: 300px;
+    width: 55%;
+    background-image: url("../Images/Rectangle\ 103.png");
+    background-size: cover;
+    border-radius: 20px;
+    text-align: center;
+  }
+  .confirm_font {
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    padding-top: 15%;
+    padding-bottom: 0%;
+    font-size: 30px;
+  }
+  
+  /* Page 6 Create a post */
+  
+  .post_createpost-text {
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+  }
+  .post_heading1 {
+    font-size: 40px;
+    font-weight: bolder;
+  }
+  .post_heading2 {
+    font-size: large;
+    font-weight: bold;
+  }
+  .post_city-card {
+    height: 500px;
+    width: 400px;
+    border-radius: 10px;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+    color: white;
+    font-size: xx-large;
+    font-weight: bolder;
+    margin-top: 30px;
+  }
+  .post_image1 {
+    background-image: url("../Images/itinerary.svg");
+    background-size: cover;
+  }
+  .post_image2 {
+    background-image: url("../Images/singlepost.svg");
+    background-size: cover;
+  }
+  .post_card-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+  }
+  
+  .post_central {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .post_button {
+    height: 30px;
+    width: 10%;
+    background-color: #7cc5e5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+  }
+  .post_next-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  @media (max-width: 480px) {
+    .post_city-card {
+      padding: 150px 30px;
+    }
+  }
+  
+  /* Page 7 itinearary post */
+  
+  .row {
+    margin: 0%;
+  }
+  .itin_createpost-text {
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+  }
+  .itin_heading1 {
+    font-size: 40px;
+    font-weight: bolder;
+  }
+  .itin_heading2 {
+    font-size: large;
+    font-weight: bold;
+  }
+  .itin_city-card1 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+  }
+  .itin_globe {
+    height: 500px;
+    width: 100%;
+  }
+  .itin_button {
+    padding: 30px;
+    background-color: #f4f4f4;
+    color: black;
+    border-radius: 5px;
+    border: none;
+    font-weight: 100;
+    font-size: 30px;
+  }
+
+
+  .itin_plus {
+    margin-right: 20px;
+    margin-bottom: 5px;
+    height: 40px;
+    width: 40px;
+  }
+  .itin_next-button {
+    padding: 10px;
+    width: 100px;
+    background-color: #7cc5e5;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: 700;
+    border: none;
+  }
+  .itin_central {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  
+  @media (max-width: 300px) {
+    .itin_city-card1 {
+      padding: 0px 283px;
+    }
+    .itin_createpost-main {
+      padding: 22px 0px;
+    }
+  }
+  
+  /* Page 8 input fields for post */
+  
+  .input_heading1 {
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .input_content-card {
+    height: 50px;
+  }
+  .input_icon-card {
+    height: 50px;
+  }
+  .input_card-wrapper {
+    height: 800px;
+    display: flex;
+    flex-direction: row;
+    padding-right: 0%;
+  }
+  .input_card-wrapper2 {
+    height: 800px;
+    background-image: url("../Images/map.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  .input_button {
+    margin-left: 20px;
+    padding: 40px;
+    background-color: #f4f4f4;
+    color: black;
+    border-radius: 5px;
+    border: none;
+  }
+  .input_plus {
+    height: 30px;
+    width: 30px;
+  }
+  .input_icon-form {
+    display: flex;
+    flex-direction: row;
+  }
+  .input_central {
+    display: flex;
+    justify-content: center;
+  }
+  .input_filter-icon {
+    margin-top: 40px;
+  }
+  img {
+    width: 40px;
+    height: 40px;
+  }
+  .input_input-field {
+    text-align: center;
+  }
+  .input_input,
+  .input_textarea {
+    width: 180px;
+    padding: 10px;
+    border: 1px solid rgb(116, 116, 116);
+    border-radius: 8px;
+    border-color: black;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+  }
+  .input_next-button {
+    padding: 10px;
+    width: 100px;
+    background-color: #7cc5e5;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: 700;
+    border: none;
+  }
+  .input_central {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 768px) {
+    .input_icon-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  
+  /* Page 10 your profile*/
+  
+  .profile_container {
+    height: 500px;
+  }
+  .profile_globe3d {
+    width: 500px;
+    height: inherit;
+    object-fit: cover;
+  }
+  .profile_dull-globe {
+    width: 100%;
+    height: 418px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .profile_button {
+    padding: 10px;
+    height: 50px;
+    width: 220px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+  }
+  .profile_plus {
+    height: 25px;
+    width: 25px;
+    object-fit: cover;
+    margin-left: 10px;
+  }
+  .profile_fit-image {
+    height: 450px;
+    width: 100%;
+    margin-top: 50px;
+  }
+  .profile_section2-image {
+    height: inherit;
+    background-image: url("../Images/Adventure.svg");
+    background-size: cover;
+    width: 100%;
+  }
+  .profile_image-title {
+    padding: 30px;
+  }
+  .profile_central {
+    display: flex;
+    justify-content: center;
+  }
+  .profile_city-card1 {
+    background-image: url("../Images/city1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 100px 30px;
+    border-radius: 20px;
+    text-align: center;
+    margin: 10px 0px;
+  }
+  
+  @media (max-width: 480px) {
+    .profile_city-card1,
+    .profile_city-card2,
+    .profile_city-card3 {
+      height: 180px;
+      padding: 150px 30px;
+    }
+  }
+  .profile_city-card2 {
+    background-image: url("../Images/city2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 100px 30px;
+    border-radius: 20px;
+    text-align: center;
+    margin: 10px 0px;
+  }
+  .profile_city-card3 {
+    background-image: url("../Images/city3.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 100px 30px;
+    border-radius: 20px;
+    text-align: center;
+    margin: 10px 0px;
+  }
+  .profile_card-wrapper {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Page 11 upcoming trips*/
+  
+  .upcoming_btn_color {
+    background-color: rgb(238, 231, 231);
+    border: none;
+    color: black;
+    font-family: "Poppins", sans-serif;
+    text-align: left;
+    border-radius: 30px;
+    width: 300px;
+  }
+  .upcoming_btn_width {
+    width: 60px;
+  }
+  
+  .upcoming_central {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .upcoming_button-divs {
+    padding: 20px;
+  }
+  @media (max-width: 321px) {
+    .upcoming_button-divs {
+      width: 310px;
+    }
+  }
+  
+  /* Page 13 upcoming trips-list view*/
+  
+  .list_top-heading {
+    font-weight: bold;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+  }
+  .list_city-card {
+    height: 150px;
+    padding: 100px 80px;
+    border-radius: 20px;
+  }
+  .list_icon1 {
+    height: 60px;
+  }
+  .list_midicons {
+    margin-top: 150px;
+  }
+  .list_icons {
+    padding-top: 4px;
+    padding-right: 63px;
+  }
+  .list_icons1 {
+    padding: 20px 0px;
+  }
+  .list_topicons {
+    width: 30px;
+  }
+  .list_toprighticon {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 10px;
+  }
+  .list_toplefticon {
+    margin-top: 10px;
+    margin-left: 40px;
+  }
+  .list_image1 {
+    background-image: url("../Images/image1.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .list_image2 {
+    background-image: url("../Images/image2.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .list_image3 {
+    background-image: url("../Images/image3.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .list_top-text {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: medium;
+    word-spacing: 10px;
+  }
+  .list_event-heading {
+    font-family: "Poppins", sans-serif;
+    color: white;
+  }
+  .list_location-text {
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: medium;
+  }
+  .list_cardtext {
+    text-align: center;
+    position: relative;
+    top: -50px;
+  }
+  .list_cardtext1 {
+    text-align: center;
+  }
+  .list_card-container {
+    padding: 0px 100px;
+  }
+  .list_mapimage {
+    padding-top: 95px;
+    width: 100%;
+  }
+  
+  @media only screen and (max-width: 500px) and (min-width: 300px) {
+    .list_toprighticon {
+      margin-left: -45px;
+    }
+    .list_topleftticon {
+      margin-bottom: 10px;
+    }
+    .list_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .list_mapimage {
+      padding-top: 60px;
+    }
+    .list_city-card {
+      padding: 111px 3px;
+    }
+  }
+  @media only screen and (max-width: 766px) and (min-width: 501px) {
+    .list_toprighticon {
+      margin-left: -45px;
+    }
+    .list_topleftticon {
+      margin-bottom: 10px;
+    }
+    .list_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .list_mapimage {
+      padding-top: 60px;
+    }
+    .list_city-card {
+      padding: 111px 3px;
+    }
+  }
+  @media only screen and (max-width: 990px) and (min-width: 767px) {
+    .list_toprighticon {
+      margin-left: -45px;
+    }
+    .list_topleftticon {
+      margin-bottom: 10px;
+    }
+    .list_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .list_midicons {
+      padding: 0px 102px;
+    }
+    .list_mapimage {
+      padding-top: 60px;
+    }
+    .list_city-card {
+      padding: 111px 3px;
+    }
+  }
+  @media only screen and (max-width: 1024px) and (min-width: 990px) {
+    .list_city-card {
+      padding: 111px 3px;
+    }
+  }
+  
+  /* Page 14 view your recommendation*/
+  
+  .view_heading {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .view_central {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .view_text {
+    padding: 130px 61px;
+    text-align: center;
+  }
+  .view_icon-center {
+    padding: 35px 99px;
+  }
+  .view_text-mid-grid {
+    padding: 29px;
+    text-align: center;
+  }
+  .view_text-final-grid {
+    padding: 111px 58px;
+    text-align: center;
+  }
+  .view_icon1 {
+    background-color: white;
+    height: 55px;
+    width: 55px;
+    border-radius: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .view_icon2 {
+    background-color: #7cc5e5;
+  }
+  .view_grid1_icon {
+    height: 35px;
+  }
+  .view_image1 {
+    border-radius: 20px;
+    padding: 20px 20px;
+    height: 600px;
+    background-image: url("../Images/card-one.svg");
+    background-size: cover;
+    color: white;
+  }
+  .view_image2 {
+    border-radius: 20px;
+    background-image: url("../Images/card-two.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .view_image3 {
+    border-radius: 20px;
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .view_image4 {
+    border-radius: 20px;
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .view_image5 {
+    border-radius: 20px;
+    background-image: url("../Images/card-fove.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .view_image6 {
+    border-radius: 20px;
+    background-image: url("../Images/card-four.svg");
+    background-size: cover;
+    height: 390px;
+    color: white;
+  }
+  
+  /* Page 15 view a single recommendation*/
+  
+  .single_icon1 {
+    height: 60px;
+  }
+  .single_top-text1 {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+    padding: 20px 28px;
+  }
+  .single_midicons {
+    margin-top: 118px;
+  }
+  .single_icons {
+    padding-top: 35px;
+    padding-right: 40px;
+  }
+  .single_mapimage {
+    padding-top: 95px;
+    width: 100%;
+  }
+  .single_imagecar {
+    height: 300px;
+    width: 300px;
+  }
+  .carousel-indicators {
+    position: static;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+  .carousel-indicators li {
+    width: 300px;
+    height: 100%;
+    opacity: 0.8;
+    border-bottom: 0px;
+    border-radius: 0px;
+    margin-left: 0px;
+    margin-right: 2px;
+  }
+  .carousel-item {
+    border-radius: 0px;
+  }
+  
+  .single_titlepara {
+    font-family: "Poppins", sans-serif;
+    padding-top: 20px;
+  }
+  .single_likes_tab {
+    width: 500px;
+    height: 80px;
+    background-color: rgb(230, 224, 224);
+    margin-top: 20px;
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: row;
+  }
+  .single_likes-tabdiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .single_hearticondiv {
+    display: flex;
+    flex-direction: row;
+  }
+  .single_planeicondiv {
+    display: flex;
+    flex-direction: row;
+  }
+  .single_heart {
+    width: 50px;
+  }
+  .single_plane {
+    width: 60px;
+  }
+  .single_likes-tab-text {
+    font-family: "Poppins", sans-serif;
+    font-size: large;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+  }
+  
+  @media only screen and (max-width: 600px) and (min-width: 300px) {
+    .single_titleimage {
+      width: 220px;
+    }
+    .single_top-text1 {
+      font-size: smaller;
+      padding: 0px;
+    }
+  
+    .single_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -30px;
+      padding: 0px 33px;
+    }
+    .single_mapimage {
+      padding-top: 60px;
+    }
+    .single_likes_tab {
+      width: 290px;
+      height: 160px;
+    }
+  }
+  @media only screen and (max-width: 991px) and (min-width: 600px) {
+    .single_topsection {
+      display: flex;
+      flex-direction: row;
+    }
+  
+    .single_top-text1 {
+      padding: 20px 15px;
+      font-size: smaller;
+    }
+    .single_midicons {
+      display: flex;
+      flex-direction: row;
+      margin-top: -60px;
+      padding: 0px 270px;
+    }
+    .single_likes_tab {
+      width: 290px;
+      height: 160px;
+    }
+  }
+  
+  /* Page 16 view your saves*/
+  
+  body {
+    font-family: "Poppins", sans-serif;
+  }
+  .yoursave_btn_color {
+    background-color: rgb(255, 255, 255);
+    border: none;
+    color: black;
+    font-family: "Poppins", sans-serif;
+    text-align: left;
+    border-radius: 60px;
+    width: 120px;
+  }
+  .yoursave_btn_width {
+    width: 40px;
+  }
+  
+  .yoursave_central {
+    width: 100%;
+    height: 100%;
+  }
+  .yoursave_central1 {
+    background-color: #7cc5e5;
+  }
+  .yoursave_button-divs {
+    padding: 10px;
+  }
+  .yoursave_font {
+    font-size: medium;
+    font-weight: bolder;
+  }
+  .yoursave_font1 {
+    font-size: medium;
+  }
+  @media (max-width: 321px) {
+    .yoursave_button-divs {
+      width: 310px;
+    }
+  }
+  
+  .yoursave_heading {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .yoursave_central {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .yoursave_text {
+    padding: 130px 61px;
+    text-align: center;
+  }
+  .yoursave_text-mid-grid {
+    padding: 0px;
+    text-align: center;
+  }
+  .yoursave_text-final-grid {
+    padding: 80px;
+    text-align: center;
+  }
+  .yoursave_image1 {
+    border-radius: 20px;
+    padding: 20px 20px;
+    height: 600px;
+    background-image: url("../Images/card-one.svg");
+    background-size: cover;
+    color: white;
+  }
+  .yoursave_image2 {
+    border-radius: 20px;
+    background-image: url("../Images/card-two.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .yoursave_image3 {
+    border-radius: 20px;
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .yoursave_image4 {
+    border-radius: 20px;
+    background-image: url("../Images/card-three.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .yoursave_image5 {
+    border-radius: 20px;
+    background-image: url("../Images/card-fove.svg");
+    background-size: cover;
+    height: 180px;
+    color: white;
+  }
+  .yoursave_image6 {
+    border-radius: 20px;
+    background-image: url("../Images/card-four.svg");
+    background-size: cover;
+    height: 390px;
+    color: white;
+  }
+  .yoursave_plusi {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .yoursave_plusii {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  .yoursave_newsletter-image {
+    height: 275px;
+    width: 100%;
+  }
+  .yoursave_section2_right_container {
+    padding: 49px 78px;
+    text-align: center;
+  }
+  .yoursave_container2 {
+    display: flex;
+    flex-direction: row;
+  }
+  .yoursave_section3_font {
+    text-align: center;
+  }
+  form {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    border: 1px solid grey;
+    width: 100%;
+    padding: 1px;
+    border-radius: 20px;
+  }
+  
+  input {
+    border: none;
+  }
+  input:focus {
+    outline: none;
+  }
+  form:focus-within {
+    outline: 1px solid blue;
+  }
+  .yoursave_input-field {
+    display: flex;
+    justify-content: center;
+  }
+  .yoursave_input1 {
+    border-radius: 20px;
+  }
+  .yoursave_btn1 {
+    font-size: 1rem;
+    padding: 0.5rem 0.5rem;
+    text-transform: capitalize;
+    border-radius: 10rem;
+    background-color: #1264fa;
+    color: white;
+    transition: all 0.3s linear;
+  }
+  .btn:hover,
+  .btn:active {
+    transform: scale(1.05);
+  }
+  @media (max-width: 300px) {
+    .yoursave_section2_right_container {
+      padding: 0px 10px;
+    }
+  }
+  
+  /* Page 17 view your save 1*/
+  
+  .save1_main-box {
+    width: 400px;
+    height: 400px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .save1_central {
+    display: flex;
+    justify-content: center;
+    padding: 150px;
+  }
+  .save1_form-check {
+    width: 250px;
+    height: 60px;
+    border: 1px solid rgb(192, 189, 189);
+    border-radius: 10px;
+    padding: 20px 40px;
+    margin-bottom: 10px;
+  }
+  .save1_form-check-input {
+    padding-left: 10px;
+  }
+  .save1_form-check-label {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+  }
+  .save1_exiticon {
+    width: 30px;
+  }
+  .save1_exiticon-div {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+  .save1_plus2icon {
+    width: 32px;
+    height: 23px;
+    margin-right: 3px;
+  }
+  .save1_end-button {
+    display: flex;
+    flex-direction: row;
+    padding-left: 20px;
+    background-color: rgba(43, 43, 248, 0.712);
+    border: none;
+  }
+  .save1_radiobutton-div {
+    padding-left: 50px;
+  }
+  
+  .save1_form-check:hover {
+    background-color: rgb(96, 200, 234);
+    color: white;
+  }
+  @media (max-width: 321px) {
+    .save1_main-box {
+      width: 300px;
+    }
+    .save1_radiobutton-div {
+      padding-left: 0px;
+    }
+  }
+  
+  /* Page 18 view your save 2*/
+  
+  .save2_main-box {
+    width: 525px;
+    height: 497px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .save2_central {
+    display: flex;
+    justify-content: center;
+    padding: 150px;
+  }
+  .save2_heading {
+    font-family: "Poppins", sans-serif;
+    font-size: large;
+  }
+  .save2_color {
+    width: 405px;
+    height: 60px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid rgb(192, 189, 189);
+    display: flex;
+    flex-direction: row;
+    padding: 19px 12px;
+  }
+  .save2_plus3icon {
+    width: 32px;
+    height: 23px;
+    margin-right: 3px;
+  }
+  .save2_form-check {
+    width: 405px;
+    height: 60px;
+    border: 1px solid rgb(192, 189, 189);
+    border-radius: 10px;
+    padding: 20px 40px;
+    margin-bottom: 10px;
+  }
+  .save2_form-check-input {
+    padding-left: 10px;
+  }
+  .save2_form-check-label {
+    font-family: "Poppins", sans-serif;
+    font-size: medium;
+  }
+  .save2_exiticon {
+    width: 30px;
+  }
+  .save2_exiticon-div {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+  
+  .save2_end-button {
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(116, 116, 255, 0.712);
+    border: none;
+    width: 405px;
+    height: 60px;
+    border-radius: 10px;
+    padding: 20px 169px;
+    margin-bottom: 10px;
+  }
+  .save2_radiobutton-div {
+    padding-left: 50px;
+  }
+  .save2_form-check:hover {
+    background-color: rgb(96, 200, 234);
+    color: white;
+  }
+  
+  @media only screen and (max-width: 600px) and (min-width: 300px) {
+    .save2_main-box {
+      width: 300px;
+      height: 600px;
+    }
+    .save2_radiobutton-div {
+      padding-left: 0px;
+    }
+    .save2_end-button {
+      width: 230px;
+      padding-left: 102px;
+      height: 60px;
+    }
+    .save2_form-check {
+      width: 250px;
+      height: 80px;
+    }
+    .save2_color {
+      width: 250px;
+    }
+  }
+  

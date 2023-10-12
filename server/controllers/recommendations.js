@@ -1,44 +1,98 @@
 const Recommendation = require("../models/recommendation");
+const Itinerary = require("../models/itinerary");
 
 const getAllRecommendations = async (req, res) => {
-  const { title, region, descriptors, sort, select } = req.query;
-  const queryObject = {};
+  try {
+    // Find all recommendations and itineraries
+    const allRecommendations = await Recommendation.find({ isItenrary: false });
+    
 
-  if (title) {
-    queryObject.title = { $regex: title, $options: "i" };
-  }
+    const allItineraries = await Itinerary.find();
 
-  if (region) {
-    queryObject.region = region;
-  }
+    // Iterate through all Itinerary records and add posts[0] record detail to each one
+    const mergedData = allItineraries.map((itinerary) => {
+      const itineraryCopy = { ...itinerary._doc }; // Create a copy of the itinerary object
+      if (itineraryCopy.posts && itineraryCopy.posts.length > 0) {
+        const firstPost = itineraryCopy.posts[0];
+        delete firstPost.isItinerary;
+        // Create a copy of the first post without its _id
+        const firstPostWithoutId = { ...firstPost };
+        delete firstPostWithoutId._id;
+       // firstPostWithoutId.isItinerary = true; // Set isItinerary to true for the post
+        return { ...itineraryCopy, ...firstPostWithoutId };
+      }
+      return itineraryCopy;
+    });
 
-  if (descriptors) {
-    if (typeof descriptors === "string") {
-      queryObject.descriptor = descriptors;
+    // Merge the modified itineraries with recommendations
+    mergedData.push(...allRecommendations);
+
+    // Sort the merged data by createdAt in descending order
+    mergedData.sort((a, b) => b.createdAt - a.createdAt);
+
+    if (mergedData.length === 0) {
+      return res.status(200).json({
+        status: false,
+        message: "No data exists",
+      });
     }
+
+    return res.status(200).json({
+      status: true,
+      message: "All data retrieved and merged successfully",
+      Recommendations: mergedData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Something went wrong in the backend",
+      error: error.message,
+    });
   }
-  let apiData = Recommendation.find(queryObject);
-
-  if (sort) {
-    let sortFix = sort.split(",").join(" ");
-    apiData = apiData.sort(sortFix);
-  }
-
-  if (select) {
-    let selectFix = select.split(",").join(" ");
-    apiData = apiData.select(selectFix);
-  }
-
-  let page = Number(req.query.page) || 1;
-  let limit = Number(req.query.limit) || 100;
-
-  let skip = (page - 1) * limit;
-
-  apiData = apiData.skip(skip).limit(limit);
-
-  const Recommendations = await apiData;
-  res.status(200).json({ Recommendations });
 };
+
+
+
+
+
+//   const { title, region, descriptors, sort, select } = req.query;
+//   const queryObject = {};
+
+//   if (title) {
+//     queryObject.title = { $regex: title, $options: "i" };
+//   }
+
+//   if (region) {
+//     queryObject.region = region;
+//   }
+
+//   if (descriptors) {
+//     if (typeof descriptors === "string") {
+//       queryObject.descriptor = descriptors;
+//     }
+//   }
+//   let apiData = Recommendation.find(queryObject);
+
+//   if (sort) {
+//     let sortFix = sort.split(",").join(" ");
+//     apiData = apiData.sort(sortFix);
+//   }
+
+//   if (select) {
+//     let selectFix = select.split(",").join(" ");
+//     apiData = apiData.select(selectFix);
+//   }
+
+//   let page = Number(req.query.page) || 1;
+//   let limit = Number(req.query.limit) || 100;
+
+//   let skip = (page - 1) * limit;
+
+//   apiData = apiData.skip(skip).limit(limit);
+
+//   const Recommendations = await apiData;
+//   res.status(200).json({ Recommendations });
+// };
 
 const getAllRecommendationsTesting = async (req, res) => {
   res.status(200).json({ msg: "I am getAllRecommendationsTesting" });
@@ -253,7 +307,27 @@ const UserTotalRecommendations = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const recommendationDetail = async (req, res) => {
+  const {
+    id,
+  } = req.body;
 
+  try {
+    // You can use the objectId to create an itinerary
+    const recommendation = await Recommendation.findOne({ _id: id });
+
+    res.status(201).json({ status: true, message: 'Successful', data: recommendation });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const errorMessages = Object.values(err.errors).map(
+        (error) => error.message
+      );
+      res.status(400).json({ error: errorMessages });
+    } else {
+      res.status(500).json({ error: "Unable to create the itinerary" });
+    }
+  }
+};
 module.exports = {
   getAllRecommendations,
   getAllRecommendationsTesting,
@@ -263,4 +337,5 @@ module.exports = {
   likeRecommendation,
   getTotalLikes,
   UserTotalRecommendations,
+  recommendationDetail
 };

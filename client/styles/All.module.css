@@ -1,0 +1,26 @@
+
+.bold{
+    color: blueviolet;
+    padding-left: 20px;
+  }
+  .head{
+    display: flex;
+    gap: 30px;
+    background-color: bisque;
+  }
+  .head:hover{
+    background-color: antiquewhite;
+  }
+  .words:hover{
+    color: brown;
+    font-style: italic;
+  }
+  .gft-img{
+    width: 100%;
+    max-width: 400px;
+}
+.textline{
+  text-decoration: none;
+  font-size: 20px;
+  color: cadetblue;
+}

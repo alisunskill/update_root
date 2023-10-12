@@ -4,11 +4,14 @@
   height: 60px;
 }
 
+.faxicon1 {
+  display: none !important;
+}
 .singleventhero {
   margin: 20px 20px 15px 20px;
   background-color: #f7f8fa;
   border-radius: 50px;
- padding: 0px 40px;
+  padding: 0px 40px;
 }
 .crossbtn {
   color: #818a91;
@@ -244,7 +247,7 @@
   border-radius: 8px;
 }
 .eventiconbox {
-  width: 300px;
+  /* max-width: 400px; */
   gap: 10px;
   padding: 0px 20px;
 }
@@ -259,7 +262,7 @@
   position: relative;
   color: #767676;
   text-align: center;
-  bottom: 10% ;
+  bottom: 10%;
 }
 .days {
   background-color: #eeeeee;
@@ -298,6 +301,18 @@
   } */
 }
 
+@media only screen and (max-width: 1440px) {
+}
+@media only screen and (max-width: 1440px) {
+}
+@media only screen and (max-width: 1440px) {
+  .singleventhero {
+    margin: 0;
+    margin-top: 33px;
+    padding: 20px;
+  }
+}
+
 @media only screen and (max-width: 600px) and (min-width: 300px) {
   .eventtitleimage {
     width: 220px;
@@ -330,20 +345,52 @@
     margin-left: -3px;
   }
 }
+@media only screen and (max-width: 991px) {
+  .eventicon {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .singleventhero {
+    border-radius: 0px;
+  }
+  .faxicon {
+    display: none !important;
+  }
+  .faxicon1 {
+    display: flex !important;
+  }
+  .eventmidicons {
+    display: flex;
+    flex-direction: row;
+    padding: 0px 10px;
+    margin: 0px;
+  }
+  .eventicon {
+    padding: 0px 0px;
+  }
+  .smallimg {
+    width: 70px;
+  }
+
+  .mapbox {
+    margin-right: 0px;
+    padding: 10px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .scenery {
+    height: 300px;
+  }
+}
 
 @media only screen and (max-width: 991px) and (min-width: 600px) {
   .eventtopsection {
     display: flex;
     flex-direction: row;
-  }
-  .eventicon {
-    padding: 0px 20px;
-  }
-  .eventmidicons {
-    display: flex;
-    flex-direction: row;
-    margin-top: -60px;
-    padding: 0px 270px;
   }
 }
 

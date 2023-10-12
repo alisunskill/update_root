@@ -25,13 +25,13 @@ import Trip from "../../website/ViewSaves/components/Trip";
 import NearSlider from "./component/NearSlider";
 import RoomIcon from "@mui/icons-material/Room";
 import { GoogleMapApiKey } from "../../apiConfig";
-import EditPost from "../../website/CreateItinerary/EditPost";
 
 export default function EventDetail() {
   const router = useRouter();
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
   const { id } = router.query;
+  const [eventDetail, setEvenDetail] = useState({});
   const userData = useSelector((state) => state?.userId);
   const [postCounts, setPostCounts] = useState({});
   const [modalShow, setModalShow] = useState(false);
@@ -56,11 +56,114 @@ export default function EventDetail() {
   };
 
   useEffect(() => {
+    const fetchEventDetail = async () => {
+      try {
+        const url = `${API_URL}api/recommendations/recommendationDetail`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: id,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setEvenDetail(data.data);
+            getUserInfo(data.data.userID);
+            getTotalExperiencesOfUser(data.data.userID);
+          } else {
+            // Handle error if needed
+          }
+        } else {
+          // Handle HTTP error if needed
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+    };
+    const getUserInfo = async (userID) => {
+      try {
+        const url = `${API_URL}api/users/userInfo`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: userID,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setUserInfo(data.data);
+          } else {
+            // Handle error if needed
+          }
+        } else {
+          // Handle HTTP error if needed
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+    };
+    const getTotalExperiencesOfUser = async (userID) => {
+      try {
+        const url = `${API_URL}api/recommendations/UserTotalRecommendations`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: userID,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setuserTotalExp(data.totalRecommendations);
+          } else {
+            // Handle error if needed
+          }
+        } else {
+          // Handle HTTP error if needed
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+    };
+    const totalLikes = async () => {
+      try {
+        const response = await axios.get(`${API_URL}api/recommendations/${id}`);
+        const totalLikes = response.data.totalLikes;
+        setTotalLikesData(totalLikes);
+      } catch (error) {
+        console.error("Error fetching total likes:", error);
+      }
+    };
+    fetchEventDetail();
+    totalLikes();
+  }, []);
+
+  useEffect(() => {
     if (userData) {
       const userDataJSON = JSON.stringify(userData);
       localStorage.setItem("userData", userDataJSON);
     } else {
-      console.error("userData is null or undefined");
+      //console.error("userData is null or undefined");
     }
   }, [userData]);
 
@@ -70,7 +173,7 @@ export default function EventDetail() {
       const userData = JSON.parse(userDataJSON);
       setUser(userData);
     } else {
-      console.error("userData not found in local storage");
+      // console.error("userData not found in local storage");
     }
   }, []);
 
@@ -91,14 +194,13 @@ export default function EventDetail() {
   const [experience, setExperience] = useState(filteredData?.experience || "");
   const [location, setLocation] = useState(filteredData?.location || "");
   const [region, setRegion] = useState(filteredData?.region || "");
-
   const [description, setDescription] = useState(
     filteredData?.description || ""
   );
   const [descriptors, setDescriptors] = useState(
     filteredData?.descriptors || []
   );
-  console.log(descriptors, "descriptorsdescriptorsdescriptors");
+  //console.log(descriptors, "descriptorsdescriptorsdescriptors");
   const [links, setLinks] = useState(filteredData?.links || "");
   const [images, setImages] = useState(filteredData?.images || []);
 
@@ -145,7 +247,7 @@ export default function EventDetail() {
 
   //itineraries
   const [itineraries, SetItineraries] = useState([]);
-  console.log("ITS", itineraries);
+  //console.log("ITS", itineraries);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedFields, setEditedFields] = useState({
@@ -159,7 +261,7 @@ export default function EventDetail() {
     descriptors: [],
     links: "",
   });
-  console.log(filteredd, "filteredd");
+  //console.log(filteredd, "filteredd");
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -189,7 +291,7 @@ export default function EventDetail() {
       links: editedFields.links,
       // images: images,
     };
-    console.log(setEditedFields, "editedFields");
+    // console.log(setEditedFields, "editedFields");
 
     axios
       .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
@@ -213,70 +315,9 @@ export default function EventDetail() {
     if (selectedIdFromFilteredData) {
       localStorage.setItem("filterPostId", selectedIdFromFilteredData);
     }
-    const getUserInfo = async () => {
-      if (filteredData) {
-        try {
-          const url = `${API_URL}api/users/userInfo`;
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userID: filteredData.userID,
-            }),
-          });
 
-          if (response.ok) {
-            const data = await response.json();
-            if (data.status) {
-              setUserInfo(data.data);
-            } else {
-              // Handle error if needed
-            }
-          } else {
-            // Handle HTTP error if needed
-          }
-        } catch (error) {
-          // Handle fetch or other errors
-          console.error(error);
-        }
-      }
-    };
-    const getTotalExperiencesOfUser = async () => {
-      if (filteredData) {
-        try {
-          const url = `${API_URL}api/recommendations/UserTotalRecommendations`;
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userID: filteredData.userID,
-            }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            if (data.status) {
-              setuserTotalExp(data.totalRecommendations);
-            } else {
-              // Handle error if needed
-            }
-          } else {
-            // Handle HTTP error if needed
-          }
-        } catch (error) {
-          // Handle fetch or other errors
-          console.error(error);
-        }
-      }
-    };
-    getUserInfo();
-    getTotalExperiencesOfUser();
+    // getUserInfo();
+    // getTotalExperiencesOfUser();
   }, [filteredData, id]);
 
   const filterLoc = filteredData?.location;
@@ -390,21 +431,10 @@ export default function EventDetail() {
   //   lng: 74.3587,
   // });
 
-  const totalLikes = async () => {
-    try {
-      const response = await axios.get(
-        `${API_URL}api/recommendations/${filteredData._id}`
-      );
-      const totalLikes = response.data.totalLikes;
-      setTotalLikesData(totalLikes);
-    } catch (error) {
-      console.error("Error fetching total likes:", error);
-    }
-  };
-  console.log(totalLikesData, "totalLikesData");
-  useEffect(() => {
-    totalLikes();
-  }, [filteredData]);
+  //console.log(totalLikesData, "totalLikesData");
+  // useEffect(() => {
+  //   totalLikes();
+  // }, [filteredData]);
 
   const [mapCenter, setMapCenter] = useState({
     lat: filterLoc?.coordinates?.[1] || 31.5204,
@@ -582,7 +612,7 @@ export default function EventDetail() {
   };
 
   return (
-    <>
+    <div className="px-lg-3 px-2">
       {isEditing ? (
         <div className={`row ${styles.createdhero}`}>
           <div className={`col-12 ${styles.scenerypara}`}>
@@ -842,11 +872,7 @@ export default function EventDetail() {
           </div>
         </div>
       ) : (
-        <div
-          className={`container-fluid pb-5 ${styles.singleventhero}`}
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-        >
+        <div className={`container-fluid pb-5 ${styles.singleventhero}`}>
           <div className={`row `}>
             <div
               className={`col-lg-7 col-12 col-md-12 mt-3 ${styles.scenerypara}`}
@@ -854,8 +880,21 @@ export default function EventDetail() {
               <div
                 className={`row align-items-center ${styles.eventtopsection}`}
               >
-                <div className=" col-9 col-md-6 col-lg-12 mt-2">
-                  <h4 className="fw-600">{filteredData?.title}</h4>
+                <div className=" col-12 col-md-6  col-lg-12 mt-2 d-flex justify-content-between w-100">
+                  <h4 className="fw-600 w-100">{eventDetail?.title}</h4>
+
+                  <div
+                    className={`d-flex justify-content-end align-items-center gap-5 w-100 pb-5 px-1 ${styles.faxicon1}`}
+                  >
+                    <FontAwesomeIcon
+                      className="cursor-pointer"
+                      icon={faX}
+                      onClick={handleIconClick}
+                      style={{
+                        color: "#818A91",
+                      }}
+                    />
+                  </div>
                 </div>
                 {/* profile men */}
                 <div className="d-flex align-items-center justify-content-start gap-3 mt-3">
@@ -880,18 +919,18 @@ export default function EventDetail() {
               </div>
               <div className="row">
                 <div className="col-lg-12 col-md-12 mt-4">
-                  <SliderApps images1={filteredData?.images} />
+                  <SliderApps images1={eventDetail?.images} />
                 </div>
               </div>
             </div>
-            <div className="col-lg-1 col-12 mt-5">
+            <div className="col-lg-1 col-12 mt-lg-5 mt-2">
               <div className="row ">
                 <div
                   className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
                 >
-                  {filteredData && filteredData.descriptors && (
+                  {eventDetail && eventDetail.descriptors && (
                     <>
-                      {filteredData.descriptors.includes("food") && (
+                      {eventDetail.descriptors.includes("food") && (
                         <div className={styles.eventicons}>
                           <Image
                             className={`h-auto ${styles.foodIcons}`}
@@ -905,7 +944,7 @@ export default function EventDetail() {
                         </div>
                       )}
 
-                      {filteredData.descriptors.includes("Art") && (
+                      {eventDetail.descriptors.includes("Art") && (
                         <div className={` ${styles.eventicons}`}>
                           <Image
                             className={`h-auto ${styles.foodIcons}`}
@@ -919,7 +958,7 @@ export default function EventDetail() {
                         </div>
                       )}
 
-                      {filteredData.descriptors.includes("Hiking") && (
+                      {eventDetail.descriptors.includes("Hiking") && (
                         <div className={` ${styles.eventicons}`}>
                           <Image
                             className={`h-auto ${styles.foodIcons}`}
@@ -938,32 +977,10 @@ export default function EventDetail() {
               </div>
             </div>
             <div className="col-lg-4 col-12 text-align-right p-0 ]">
-              <div
-                className={styles.mapbox}
-                style={{ height: "100vh", width: "100%" }}
-              >
-                <div className="d-flex justify-content-end align-items-center gap-5 w-100 pb-5 px-1">
-                  <div>
-                    {/* <button
-            className="bgdark border-0 py-1 px-3 rounded-5 fw-600"
-            onClick={() => editHandlePost(filteredData._id)}
-          >
-            {" "}
-            Edit
-          </button> */}
-                    <div
-                      className={` col-6 col-md-2 col-lg-1 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
-                    >
-                      {/* ... (existing JSX for edit, favorite, like buttons) */}
-                      <button
-                        onClick={handleEditClick}
-                        className="bgdark border-0 py-1 px-3 rounded-5 fw-600"
-                      >
-                        Edit
-                      </button>
-                    </div>
-                  </div>
-
+              <div className={styles.mapbox} style={{ width: "100%" }}>
+                <div
+                  className={`d-flex justify-content-end align-items-center gap-5 w-100 pb-5 px-1 ${styles.faxicon}`}
+                >
                   <FontAwesomeIcon
                     className="cursor-pointer"
                     icon={faX}
@@ -980,28 +997,10 @@ export default function EventDetail() {
                   height="470"
                   frameBorder="0"
                   style={{ border: "10px", marginTop: "30px" }}
-                  src={`https://www.google.com/maps/embed/v1/place?q=${filteredData?.latitude},${filteredData?.longitude}&key=${GoogleMapApiKey}`}
+                  src={`https://www.google.com/maps/embed/v1/place?q=${eventDetail?.latitude},${eventDetail?.longitude}&key=${GoogleMapApiKey}`}
                   allowFullScreen
                 ></iframe>
-                {/* <div className={styles.mapbox}>
-   <div className="mapouter">
-      <div className="gmap_canvas">
-        <iframe
-          width="770"
-          height="590"
-          id="gmap_canvas"
-          src="https://maps.google.com/maps?q=california&t=&z=10&ie=UTF8&iwloc=&output=embed"
-          frameborder="0"
-          scrolling="no"
-          marginheight="0"
-          marginwidth="0"
-        ></iframe>
-        <a href="https://2yu.co"></a>
-        <br />
-        <a href="https://embedgooglemap.2yu.co"></a>
-      </div>
-    </div>
-   </div> */}
+
                 {/* hours and cost */}
                 <div></div>
               </div>
@@ -1012,29 +1011,25 @@ export default function EventDetail() {
             <div className="col-12 col-md-7 col-lg-7 ">
               {/* General Information / Highlights */}
               <h5 className="fw-600 mt-4">General Information / Highlights</h5>
-              <p className={styles.eventtitlepara}>
-                General Information / Highlights
-              </p>
+              <p className={styles.eventtitlepara}>{eventDetail?.region}</p>
 
               {/* My Experience */}
               <h5 className="fw-600 mt-4">My Experience</h5>
-              <p className={styles.eventtitlepara}>
-                {filteredData?.experience}
-              </p>
+              <p className={styles.eventtitlepara}>{eventDetail?.experience}</p>
 
               {/* Tips */}
               <h5 className="fw-600 mt-4">Tips</h5>
               <ul>
                 <li className={styles.eventtitlepara}>
-                  {filteredData?.description}
+                  {eventDetail?.description}
                 </li>
               </ul>
 
               {/* Useful Links */}
               <h5 className="fw-600 mt-4">Useful Links</h5>
               <p className={styles.eventtitlepara}>
-                {filteredData?.links
-                  ? filteredData?.links.split("\n").map((link, index) => (
+                {eventDetail?.links
+                  ? eventDetail?.links.split("\n").map((link, index) => (
                       <a
                         key={index}
                         href={link}
@@ -1052,13 +1047,13 @@ export default function EventDetail() {
               <div className="mt-3">
                 <Image width={50} height={50} src={clock} />
                 <h5 className="fw-600 mt-3">Hours of Operation</h5>
-                <p className={styles.eventtitlepara}>{filteredData?.hours}</p>
+                <p className={styles.eventtitlepara}>{eventDetail?.hours}</p>
               </div>
               <div className="mt-5">
                 <Image width={50} height={50} src={money} />
 
                 <h5 className="fw-600 mt-3">Cost to Attend</h5>
-                <p className={styles.eventtitlepara}>{filteredData?.cost} </p>
+                <p className={styles.eventtitlepara}>{eventDetail?.cost}$ </p>
               </div>
             </div>
           </div>
@@ -1066,59 +1061,65 @@ export default function EventDetail() {
           {/* extra */}
           <div className="row d-flex justify-content-end mt-lg-5 mt-3 pt-lg-4 pt-3 px-lg-5  px-2 pb-2">
             <div
-              className={` col-6 col-md-2 col-lg-1 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
+              className={`col-md-3 col-lg-3 col-12 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
             >
-              <div
-                className={`d-flex align-items-center justify-content-center ${styles.eventicondiv}`}
-              >
-                <Image
-                  onClick={() => setModalShow(true)}
-                  className={`${styles.eventtopicons} animated1`}
-                  src={plusicon2}
-                  alt=""
-                />
-              </div>
-              <div className="text-center w-100  d-flex justify-content-center align-items-center">
-                <Trip
-                  show={modalShow}
-                  onHide={() => setModalShow(false)}
-                  setModalShow={setModalShow}
-                  images1={filteredData?.images}
-                />
-              </div>
-              <div
-                className={`d-flex align-items-center justify-content-center bold1 ${styles.eventicondiv}`}
-              >
-                <div className="animated">
-                  <FontAwesomeIcon
-                    icon={faHeart}
-                    className="heartbeat"
-                    onClick={() => handleFavoriteClick(filteredData?._id)}
-                    style={{
-                      color: selectedItems[filteredData?._id] ? "red" : "black",
-                      cursor: "pointer",
-                    }}
+              <div className="row gap-3 justify-content-around align-align-items-center ">
+                <div
+                  className={`d-flex align-items-center justify-content-center col-3 ${styles.eventicondiv}`}
+                >
+                  <Image
+                    onClick={() => setModalShow(true)}
+                    className={`${styles.eventtopicons} animated1`}
+                    src={plusicon2}
+                    alt=""
                   />
+
+                  <div className="text-center w-100  d-flex justify-content-center align-items-center">
+                    <Trip
+                      show={modalShow}
+                      onHide={() => setModalShow(false)}
+                      setModalShow={setModalShow}
+                      images1={eventDetail?.images}
+                    />
+                  </div>
                 </div>
-              </div>
-              {/* LIKE LOGIC  */}
-              <div
-                className={`d-flex align-items-center justify-content-center bold1 ${styles.eventiconbox}`}
-              >
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className="heartbeat text-danger"
-                  onClick={() => handleLikeCount(filteredData._id)}
-                  // style={{
-                  //   color: selectedItems[filteredData?._id] ? "red" : "black",
-                  //   cursor: "pointer",
-                  // }}
-                />
-                {totalLikesData === 1
-                  ? `${totalLikesData} Like`
-                  : totalLikesData === 0
-                  ? ""
-                  : `${totalLikesData} Likes`}{" "}
+
+                <div
+                  className={`d-flex align-items-center justify-content-center bold1 col-3 ${styles.eventicondiv}`}
+                >
+                  <div className="animated">
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      className="heartbeat"
+                      onClick={() => handleFavoriteClick(eventDetail?._id)}
+                      style={{
+                        color: selectedItems[eventDetail?._id]
+                          ? "red"
+                          : "black",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* LIKE LOGIC  */}
+                <div
+                  className={`d-flex align-items-center justify-content-center bold1 col-3 ${styles.eventiconbox}`}
+                >
+                  <div className=" d-flex align-items-center justify-content-center">
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      className="heartbeat text-danger"
+                      onClick={() => handleLikeCount(eventDetail._id)}
+                    />
+                    <h5 className="mx-1 mb-0 fw-600" style={{ width: "80px" }}>
+                      {totalLikesData === 1
+                        ? `${totalLikesData} Like`
+                        : totalLikesData === 0
+                        ? ""
+                        : `${totalLikesData} Likes`}
+                    </h5>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1131,7 +1132,7 @@ export default function EventDetail() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

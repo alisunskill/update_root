@@ -63,7 +63,7 @@ exports.createUser = async (req, res) => {
       },
     });
 
-    const verificationURL = `http://localhost:3000/login?token=${verificationToken}`;
+    const verificationURL = `${process.env.FRONTEND_URL}login?token=${verificationToken}`;
 
     const mailOptions = {
       from: "asim.sunskilltechs@gmail.com",
@@ -121,7 +121,7 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password, recaptchaResponse } = req.body;
     console.log(recaptchaResponse, "recaptchaResponse");
-    const recaptchaSecretKey = "6LdNryEnAAAAAHvI4ty3RvMc2dnX0fR9aF1dXq7r";
+    const recaptchaSecretKey = process.env.RECAPETCHA_SECRET_KEY;
     const recaptchaVerificationURL = `https://www.google.com/recaptcha/api/siteverify`;
     const verificationResponse = await axios.post(
       recaptchaVerificationURL,
@@ -200,7 +200,7 @@ exports.forgotPassword = async (req, res) => {
       from: "muhammadali.sunskilltechs@gmail.com",
       to: user.email,
       subject: "Password Reset",
-      text: `Click the following link to reset your password: http://localhost:3000/resetpassword?token=${resetToken}`,
+      text: `Click the following link to reset your password: ${process.env.FRONTEND_URL}resetpassword?token=${resetToken}`,
     };
 
     // Send the email

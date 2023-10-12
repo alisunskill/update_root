@@ -6,8 +6,13 @@ const itinerarySchema = new mongoose.Schema({
     type: String,
     required: [true, "User must be provided"],
   },
-  posts:Array
-
+  posts: Array,
+  isItenrary: {
+    type: Boolean,
+    default: true,
+  }
+}, {
+  timestamps: true
 });
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);

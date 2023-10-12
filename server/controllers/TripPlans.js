@@ -37,7 +37,6 @@ const addTripPlan = async (req, res) => {
     };
     res.status(500).json(response);
   }
-
 };
 const getATripPlan = async (req, res) => {
   try {

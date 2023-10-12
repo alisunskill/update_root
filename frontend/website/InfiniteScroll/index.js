@@ -23,7 +23,29 @@ const InfiniteScrollComponent = () => {
   const dispatch = useDispatch();
   const recommendationsData = useSelector((state) => state.recommendation);
   const { recommendations, loading, error } = recommendationsData;
+  const [numColumns, setNumColumns] = useState(4);
+  const updateNumColumns = () => {
+    if (window.innerWidth >= 1500) {
+      setNumColumns(5);
+    }else if (window.innerWidth >= 1200) {
+      setNumColumns(4);
+    } else if (window.innerWidth >= 768) {
+      setNumColumns(3);
+    } else if (window.innerWidth >= 500) {
+      setNumColumns(2);
+    } else {
+      setNumColumns(1);
+    }
+  };
 
+  
+useEffect(() => {
+  window.addEventListener("resize", updateNumColumns);
+  updateNumColumns(); 
+  return () => {
+    window.removeEventListener("resize", updateNumColumns);
+  };
+}, []);
   // const loading = true;
   useEffect(() => {
     dispatch(fetchRecommendations());
@@ -186,7 +208,7 @@ const InfiniteScrollComponent = () => {
   return (
     <div>
       <div></div>
-      <div className="container-fluid px-5 pt-3 pb-5">
+      <div className="container-fluid px-lg-5 px-2 pt-3 pb-5 d-flex justify-content-center">
         <div className="row d-flex w-100">
           {/* <h1 className="dark bold text-center fw-600">
             {filteredPosts.length > 0 && filteredPosts[0].region}
@@ -237,9 +259,9 @@ const InfiniteScrollComponent = () => {
               hasMore={hasMore}
               loader={<h4>Loading...</h4>}
             >
-              <Box sx={{ minHeight: 829 }}>
+              <Box sx={{ minHeight: 829 }} className="d-flex justify-content-center">
                 {filteredPosts ? (
-                  <Masonry columns={5} spacing={1}>
+                      <Masonry  columns={numColumns}  spacing={1}>
                     {(filteredPosts.length > 0
                       ? filteredPosts
                       : searchResults.length > 0

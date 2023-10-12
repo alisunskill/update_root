@@ -1,0 +1,5 @@
+minCost && maxCost
+                    ? cost.filter((item) => item >= minCost && item <= maxCost)
+                    : searchResults.length > 0
+                    ? searchResults
+                    :

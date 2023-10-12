@@ -11,7 +11,7 @@ const recommendationSchema = new mongoose.Schema({
 
   images: {
     type: [String],
-    // required: true,
+    required: true,
   },
 
   description: {
@@ -73,6 +73,10 @@ const recommendationSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  isItenrary:{
+    type: Boolean,
+    default:false,
+  }
 }, {
   timestamps: true
 });
