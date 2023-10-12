@@ -84,6 +84,9 @@ export default function NearSlider() {
             slidesPerView: 4,
           },
           1200: {
+            slidesPerView: 5,
+          },
+          1600: {
             slidesPerView: 6,
           },
         }}
