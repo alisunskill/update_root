@@ -6,6 +6,7 @@
   font-weight: 700;
 }
 
+
 .signupmycontainer {
   height: 100vh;
   width: 100%;
@@ -137,5 +138,8 @@
   }
   .signupinput {
     width: 42%;
+  }
+  .resetbtntext{
+    font-size: 14px;
   }
 }

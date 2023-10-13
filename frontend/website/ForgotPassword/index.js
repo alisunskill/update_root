@@ -74,7 +74,7 @@ function ForgotPassword() {
 
                     <div className="text-center">
                       <button
-                        className="savebtn1 text-light mt-4"
+                        className={`savebtn1 text-light mt-4 ${styles.resetbtntext}`}
                         type="submit"
                         disabled={!isValid}
                       >

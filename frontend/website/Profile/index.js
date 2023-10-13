@@ -74,10 +74,9 @@ function Profile() {
   }, [dispatch]);
 
   useEffect(() => {
-     const fetchTotalExp=async()=>{
-      const userIDPerson =  localStorage.getItem("userID"); // Use "userID" key
-      if(userIDPerson){
-     
+    const fetchTotalExp = async () => {
+      const userIDPerson = localStorage.getItem("userID"); // Use "userID" key
+      if (userIDPerson) {
         try {
           const url = `${API_URL}api/recommendations/UserTotalRecommendations`;
           const response = await fetch(url, {
@@ -106,15 +105,13 @@ function Profile() {
           console.error(error);
         }
       }
-     
-
-     }
-     fetchTotalExp()
+    };
+    fetchTotalExp();
   }, []);
 
   useEffect(() => {
-    const fetchTotalCountryCitiesVisited=async()=>{
-      const uid=await localStorage.getItem("userID")
+    const fetchTotalCountryCitiesVisited = async () => {
+      const uid = await localStorage.getItem("userID");
       try {
         const url = `${API_URL}api/trips/userVisitedCountriesRegions`;
         const response = await fetch(url, {
@@ -130,22 +127,20 @@ function Profile() {
 
         if (response.ok) {
           const data = await response.json();
-          setTotalCities(data.totalSimilarCities)
-          setTotalCountries(data.totalSimilarCountries)
+          setTotalCities(data.totalSimilarCities);
+          setTotalCountries(data.totalSimilarCountries);
         }
       } catch (error) {
         // Handle fetch or other errors
         console.error(error);
       }
-
-    }
+    };
     fetchTotalCountryCitiesVisited();
   }, []);
 
-
   return (
     <>
-      <div className="row px-5 py-3">
+      <div className="row px-lg-5 px-4 pt-lg-5 pt-4">
         <div className=" col-lg-4 align-items-center gap-2 ">
           <div className="d-flex align-items-center gap-3">
             <Image
@@ -161,13 +156,25 @@ function Profile() {
             </p>
           </div>
           <h6 className="fw-600 mb-0 mt-4">{user?.userId?.username}</h6>
-          <p className="pt-3">Where you've been:
-  {totalCities === 0 && totalCountries === 0 && " Nowhere yet"}
-  {totalCities === 1 && totalCountries === 1 && ` ${totalCities} city and ${totalCountries} country`}
-  {totalCities === 1 && totalCountries > 1 && ` ${totalCities} city and ${totalCountries} countries`}
-  {totalCities > 1 && totalCountries === 1 && ` ${totalCities} cities and ${totalCountries} country`}
-  {totalCities > 1 && totalCountries > 1 && ` ${totalCities} cities and ${totalCountries} countries`}</p>
-          <h6 className="fw-600 mb-3 mb-lg-4">Total shared experiences: {userTotalExperience} </h6>
+          <p className="pt-3">
+            Where you've been:
+            {totalCities === 0 && totalCountries === 0 && " Nowhere yet"}
+            {totalCities === 1 &&
+              totalCountries === 1 &&
+              ` ${totalCities} city and ${totalCountries} country`}
+            {totalCities === 1 &&
+              totalCountries > 1 &&
+              ` ${totalCities} city and ${totalCountries} countries`}
+            {totalCities > 1 &&
+              totalCountries === 1 &&
+              ` ${totalCities} cities and ${totalCountries} country`}
+            {totalCities > 1 &&
+              totalCountries > 1 &&
+              ` ${totalCities} cities and ${totalCountries} countries`}
+          </p>
+          <h6 className="fw-600 mb-3 mb-lg-4">
+            Total shared experiences: {userTotalExperience}{" "}
+          </h6>
           <Link
             href="/editprofile"
             className={` fw-600 cursor-pointer text-decoration-none fw-600 ${styles.editbtn}`}
@@ -179,8 +186,8 @@ function Profile() {
       </div>
 
       <div className="container-fluid pb-4">
-        <div className="row py-5 mt-4">
-          <div className="col-12 col-md-4 col-lg-4 text-center justify-content-center d-flex">
+        <div className="row py-5 mt-4 flex-wrap align-items-center justify-content-center justify-content-md-start gap-lg-0 gap-3 px-4 px-lg-0 justify-content-lg-center">
+          <div className="col-6 col-md-4 col-sm-6 col-lg-4 text-center justify-content-center d-flex">
             <Link
               href="/upcomingtrips"
               className="text-decoration-none text-light"
@@ -193,7 +200,7 @@ function Profile() {
               </button>
             </Link>
           </div>
-          <div className="col-12 col-md-4 col-lg-4 text-center justify-content-center d-flex">
+          <div className="col-6 col-md-4 col-sm-6 col-lg-4 text-center justify-content-center d-flex">
             <Link
               href="/infinitescroll"
               className="text-decoration-none text-light"
@@ -206,7 +213,7 @@ function Profile() {
               </button>
             </Link>
           </div>
-          <div className="col-12 col-md-4 col-lg-4 text-center">
+          <div className="col-6 col-md-4 col-sm-6 col-lg-4 text-center justify-content-center d-flex">
             <Link href="/viewsave" className="text-decoration-none text-light">
               <button
                 href="#"

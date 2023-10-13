@@ -54,6 +54,29 @@ function ViewSaves() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [numColumns, setNumColumns] = useState(4);
+  const updateNumColumns = () => {
+    if (window.innerWidth >= 1500) {
+      setNumColumns(5);
+    } else if (window.innerWidth >= 1200) {
+      setNumColumns(4);
+    } else if (window.innerWidth >= 768) {
+      setNumColumns(3);
+    } else if (window.innerWidth >= 500) {
+      setNumColumns(2);
+    } else {
+      setNumColumns(1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateNumColumns);
+    updateNumColumns();
+    return () => {
+      window.removeEventListener("resize", updateNumColumns);
+    };
+  }, []);
+
   const filteredRegion = recommendationData.filter((item) =>
     postIds?.some((post) => post.id === item.id)
   );
@@ -97,18 +120,20 @@ function ViewSaves() {
   return (
     <>
       <div className="container-fluid">
-        <div className="row px-4">
+        <div className="row px-lg-4 px-2">
           <div className="col-12">
-            <div className="row align-items-center">
-              <div className="col-lg-4 d-flex justify-content-start px-4">
+            <div className="row align-items-center justify-content-start flex-wrap  pt-lg-0 pt-3">
+              <div
+                className={`col-lg-4 col-md-4 col-6 d-flex justify-content-start mb-lg-0 mb-3 px-lg-2 px-1 ${styles.filterbox}`}
+              >
                 <FilterPosts />
               </div>
-              <div className="col-lg-4">
-                <h1 className="dark bold fw-700 pt-4 text-center mb-4">
+              <div className="col-lg-4 col-md-4 col-6 pb-lg-3 pb-0">
+                <h1 className="dark bold fw-700 pt-lg-0 text-center  mb-lg-3 mb-3 experience-saves-header">
                   Your Saves
                 </h1>
               </div>
-              <div className="col-lg-4 d-flex justify-content-end px-4">
+              <div className="col-lg-4 col-md-4 col-6 d-flex justify-content-lg-end justify-content-start px-lg-4 px-2 pb-lg-3 pt-lg-0 pt-2 pb-md-1">
                 <div className="d-flex gap-3">
                   <button className="rounded-5 bg-gray1 border-0 px-3 py-1 fw-600">
                     <Link
@@ -130,7 +155,7 @@ function ViewSaves() {
               </div>
             </div>
           </div>
-          <div className="col-lg-12">
+          <div className="col-lg-12  pt-lg-0 pt-4 mt-lg-0 mt-1">
             {isLoading && (
               <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Loading...</span>
@@ -144,8 +169,8 @@ function ViewSaves() {
               >
                 <Box className="pb-lg-5 pb-sm-3">
                   <Masonry
-                    columns={3}
-                    spacing={2}
+                    columns={numColumns}
+                    spacing={1}
                     style={{ display: "-webkit-inline-box" }}
                   >
                     {filteredRegion.map((post, index) => {

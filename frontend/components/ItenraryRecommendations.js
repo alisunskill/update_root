@@ -10,30 +10,43 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Files_URL } from "../apiConfig";
 
 const ItenraryRecommendationGrid = ({
-    data,
+  data,
   loading,
   error,
 }) => {
   const router = useRouter();
-  
-  
-
+  const [numColumns, setNumColumns] = useState(4);
+  useEffect(() => {
+    window.addEventListener("resize", updateNumColumns);
+    updateNumColumns(); 
+    return () => {
+      window.removeEventListener("resize", updateNumColumns);
+    };
+  }, []);
+  const updateNumColumns = () => {
+    if (window.innerWidth >= 1500) {
+      setNumColumns(5);
+    }else if (window.innerWidth >= 1200) {
+      setNumColumns(4);
+    } else if (window.innerWidth >= 768) {
+      setNumColumns(3);
+    } else if (window.innerWidth >= 500) {
+      setNumColumns(2);
+    } else {
+      setNumColumns(1);
+    }
+  };
   const handleLinkClick = (itemId, postTitle, item) => {
-   
-    
-     
     router.push(
-        {
-          pathname: "/Itenraries",
-          query: {
-            id: JSON.stringify(item._id),
-          },
+      {
+        pathname: "/Itenraries",
+        query: {
+          id: JSON.stringify(item._id),
         },
-        undefined, // The second argument is for the "as" option, set it to undefined
-        { shallow: true } // Use shallow routing to prevent adding the new page to the browser's history
-      );
-      
-    
+      },
+      undefined, // The second argument is for the "as" option, set it to undefined
+      { shallow: true } // Use shallow routing to prevent adding the new page to the browser's history
+    );
   };
   return (
     <>
@@ -46,13 +59,13 @@ const ItenraryRecommendationGrid = ({
               next={data}
             >
               <Box sx={{ minHeight: 829 }}>
-                <Masonry  columns={2}  spacing={1}>
-                  { data && data?.map((item, index) => {
+                <Masonry columns={numColumns} spacing={1}>
+                  {data && data?.map((item, index) => {
                     return (
                       <div key={index} className="">
                         <div
                           className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                          onClick={() => handleLinkClick(item._id, item.title,item)}
+                          onClick={() => handleLinkClick(item._id, item.title, item)}
                         >
                           <Link
                             href={`/eventdetail/${encodeURIComponent(
@@ -73,8 +86,8 @@ const ItenraryRecommendationGrid = ({
                                 Event
                               </p> */}
                               <h3 className="w-700 text-white">{item.title.length <= 40
-                                    ? item.title
-                                    : `${item.title.slice(0, 40)}...`}</h3>
+                                ? item.title
+                                : `${item.title.slice(0, 40)}...`}</h3>
                               <p className={`mb-0 m1 text-white`}>
                                 {item.location}
                               </p>

@@ -17,6 +17,7 @@ import { Files_URL } from "../apiConfig";
 const Searchbar = () => {
   const router = useRouter();
   const region = router.query.region?.toLowerCase();
+  
   const descriptor = router.query.descriptor?.toLowerCase();
   // redux
   const dispatch = useDispatch();

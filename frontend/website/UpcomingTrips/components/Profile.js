@@ -16,9 +16,6 @@ export default function Profile({ trips }) {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userId);
 
-  // login Data id, email
-  // const { userID, email } = useSelector((state) => state.recommendation);
-  // console.log(userID, email, "userData");
 
   const recommendationsData = useSelector((state) => state.recommendation);
   const { recommendations, loading, error } = recommendationsData;

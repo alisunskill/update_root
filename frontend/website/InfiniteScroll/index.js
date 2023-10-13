@@ -27,7 +27,7 @@ const InfiniteScrollComponent = () => {
   const updateNumColumns = () => {
     if (window.innerWidth >= 1500) {
       setNumColumns(5);
-    }else if (window.innerWidth >= 1200) {
+    } else if (window.innerWidth >= 1200) {
       setNumColumns(4);
     } else if (window.innerWidth >= 768) {
       setNumColumns(3);
@@ -38,14 +38,13 @@ const InfiniteScrollComponent = () => {
     }
   };
 
-  
-useEffect(() => {
-  window.addEventListener("resize", updateNumColumns);
-  updateNumColumns(); 
-  return () => {
-    window.removeEventListener("resize", updateNumColumns);
-  };
-}, []);
+  useEffect(() => {
+    window.addEventListener("resize", updateNumColumns);
+    updateNumColumns();
+    return () => {
+      window.removeEventListener("resize", updateNumColumns);
+    };
+  }, []);
   // const loading = true;
   useEffect(() => {
     dispatch(fetchRecommendations());
@@ -66,12 +65,21 @@ useEffect(() => {
     fetchPosts();
   }, []);
 
-  const handleLinkClick = (itemId, postTitle) => {
-    router.push(
-      `/eventdetail/${encodeURIComponent(
-        postTitle.replace(/ /g, "-")
-      )}?id=${itemId}`
-    );
+  const handleLinkClick = (itemId, postTitle, item) => {
+    if (item?.isItenrary) {
+      router.push({
+        pathname: "/Itenraries",
+        query: {
+          id: JSON.stringify(item._id),
+        },
+      });
+    } else {
+      router.push(
+        `/eventdetail/${encodeURIComponent(
+          postTitle.replace(/ /g, "-")
+        )}?id=${itemId}`
+      );
+    }
   };
 
   const fetchPosts = () => {
@@ -163,10 +171,8 @@ useEffect(() => {
   }, [router.query.descriptor]);
 
   useEffect(() => {
-   const getUserFilterPosts=async()=>{
-
-   }
-   getUserFilterPosts()
+    const getUserFilterPosts = async () => {};
+    getUserFilterPosts();
   }, []);
 
   useEffect(() => {
@@ -208,8 +214,8 @@ useEffect(() => {
   return (
     <div>
       <div></div>
-      <div className="container-fluid px-lg-5 px-2 pt-3 pb-5 d-flex justify-content-center">
-        <div className="row d-flex w-100">
+      <div className="container-fluid px-lg-3 px-2 pt-3 pb-5 d-flex justify-content-center">
+        <div className="row px-lg-4 px-2">
           {/* <h1 className="dark bold text-center fw-600">
             {filteredPosts.length > 0 && filteredPosts[0].region}
           </h1> */}
@@ -219,16 +225,18 @@ useEffect(() => {
           </p> */}
 
           <div className="col-12">
-            <div className="row align-items-center">
-              <div className="col-lg-4 d-flex justify-content-start px-4">
+            <div className="row align-items-center justify-content-start flex-wrap  pt-lg-0 pt-3">
+              <div
+                className={`col-lg-4 col-md-4 col-5 d-flex justify-content-start mb-lg-0 mb-3 px-lg-2 px-1 ${styles.filterbox}`}
+              >
                 <FilterPosts />
               </div>
-              <div className="col-lg-4">
-                <h1 className="dark bold fw-700 pt-4 text-center mb-4">
+              <div className="col-lg-4 col-md-4 col-7 pb-lg-3 pb-0">
+                <h1 className="dark bold fw-700 pt-lg-0 text-center  mb-lg-2 mb-2 experience-saves-header">
                   Your Experiences
                 </h1>
               </div>
-              <div className="col-lg-4 d-flex justify-content-end px-4">
+              <div className="col-lg-4 col-md-4 col-6 d-flex justify-content-lg-end justify-content-md-end justify-content-start  px-lg-4 px-3 pb-lg-3 pt-lg-0 pt-2 pb-md-1 pb-3">
                 <div className="d-flex gap-3">
                   <button className="rounded-5 bg-gray1 border-0 px-3 py-1 fw-600">
                     <Link
@@ -259,46 +267,47 @@ useEffect(() => {
               hasMore={hasMore}
               loader={<h4>Loading...</h4>}
             >
-              <Box sx={{ minHeight: 829 }} className="d-flex justify-content-center">
+              <Box
+                sx={{ minHeight: 829 }}
+                className="d-flex justify-content-center"
+              >
                 {filteredPosts ? (
-                      <Masonry  columns={numColumns}  spacing={1}>
+                  <Masonry columns={numColumns} spacing={1}>
                     {(filteredPosts.length > 0
                       ? filteredPosts
                       : searchResults.length > 0
-                        ? searchResults
-                        : filterPrice.length > 0
-                          ? filterPrice
-                          : recommendationData
+                      ? searchResults
+                      : filterPrice.length > 0
+                      ? filterPrice
+                      : recommendationData
                     ).map((item, index) => (
-                      
-                      
-                        <div key={index} className="">
-                          <div
-                            className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                            onClick={() => handleLinkClick(item._id, item.title)}
-                          >
-                            <img
-                              className={styles.uploadimg}
-                              src={`${Files_URL}${item.images[0]}`}
-                              alt="Uploaded Image"
-                            />
-                    
-                            <div style={{ position: "absolute", zIndex: 999 }}>
-                              <div className="text-center">
-                                <h3 className="w-700 text-white">
-                                  {item.title.length <= 45
-                                    ? item.title
-                                    : `${item.title.slice(0, 45)}...`}
-                                </h3>
-                                <p className={`mb-0 m1 text-white`}>
-                                  {item.region.split(" ")[0]}
-                                </p>
-                              </div>
+                      <div key={index} className="">
+                        <div
+                          className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
+                          onClick={() =>
+                            handleLinkClick(item._id, item.title, item)
+                          }
+                        >
+                          <img
+                            className={styles.uploadimg}
+                            src={`${Files_URL}${item.images[0]}`}
+                            alt="Uploaded Image"
+                          />
+
+                          <div style={{ position: "absolute", zIndex: 999 }}>
+                            <div className="text-center">
+                              <h3 className="w-700 text-white">
+                                {item.title.length <= 45
+                                  ? item.title
+                                  : `${item.title.slice(0, 45)}...`}
+                              </h3>
+                              <p className={`mb-0 m1 text-white`}>
+                                {item.region.split(" ")[0]}
+                              </p>
                             </div>
                           </div>
                         </div>
-                    
-                    
+                      </div>
                     ))}
                   </Masonry>
                 ) : filtereDescriptor ? (
@@ -306,10 +315,10 @@ useEffect(() => {
                     {(filtereDescriptor.length > 0
                       ? filtereDescriptor
                       : searchResults.length > 0
-                        ? searchResults
-                        : filterPrice.length > 0
-                          ? filterPrice
-                          : recommendationData
+                      ? searchResults
+                      : filterPrice.length > 0
+                      ? filterPrice
+                      : recommendationData
                     ).map((item, index) => (
                       <div key={index}>
                         {console.log(item, "des")}

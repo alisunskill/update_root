@@ -31,8 +31,9 @@ export default function NearSlider() {
             return {
               id: recommendation._id,
               title: recommendation.title,
-              region: recommendation.region,
+              location: recommendation.location,
               image: recommendation.images[0],
+              isItenrary:recommendation.location
             };
           }
           return null;
@@ -51,12 +52,22 @@ export default function NearSlider() {
     );
   }
 
-  const handleLinkClick = (itemId, postTitle) => {
-    router.push(
-      `/eventdetail/${encodeURIComponent(
-        postTitle.replace(/ /g, "-")
-      )}?id=${itemId}`
-    );
+  const handleLinkClick = (itemId, postTitle,post) => {
+    if (post?.isItenrary) {
+      router.push({
+        pathname: "/Itenraries",
+        query: {
+          id: JSON.stringify(post.id),
+        },
+      });
+    } else {
+      router.push(
+        `/eventdetail/${encodeURIComponent(
+          postTitle.replace(/ /g, "-")
+        )}?id=${itemId}`
+      );
+    }
+    
   };
   return (
     <>
@@ -95,7 +106,7 @@ export default function NearSlider() {
           <SwiperSlide
             key={index}
             className={` d-flex justify-content-center align-items-center ${styles.savelink1}`}
-            onClick={() => handleLinkClick(post.id, post.title)}
+            onClick={() => handleLinkClick(post.id, post.title,post)}
           >
             <img
               className={`${styles.scenery2} object-cover`}
@@ -107,11 +118,9 @@ export default function NearSlider() {
               className={styles.scenerybox}
             >
               <div className="text-center">
-                <p className={`mb-0 letterspac text-white f-16`}>ITINERARY</p>
+                {/* <p className={`mb-0 letterspac text-white f-16`}>ITINERARY</p> */}
                 <h5 className="w-700 text-white"> {post.title}</h5>
-                <p className={`mb-0 m1 text-white f-16`}>
-                  {post.region.slice(0, 9)}
-                </p>
+                <p className={`mb-0 m1 text-white f-16`}>{post.location}</p>
               </div>
             </div>
           </SwiperSlide>

@@ -1,13 +1,13 @@
-import React from 'react'
-import SinglePost from '../website/CreateItinerary/SinglePost'
+import React from "react";
+import SinglePost from "../website/CreateItinerary/SinglePost";
 import Title from "../components/Title";
 
-export default function singlePost()  {
+export default function singlePost() {
   return (
     <div>
-            <Title title="SinglePost" />
+      <Title title="SinglePost" />
 
-        <SinglePost />
+      <SinglePost />
     </div>
-  )
+  );
 }

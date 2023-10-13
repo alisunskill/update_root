@@ -16,16 +16,13 @@ import {
 } from "../../store/actions/recommendationActions";
 import { useDispatch, useSelector } from "react-redux";
 
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
 import IconButton from "@mui/material/IconButton";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import CloseIcon from "@mui/icons-material/Close"; // Icon for removing images
 import RoomIcon from "@mui/icons-material/Room";
 import { GoogleMapApiKey, API_URL } from "../../apiConfig";
-
-
-
 
 const apiKey = process.env.SECRET_KEY;
 
@@ -36,17 +33,16 @@ export default () => {
   const fileInputRef = useRef(null);
 
   const [showAlert, setShowAlert] = useState(false);
-  const [title, setTitle] = useState('')
-  const [cost, setCost] = useState('')
-  const [hours, setHours] = useState('')
-  const [experience, setExperience] = useState('')
-  const [location, setLocation] = useState('')
-  const [region, setRegion] = useState('')
-  const [description, setDescription] = useState('')
-  const [descriptors, setDescriptors] = useState([])
-  const [links, setLinks] = useState('')
+  const [title, setTitle] = useState("");
+  const [cost, setCost] = useState("");
+  const [hours, setHours] = useState("");
+  const [experience, setExperience] = useState("");
+  const [location, setLocation] = useState("");
+  const [region, setRegion] = useState("");
+  const [description, setDescription] = useState("");
+  const [descriptors, setDescriptors] = useState([]);
+  const [links, setLinks] = useState("");
   const [images, setImages] = useState([]);
-
 
   const [posts, setPosts] = useState([]);
 
@@ -68,15 +64,13 @@ export default () => {
     }
   };
 
-
   const defaultProps = {
     center: {
       lat: 33.572423,
-      lng: 73.146750
+      lng: 73.14675,
     },
-    zoom: 11
+    zoom: 11,
   };
-
 
   useEffect(() => {
     // Get the user's current location using the browser's geolocation API
@@ -111,14 +105,11 @@ export default () => {
     }
   }, [currentLocation]);
 
-
-
-  const [isFormFilled, setIsFormFilled] = useState(false)
+  const [isFormFilled, setIsFormFilled] = useState(false);
 
   //itineraries
-  const [itineraries, SetItineraries] = useState([])
-  console.log("ITS", itineraries)
-
+  const [itineraries, SetItineraries] = useState([]);
+  console.log("ITS", itineraries);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -149,8 +140,8 @@ export default () => {
         description,
         links,
         longitude: currentLocation.lng,
-        latitude: currentLocation.lat
-      }
+        latitude: currentLocation.lat,
+      };
       const updatedItineraries = [...itineraries, newItinerary];
       SetItineraries(updatedItineraries);
 
@@ -178,23 +169,21 @@ export default () => {
       // Append images
       for (let i = 0; i < images.length; i++) {
         formData.append("images", images[i]);
-        console.log(images[i])
+        console.log(images[i]);
       }
 
-      console.log(formData)
+      console.log(formData);
 
       // Dispatch the fetchCreateRecommendations action with formData
       const data = await dispatch(fetchCreateRecommendations(formData, token));
-      console.log(data)
+      console.log(data);
       setPosts((prevPosts) => [...prevPosts, data]);
 
       const postsss = [...posts, data];
 
-
       if (postsss.length > 1) {
-        addItineraryinBackend(postsss)
-      }
-      else {
+        addItineraryinBackend(postsss);
+      } else {
         router.push("/");
       }
 
@@ -205,19 +194,18 @@ export default () => {
     }
   };
 
-
   const isFormDataValid = () => {
     if (
-      !title.trim() ||                     // Title must not be empty
-      images.length === 0 ||        // At least one file must be selected
-      !cost.trim() ||                      // Cost must not be empty
-      !hours.trim() ||                     // Hours must not be empty
-      !experience.trim() ||                // Experience must not be empty
-      !location.trim() ||                  // Location must not be empty
-      !region.trim() ||                    // Region must not be empty
-      descriptors.length === 0 ||           // At least one descriptor must be selected
-      !description.trim() ||               // Description must not be empty
-      !links.trim()                        // Links must not be empty
+      !title.trim() || // Title must not be empty
+      images.length === 0 || // At least one file must be selected
+      !cost.trim() || // Cost must not be empty
+      !hours.trim() || // Hours must not be empty
+      !experience.trim() || // Experience must not be empty
+      !location.trim() || // Location must not be empty
+      !region.trim() || // Region must not be empty
+      descriptors.length === 0 || // At least one descriptor must be selected
+      !description.trim() || // Description must not be empty
+      !links.trim() // Links must not be empty
     ) {
       return false;
     }
@@ -227,25 +215,35 @@ export default () => {
   useEffect(() => {
     const isFormFilled = async () => {
       if (
-        !title.trim() ||                     // Title must not be empty
-        images.length === 0 ||        // At least one file must be selected
-        !cost.trim() ||                      // Cost must not be empty
-        !hours.trim() ||                     // Hours must not be empty
-        !experience.trim() ||                // Experience must not be empty
-        !location.trim() ||                  // Location must not be empty
-        !region.trim() ||                    // Region must not be empty
-        descriptors.length === 0 ||           // At least one descriptor must be selected
-        !description.trim() ||               // Description must not be empty
-        !links.trim()                        // Links must not be empty
+        !title.trim() || // Title must not be empty
+        images.length === 0 || // At least one file must be selected
+        !cost.trim() || // Cost must not be empty
+        !hours.trim() || // Hours must not be empty
+        !experience.trim() || // Experience must not be empty
+        !location.trim() || // Location must not be empty
+        !region.trim() || // Region must not be empty
+        descriptors.length === 0 || // At least one descriptor must be selected
+        !description.trim() || // Description must not be empty
+        !links.trim() // Links must not be empty
       ) {
         setIsFormFilled(false);
-      }
-      else {
+      } else {
         setIsFormFilled(true);
       }
-    }
+    };
     isFormFilled();
-  }, [title, images, cost, hours, experience, location, region, descriptors, description, links]);
+  }, [
+    title,
+    images,
+    cost,
+    hours,
+    experience,
+    location,
+    region,
+    descriptors,
+    description,
+    links,
+  ]);
 
   const addItinerary = async () => {
     if (!isFormDataValid()) {
@@ -265,8 +263,8 @@ export default () => {
       description,
       links,
       longitude: currentLocation.lng,
-      latitude: currentLocation.lat
-    }
+      latitude: currentLocation.lat,
+    };
     const updatedItineraries = [...itineraries, newItinerary];
     SetItineraries(updatedItineraries);
 
@@ -305,55 +303,51 @@ export default () => {
     // Append images
     for (let i = 0; i < images.length; i++) {
       formData.append("images", images[i]);
-      console.log(images[i])
+      console.log(images[i]);
     }
 
-    console.log(formData)
+    console.log(formData);
 
     // Dispatch the fetchCreateRecommendations action with formData
     const data = await dispatch(fetchCreateRecommendations(formData, token));
-    console.log(data)
+    console.log(data);
     setPosts((prevPosts) => [...prevPosts, data]);
 
     //making the states empty
-    setTitle('')
-    setCost('')
-    setHours('')
-    setExperience('')
-    setLocation('')
-    setRegion('')
-    setDescription('')
-    setDescriptors([])
-    setLinks('')
-    setImages([])
-  }
+    setTitle("");
+    setCost("");
+    setHours("");
+    setExperience("");
+    setLocation("");
+    setRegion("");
+    setDescription("");
+    setDescriptors([]);
+    setLinks("");
+    setImages([]);
+  };
 
   const addItineraryinBackend = async (postsss) => {
-
-
     const userID = localStorage.getItem("userID");
     const url = `${API_URL}api/itineraryposts/createItineraryPost`;
     fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userID: userID,
-        posts: postsss
+        posts: postsss,
       }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         router.push("/");
       })
-      .catch(error => {
-
-        console.log(error)
+      .catch((error) => {
+        console.log(error);
       });
-  }
-
+  };
 
   const handleFilesSelected = (e) => {
     const files = e.target.files;
@@ -371,13 +365,6 @@ export default () => {
 
     setImages(updatedFiles);
   };
-
-
-
-
-
-
-
 
   const handleRemoveFile = (indexToRemove) => {
     const updatedFiles = images.filter((_, index) => index !== indexToRemove);
@@ -398,12 +385,15 @@ export default () => {
               <h3>{itineraries.length > 1 ? "Itinerary" : "Post"}</h3>
               <div className="itinerary-cards" style={{ display: "flex" }}>
                 {itineraries.map((itinerary, index) => (
-                  <div key={index} style={{
-                    marginRight: "10px",
-                    borderRadius: '5px',
-                    border: '2px solid #7CC5E5', // Specify border style and color here
-                    padding: '4px',
-                  }}>
+                  <div
+                    key={index}
+                    style={{
+                      marginRight: "10px",
+                      borderRadius: "5px",
+                      border: "2px solid #7CC5E5", // Specify border style and color here
+                      padding: "4px",
+                    }}
+                  >
                     {itinerary.title}
                   </div>
                 ))}
@@ -425,9 +415,7 @@ export default () => {
                   name="title"
                   className="form-control"
                   value={title}
-                  onChange={(e) =>
-                    setTitle(e.target.value)
-                  }
+                  onChange={(e) => setTitle(e.target.value)}
                   required
                   placeholder="Enter a title..."
                   style={{ width: "90%" }}
@@ -442,8 +430,7 @@ export default () => {
 
               <div className="row">
                 <div className="col-lg-7 col-md-6 col-12">
-
-                  <div >
+                  <div>
                     <div className="row justify-content-between mt-3 ">
                       <div>
                         <div>
@@ -463,7 +450,6 @@ export default () => {
                             style={{ display: "none" }}
                             ref={fileInputRef}
                           />
-
                         </div>
 
                         <div>
@@ -491,7 +477,10 @@ export default () => {
                                   />
                                 ) : (
                                   <video controls width="100%">
-                                    <source src={URL.createObjectURL(item)} type={item.type} />
+                                    <source
+                                      src={URL.createObjectURL(item)}
+                                      type={item.type}
+                                    />
                                     Your browser does not support the video tag.
                                   </video>
                                 )}
@@ -499,8 +488,6 @@ export default () => {
                             ))}
                           </ImageList>
                         </div>
-
-
                       </div>
                     </div>
                   </div>
@@ -511,7 +498,6 @@ export default () => {
                       name="location"
                       className="form-control py-2"
                       value={location}
-
                       onChange={(e) => setLocation(e.target.value)}
                       required
                       placeholder="Provide a Location"
@@ -525,9 +511,7 @@ export default () => {
                       className="form-control "
                       id="exampleFormControlTextarea5"
                       value={region}
-                      onChange={(e) =>
-                        setRegion(e.target.value)
-                      }
+                      onChange={(e) => setRegion(e.target.value)}
                       required
                       rows="5"
                       placeholder="General information you’d like to share..."
@@ -542,10 +526,7 @@ export default () => {
                       id="exampleFormControlTextarea1"
                       name="experience"
                       value={experience}
-
-                      onChange={(e) =>
-                        setExperience(e.target.value)
-                      }
+                      onChange={(e) => setExperience(e.target.value)}
                       required
                       rows="5"
                     ></textarea>
@@ -560,11 +541,7 @@ export default () => {
                       rows="4"
                       name="description"
                       value={description}
-
-                      onChange={(e) =>
-                        setDescription(e.target.value,
-                        )
-                      }
+                      onChange={(e) => setDescription(e.target.value)}
                       required
                     ></textarea>
                   </div>
@@ -576,21 +553,17 @@ export default () => {
                       id="exampleFormControlTextarea3"
                       rows="4"
                       value={links}
-
                       name="links"
-                      onChange={(e) =>
-                        setLinks(e.target.value)
-                      }
+                      onChange={(e) => setLinks(e.target.value)}
                       required
                     ></textarea>
                   </div>
                 </div>
-                <div className="col-12 col-lg-1">
-                  <div className="row">
+                <div className="col-12 col-lg-1 col-md-1">
+                  <div className="row justify-content-center">
                     <div
                       className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
                     >
-
                       <DescriptorRadio
                         descriptor="food"
                         descriptors={descriptors}
@@ -610,29 +583,28 @@ export default () => {
                         iconSrc={travelicon}
                       />
                       {/* Add more DescriptorRadio components for other descriptors */}
-
                     </div>
                   </div>
                 </div>
-                <div className="col-lg-4 col-md-4 col-12">
-                  <div style={{ height: "100vh", width: "100%" }}>
-                    <div class="responsive-map" >
+                <div className="col-lg-4 col-md-5 col-12">
+                  <div style={{ width: "100%" }}>
+                    <div class="responsive-map">
                       <input
                         type="text"
                         placeholder="Search for a location"
                         onChange={handleLocationSearch}
                         value={searchValue}
                         style={{
-                          position: 'absolute',
-                          top: '10px',
-                          marginLeft: '5px',
-                          marginRight: '5px',
+                          position: "absolute",
+                          top: "10px",
+                          marginLeft: "5px",
+                          marginRight: "5px",
                           width: "80%",
                           zIndex: 1,
-                          height: '7.5%',
-                          borderWidth: '1px',
+                          height: "7.5%",
+                          borderWidth: "1px",
                           borderColor: "#7CC5E5",
-                          borderRadius: '20px'
+                          borderRadius: "20px",
                         }}
                       />
                       <GoogleMapReact
@@ -658,7 +630,6 @@ export default () => {
                       </GoogleMapReact>
                     </div>
 
-
                     <div className="form-group col-lg-12 col-12 text-center pt-2 pt-lg-2">
                       <Image
                         width="40"
@@ -669,43 +640,39 @@ export default () => {
                       />
                       <h5 className="fw-600">Hours of Operation</h5>
 
-                      <div className="d-flex justify-content-center align-items-center">
-                        <input
-                          type="text"
-                          name="hours"
-                          className="form-control py-2 w-50"
-                          value={hours}
-
-                          onChange={(e) =>
-                            setHours(e.target.value)
-                          }
-                          required
-                          placeholder="Hours of Operation"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group col-lg-12 col-12 text-center align-items-center pt-3 pt-lg-5 justify-content-center flex-column d-flex">
-                      <Image
-                        width="45"
-                        height="30"
-                        src={moneyicon}
-                        className="mt-3 mb-3"
-                        alt="calender"
-                      />
-                      <h5 className="fw-600">Cost to Attend</h5>
-                      <div className="d-flex justify-content-center align-items-center">
-                        <input
-                          type="number"
-                          name="cost"
-                          className="form-control py-2"
-                          value={cost}
-
-                          onChange={(e) =>
-                            setCost(e.target.value)
-                          }
-                          required
-                          placeholder="Cost to Attend"
-                        />
+                      <div className="d-flex justify-content-center  align-items-center">
+                        <div className="w-75">
+                          <input
+                            type="text"
+                            name="hours"
+                            className="form-control py-2"
+                            value={hours}
+                            onChange={(e) => setHours(e.target.value)}
+                            required
+                            placeholder="Hours of Operation"
+                          />
+                          <div className="form-group col-lg-12 col-12 text-center align-items-center pt-3 pt-lg-5 justify-content-center flex-column d-flex">
+                            <Image
+                              width="45"
+                              height="30"
+                              src={moneyicon}
+                              className="mt-3 mb-3"
+                              alt="calender"
+                            />
+                            <h5 className="fw-600">Cost to Attend</h5>
+                            <div className="d-flex justify-content-center align-items-center w-100">
+                              <input
+                                type="number"
+                                name="cost"
+                                className="form-control py-2"
+                                value={cost}
+                                onChange={(e) => setCost(e.target.value)}
+                                required
+                                placeholder="Cost to Attend"
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -723,7 +690,7 @@ export default () => {
                 </button>
               </div>
             )} */}
-            <div className="d-flex justify-content-end mt-lg-5 mt-4">
+            <div className="d-flex justify-content-end mt-lg-5 mt-4  pb-lg-5">
               <button
                 form="recommendationForm"
                 type="submit"
@@ -734,17 +701,18 @@ export default () => {
               </button>
             </div>
           </div>
-
-
         </div>
-
-
       </div>
     </>
   );
 };
 
-const DescriptorRadio = ({ descriptor, descriptors, setDescriptors, iconSrc }) => {
+const DescriptorRadio = ({
+  descriptor,
+  descriptors,
+  setDescriptors,
+  iconSrc,
+}) => {
   return (
     <div className={styles.eventicons}>
       <label>
@@ -770,9 +738,9 @@ const DescriptorRadio = ({ descriptor, descriptors, setDescriptors, iconSrc }) =
           style={
             descriptors.includes(descriptor)
               ? {
-                border: "2px solid green",
-                borderRadius: "50px",
-              }
+                  border: "2px solid green",
+                  borderRadius: "50px",
+                }
               : { border: "none" }
           }
         />

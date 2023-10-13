@@ -156,7 +156,7 @@ export default function EventDetail() {
     };
     fetchEventDetail();
     totalLikes();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (userData) {
@@ -416,6 +416,7 @@ export default function EventDetail() {
 
   const sendFavListToBackend = async (selectedIds) => {
     const userID = localStorage.getItem("userID");
+    console.log("Selected IDDDDDSSSSSS", selectedIds);
     try {
       const response = await axios.post(`${API_URL}api/savepost`, {
         postId: selectedIds,

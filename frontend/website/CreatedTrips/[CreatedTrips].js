@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchSingleTrip } from "../../store/actions/singleTripAction";///
+import { fetchSingleTrip } from "../../store/actions/singleTripAction"; ///
 import {
   updateTripAction,
   removeTripAction,
@@ -48,6 +48,28 @@ function CreatedTrips() {
   const [postid, setPostId] = useState("");
   const [note, setNote] = useState("");
   const [listTrip, setListTrip] = useState(1);
+  const [numColumns, setNumColumns] = useState(4);
+  const updateNumColumns = () => {
+    if (window.innerWidth >= 1500) {
+      setNumColumns(5);
+    } else if (window.innerWidth >= 1200) {
+      setNumColumns(4);
+    } else if (window.innerWidth >= 768) {
+      setNumColumns(3);
+    } else if (window.innerWidth >= 500) {
+      setNumColumns(2);
+    } else {
+      setNumColumns(1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateNumColumns);
+    updateNumColumns();
+    return () => {
+      window.removeEventListener("resize", updateNumColumns);
+    };
+  }, []);
 
   const handleListView = () => {
     setListTrip(2);
@@ -61,13 +83,12 @@ function CreatedTrips() {
       setPostId(selectedIdsFromLocalStorage);
     }
   }, []);
-  const [userId, setUserId] = useState('')
+  const [userId, setUserId] = useState("");
   useEffect(() => {
     const fetchTrips = async () => {
-      const uid = await localStorage.getItem("userID")
-      setUserId(uid)
-
-    }
+      const uid = await localStorage.getItem("userID");
+      setUserId(uid);
+    };
     fetchTrips();
   }, []);
 
@@ -175,10 +196,6 @@ function CreatedTrips() {
 
   // note message
   const saveHandle = async () => {
-    // try {
-    //   const response = await axios.post("http://localhost:8000/api/trips", {
-    //     note,
-    //   });
     try {
       const response = await axios.post(`${API_URL}api/trips`, {
         note,
@@ -215,10 +232,10 @@ function CreatedTrips() {
   return (
     <>
       <div className="container-fluid">
-        <div className="row px-4">
+        <div className="row px-lg-4 px-2">
           <div className="col-12 mb-3">
-            <div className="row align-items-center px-4">
-              <div className="col-lg-4 d-flex justify-content-start">
+            <div className="row align-items-center px-lg-4 px-0  pt-lg-0 pt-4">
+              <div className="col-lg-4 col-12 d-flex justify-content-lg-start justify-content-between">
                 <div className="">
                   {listTrip === 1 ? (
                     <Image
@@ -262,12 +279,12 @@ function CreatedTrips() {
                 </div>
                 <button
                   onClick={() => handleEditTrip(matchingTrip)}
-                  className="rounded-5 bg-gray border-0 px-3 py-1 fw-600 mx-5"
+                  className="rounded-5 bg-gray border-0 px-3 py-1 fw-600 mx-3 mx-lg-5"
                 >
                   Edit Trip
                 </button>
               </div>
-              <div className="col-lg-4">
+              <div className="col-lg-4 col-sm-6 col-12 d-flex justify-content-start justify-content-lg-center">
                 <h1 className="dark bold fw-700 pt-4 text-center mb-4">
                   {matchingTrip ? (
                     matchingTrip?.title
@@ -278,20 +295,20 @@ function CreatedTrips() {
                   )}
                 </h1>
               </div>
-              <div className="col-lg-4 d-flex justify-content-end">
+              <div className="col-lg-4 col-sm-6 col-12 d-flex justify-content-start pb-lg-0 pb-3 justify-content-lg-center ">
                 {matchingTrip ? (
                   <div>
                     {new Date(matchingTrip?.sdate).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "2-digit",
-                            })} &nbsp;{" "}
-                    <span className="fw-600">to</span> &nbsp;
+                      year: "numeric",
+                      month: "long",
+                      day: "2-digit",
+                    })}{" "}
+                    &nbsp; <span className="fw-600">to</span> &nbsp;
                     {new Date(matchingTrip?.edate).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "2-digit",
-                            })}
+                      year: "numeric",
+                      month: "long",
+                      day: "2-digit",
+                    })}
                   </div>
                 ) : (
                   <div className="spinner-border text-primary" role="status">
@@ -310,7 +327,7 @@ function CreatedTrips() {
                 loader={<h4>Loading...</h4>}
               >
                 <Box sx={{ minHeight: 829 }}>
-                  <Masonry columns={3} spacing={2}>
+                  <Masonry columns={numColumns} spacing={1}>
                     {trips.length > 0 ? (
                       <>
                         {recData?.map((trip, index) => {
@@ -366,7 +383,6 @@ function CreatedTrips() {
                   <div className={`col-lg-7 col-md-6 col-12`}>
                     <div className={styles.tripsscrolled}>
                       {trips?.map((item) => {
-
                         return (
                           <div>
                             {item.userID === userIDPerson1 && (
@@ -387,7 +403,7 @@ function CreatedTrips() {
                           /> */}
                                 <div className="">
                                   <label
-                                    className={`form-check-label f-16 fw-600 h4 text-light ${styles.titleheader}`}
+                                    className={`form-check-label f-16 fw-600 h4 mb-0 text-light ${styles.titleheader}`}
                                     for="exampleRadios1"
                                   >
                                     {item.title}
@@ -397,8 +413,8 @@ function CreatedTrips() {
                                     {item && item.sdate
                                       ? item.sdate.slice(0, 7)
                                       : item
-                                        ? item.sdate
-                                        : "No item available"}
+                                      ? item.sdate
+                                      : "No item available"}
                                   </label>
                                 </div>
                                 <button
@@ -410,7 +426,6 @@ function CreatedTrips() {
                                 </button>
                               </div>
                             )}
-
                           </div>
                         );
                       })}
@@ -423,12 +438,10 @@ function CreatedTrips() {
                             return (
                               <div>
                                 {trip.userID === userIDPerson1 && (
-
                                   <div
                                     key={trip?._id}
                                     className={styles.trillistpost}
                                   >
-
                                     <div
                                       className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
                                       onClick={() =>
@@ -463,7 +476,6 @@ function CreatedTrips() {
                                         </div>
                                       </div>
                                     </div>
-
                                   </div>
                                 )}
                               </div>
@@ -480,15 +492,15 @@ function CreatedTrips() {
                       )}
                     </div>
                   </div>
-                  <div className="col-lg-1 col-12">
+                  <div className="col-lg-1 col-md-1 col-12">
                     <div className="row">
                       <div
                         className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
                       ></div>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-4 col-12">
-                    <div style={{ height: "100vh", width: "100%" }}>
+                  <div className="col-lg-4 col-md-5 col-12  mt-lg-0 mt-4">
+                    <div style={{ width: "100%" }}>
                       <div className="responsive-map">
                         <iframe
                           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.7806761080233!2d-93.29138368446431!3d44.96844997909819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b32b6ee2c87c91%3A0xc20dff2748d2bd92!2sWalker+Art+Center!5e0!3m2!1sen!2sus!4v1514524647889"
@@ -517,7 +529,7 @@ function CreatedTrips() {
                                 />
                               </Form.Group>
                             </Form>
-                            <div className="d-flex justify-content-end">
+                            <div className="d-flex justify-content-end pb-lg-0 pb-4">
                               <button
                                 className="savebtn1 text-light"
                                 onClick={saveHandle}
@@ -585,7 +597,7 @@ function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
   };
 
   return (
-    <Modal style={{marginTop:30}} size="md" show={show} onHide={onHide}>
+    <Modal style={{ marginTop: 30 }} size="md" show={show} onHide={onHide}>
       <Modal.Header closeButton>
         <Modal.Title className="fw-600 d-flex  justify-content-center">
           Edit Trip

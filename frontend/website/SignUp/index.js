@@ -13,6 +13,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import ReCAPTCHA from "react-google-recaptcha";
+import { sitekey } from "../../apiConfig";
 function Signup() {
   const router = useRouter();
   const fileInputRef = useRef(null);
@@ -264,7 +265,7 @@ function Signup() {
                   <div className="text-center">
                     <div className="w-100 d-flex justify-content-center mt-3">
                       <ReCAPTCHA
-                        sitekey="6LdNryEnAAAAAHvI4ty3RvMc2dnX0fR9aF1dXq7r"
+                        sitekey={sitekey}
                         onChange={handleCaptchaChange}
                       />
                     </div>

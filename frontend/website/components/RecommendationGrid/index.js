@@ -19,7 +19,9 @@ const RecommendationGrid = ({
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+
   const [currentRecommendations, setCurrentRecommendations] = useState([]);
+  
   const [numColumns, setNumColumns] = useState(4);
   const updateNumColumns = () => {
     if (window.innerWidth >= 1500) {

@@ -17,6 +17,7 @@ import axios from "axios";
 import { handleLogout } from "./authUtils";
 import wlogo from "../../public/images/rootwhite.png";
 import Image from "next/image";
+import { sitekey } from "../../apiConfig";
 
 // import setUserID
 
@@ -201,7 +202,7 @@ function Login() {
                     >
                       <ReCAPTCHA
                         className="w-100 d-flex justify-content-center"
-                        sitekey="6LdNryEnAAAAAHvI4ty3RvMc2dnX0fR9aF1dXq7r"
+                        sitekey={sitekey}
                         onChange={handleCaptchaChange}
                       />
                     </div>
