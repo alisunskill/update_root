@@ -1,0 +1,87 @@
+.post_next_btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.signupheading {
+  font-size: 30px;
+  color: #000;
+  text-align: center;
+}
+.post_central {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../public/images/male.png");
+  background-size: cover;
+  height: 550px;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  color: white;
+  font-size: xx-large;
+  font-weight: bolder;
+  background-size: 100% 100%;
+}
+.post_central1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../public/images/female.png");
+  background-size: cover;
+  height: 550px;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  color: white;
+  font-size: xx-large;
+  font-weight: bolder;
+  background-size: 100% 100%;
+}
+.postheader {
+  font-size: 30px;
+  color: #FFFFFF;
+  margin: 0%;
+  text-align: center;
+  font-weight: 700;
+}
+.itin_button {
+  padding: 30px;
+  background-color: #F4F4F4;
+  color: black;
+  border-radius: 5px;
+  border: none;
+  font-weight: 100;
+  font-size: 30px;
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.itin_globe {
+  height: 500px;
+  width: 100%;
+  max-width: 500px;
+}
+@media only screen and (max-width: 1440px) {
+  .post_central{
+    height: 450px;
+  }
+  .post_central1{
+    height: 450px;
+  }
+  .postheader{
+    font-size: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .postheader{
+    font-size: 16px;
+  }
+  .post_central{
+    height: 300px;
+  }
+  .post_central1{
+    height: 300px;
+  }
+}

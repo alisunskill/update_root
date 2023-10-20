@@ -24,11 +24,11 @@ exports.createUser = async (req, res) => {
     // }
 
     if (existingEmailUser) {
-      return res.status(409).json({ message: "Email already exists" });
+      return res.status(201).json({status:false, message: "Email already exists" });
     }
 
     if (existingUsernameUser) {
-      return res.status(409).json({ message: "Username already exists" });
+      return res.status(201).json({status:false, message: "Username already exists" });
     }
 
     console.log(req.body);
@@ -63,19 +63,26 @@ exports.createUser = async (req, res) => {
       },
     });
 
-    const verificationURL = `${process.env.FRONTEND_URL}login?token=${verificationToken}`;
+    const verificationURL = `${process.env.FRONTEND_URL}verifyEmail?token=${verificationToken}`;
 
     const mailOptions = {
-      from: "asim.sunskilltechs@gmail.com",
+      from: "OnRoot <noreply@yourcompany.com>",
       to: email,
-      subject: "Gmail Verification",
-      text: `Click the following link to verify your email address: ${verificationURL}`,
+      subject: "Account Verification - OnRoot",
+      html: `
+        <p>Dear User,</p>
+        <p>Thank you for choosing OnRoot for your account needs. To ensure the security of your account, please click the following link to verify your email address:</p>
+        <p><a href="${verificationURL}">Verify Your Email</a></p>
+        <p>If you did not sign up for an account with OnRoot, please disregard this email.</p>
+        <p>Best Regards,<br>OnRoot</p>
+      `,
     };
+    
 
     // Send the email
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ message: "User created successfully", user });
+    res.status(201).json({status:true, message: "User created successfully", user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -86,6 +93,7 @@ exports.createUser = async (req, res) => {
 
 exports.verifyEmail = async (req, res) => {
   const { token } = req.query;
+  console.log("token", token);
 
   try {
     const user = await User.findOneAndUpdate(
@@ -105,16 +113,17 @@ exports.verifyEmail = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ message: "Invalid or expired verification token" });
+        .json({ status: "failed", message: "Invalid or expired verification token" });
     }
 
-    // Redirect to a login page or send a success response
-    res.redirect("/login"); // Or res.json({ message: 'Email verified successfully' });
+    // Verification successful
+    res.status(200).json({ status: "verified", message: "Email verified successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ status: "failed", message: "Internal server error" });
   }
 };
+
 
 // Login user
 exports.loginUser = async (req, res) => {
@@ -122,22 +131,22 @@ exports.loginUser = async (req, res) => {
     const { email, password, recaptchaResponse } = req.body;
     console.log(recaptchaResponse, "recaptchaResponse");
     const recaptchaSecretKey = process.env.RECAPETCHA_SECRET_KEY;
-    const recaptchaVerificationURL = `https://www.google.com/recaptcha/api/siteverify`;
-    const verificationResponse = await axios.post(
-      recaptchaVerificationURL,
-      null,
-      {
-        params: {
-          secret: recaptchaSecretKey,
-          response: recaptchaResponse,
-        },
-      }
-    );
-    verificationResponse.data.success = true;
+    // const recaptchaVerificationURL = `https://www.google.com/recaptcha/api/siteverify`;
+    // const verificationResponse = await axios.post(
+    //   recaptchaVerificationURL,
+    //   null,
+    //   {
+    //     params: {
+    //       secret: recaptchaSecretKey,
+    //       response: recaptchaResponse,
+    //     },
+    //   }
+    // );
+    // verificationResponse.data.success = true;
 
-    if (!verificationResponse.data.success) {
-      return res.status(401).json({ message: "reCAPTCHA verification failed" });
-    }
+    // if (!verificationResponse.data.success) {
+    //   return res.status(401).json({ message: "reCAPTCHA verification failed" });
+    // }
 
     // console.log(email, password, "jjj");
 
@@ -146,13 +155,17 @@ exports.loginUser = async (req, res) => {
 
     // Check if the user exists
     if (!user) {
-      return res.status(401).json({ message: "Invalid Credentials" });
+      return res.status(200).json({status:false, message: "User not exists against the email" });
+    }
+
+    if (!user.emailVerified) {
+      return res.status(200).json({status:false, message: "Email is not verified." });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid credentials2" });
+      return res.status(200).json({status:false, message: "Invalid Password" });
     }
 
     const token = jwt.sign({ userId: user._id, email: user.email }, jwtKey, {
@@ -160,6 +173,7 @@ exports.loginUser = async (req, res) => {
     });
     user.token = token;
     res.status(200).json({
+      status:true,
       message: "Login successful",
       token: token,
       userID: user._id,
@@ -197,11 +211,12 @@ exports.forgotPassword = async (req, res) => {
     });
 
     const mailOptions = {
-      from: "muhammadali.sunskilltechs@gmail.com",
+      from: "OnRoot Support <support@onroot.com>",
       to: user.email,
-      subject: "Password Reset",
-      text: `Click the following link to reset your password: ${process.env.FRONTEND_URL}resetpassword?token=${resetToken}`,
+      subject: "Password Reset Request",
+      text: `Dear ${user.firstName},\n\nYou have requested to reset your password on OnRoot. To reset your password, please click the following link:\n\n${process.env.FRONTEND_URL}resetpassword?token=${resetToken}\n\nIf you did not make this request, please disregard this email. Your account's security is important to us.\n\nBest regards,\nOnRoot Support Team`,
     };
+    
 
     // Send the email
     transporter.sendMail(mailOptions, (error, info) => {

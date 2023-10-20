@@ -31,12 +31,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  emailVerified: {
+    type: Boolean,
+    default:false,
+    required: true,
+  },
   token: { type: String },
   resetToken: {
     type: String,
     default: null,
   },
-  resetTokenExpiration: {
+  verificationToken: {
+    type: String,
+    default: null,
+  },
+  verificationTokenExpiration: {
     type: Date,
     default: null,
   },

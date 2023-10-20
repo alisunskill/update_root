@@ -7,6 +7,7 @@ router.post("/", userController.createUser);
 
 // Login user
 router.post("/login", userController.loginUser);
+router.get("/verifyEmail", userController.verifyEmail);
 
 // Forgot password - Generate reset token
 router.post("/forgot-password", userController.forgotPassword);

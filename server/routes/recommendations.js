@@ -15,10 +15,14 @@ const {
   likeRecommendation,
   getTotalLikes,
   UserTotalRecommendations,
-  recommendationDetail
+  recommendationDetail,
+  updateLikes,
+  isRecommendationAlreadyLiked
 } = require("../controllers/recommendations");
 
 router.route("/").get(getAllRecommendations);
+router.route("/updateLikes").post(updateLikes);
+router.route("/isRecommendationAlreadyLiked").post(isRecommendationAlreadyLiked);
 
 router.route("/UserTotalRecommendations").post(UserTotalRecommendations);
 router.route("/testing").get(getAllRecommendationsTesting);
@@ -52,7 +56,7 @@ router.post('/createrecommendation', upload.array('images'), async (req, res) =>
 
   try {
     // Check for missing required fields
-    if (!userID || !title || !cost || !hours || !experience || !description || !location || !descriptors || !region || !links) {
+    if (!userID || !title || !location || !descriptors ) {
       return res.status(400).json({ error: "Missing required fields in the request." });
     }
 

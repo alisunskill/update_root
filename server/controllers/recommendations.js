@@ -241,7 +241,8 @@ const updateRecommendation = async (req, res) => {
 
 // like post
 const likeRecommendation = async (req, res) => {
-  const recommendationId = req.params.recommendationId;
+  const recommendationId = req.body.recommendationId;
+  const userID = req.body.userID;
 
   try {
     const existingRecommendation = await Recommendation.findById(
@@ -252,19 +253,61 @@ const likeRecommendation = async (req, res) => {
       return res.status(404).json({ error: "Recommendation not found." });
     }
 
-    existingRecommendation.likes += 1;
+    const likesArray = existingRecommendation.likes;
 
-    const updatedRecommendation = await existingRecommendation.save();
+    // Check if userID is already in the likes array
+    const indexOfUser = likesArray.indexOf(userID);
+    if (indexOfUser !== -1) {
+      // User already liked the recommendation, remove them
+      likesArray.splice(indexOfUser, 1);
+      existingRecommendation.likes = likesArray;
+      const updatedRecommendation = await existingRecommendation.save();
+      res.status(200).json({ status: false, message: "User unliked this recommendation.", data: updatedRecommendation });
+    } else {
+      // User has not liked the recommendation, add them
+      existingRecommendation.likes.push(userID);
+      const updatedRecommendation = await existingRecommendation.save();
+      res.status(200).json({ status: true, message: "User liked this recommendation.", data: updatedRecommendation });
+    }
 
-    res.status(200).json(updatedRecommendation);
-    console.log("Recommendation liked successfully.");
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({
-      error: "Failed to like recommendation. " + error.message,
+      error: "Failed to like/unlike recommendation. " + error.message,
     });
   }
 };
+
+const isRecommendationAlreadyLiked = async (req, res) => {
+  const recommendationId = req.body.recommendationId;
+  const userID = req.body.userID;
+
+  try {
+    const existingRecommendation = await Recommendation.findById(recommendationId);
+
+    if (!existingRecommendation) {
+      return res.status(404).json({ error: "Recommendation not found." });
+    }
+
+    const likesArray = existingRecommendation.likes;
+
+    // Check if userID is already in the likes array
+    const isLiked = likesArray.includes(userID);
+
+    if (isLiked) {
+      res.status(200).json({ status: true, message: "User has already liked this recommendation." });
+    } else {
+      res.status(200).json({ status: false, message: "User has not liked this recommendation." });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      error: "Failed to check if recommendation is already liked. " + error.message,
+    });
+  }
+};
+
+
 
 // total likes
 const getTotalLikes = async (req, res) => {
@@ -328,6 +371,23 @@ const recommendationDetail = async (req, res) => {
     }
   }
 };
+
+const updateLikes = async (req, res) => {
+  try {
+    // Find all documents where "likes" is a number and update them
+    const documentsToUpdate = await Recommendation.find({ likes: { $exists: true, $type: 16 } });
+
+    for (const doc of documentsToUpdate) {
+      doc.likes = [];
+      await doc.save();
+    }
+
+    console.log("Migration completed successfully.");
+  } catch (error) {
+    console.error("Migration failed:", error);
+  }
+};
+
 module.exports = {
   getAllRecommendations,
   getAllRecommendationsTesting,
@@ -337,5 +397,7 @@ module.exports = {
   likeRecommendation,
   getTotalLikes,
   UserTotalRecommendations,
-  recommendationDetail
+  recommendationDetail,
+  updateLikes,
+  isRecommendationAlreadyLiked
 };

@@ -7,6 +7,7 @@ const recommendationSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, "Title must be provided"],
+    required: true,
   },
 
   images: {
@@ -21,18 +22,13 @@ const recommendationSchema = new mongoose.Schema({
 
   hours: {
     type: String,
-    required: true,
-    default: "9:00 am",
   },
 
   cost: {
     type: Number,
-    required: [true, "Cost must be provided"],
   },
   experience: {
     type: String,
-    required: true,
-    default: "2 year",
   },
   descriptors: {
     type: [String],
@@ -41,7 +37,6 @@ const recommendationSchema = new mongoose.Schema({
 
   region: {
     type: String,
-    required: true,
   },
 
   createdAt: {
@@ -67,11 +62,9 @@ const recommendationSchema = new mongoose.Schema({
   },
   links: {
     type: String,
-    required: true,
   },
   likes: {
-    type: Number,
-    default: 0,
+    type: Array,
   },
   isItenrary:{
     type: Boolean,

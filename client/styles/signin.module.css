@@ -1,0 +1,152 @@
+/* sign up */
+.signupheading1 {
+  font-size: 30px;
+  color: #ffffff;
+  margin: 0%;
+  font-weight: 700;
+}
+
+
+.signupmycontainer {
+  height: 100vh;
+  width: 100%;
+  /* background-image: url("../public/images/bgimag.jpg"); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+}
+.signupsignupcontainer {
+  width: 45%;
+  /* background-image: url("../public/images/Rectangle\ 103.png"); */
+  background-color: #7ec4e6;
+  background-size: cover;
+  border-radius: 20px;
+  padding: 35px 40px;
+  margin: 60px 0px;
+}
+.signupinputfield {
+  text-align: center;
+}
+.signupinput {
+  text-align: center;
+  width: 30%;
+  padding: 10px;
+  border-radius: 20px;
+  border-color: white;
+  margin-top: 10px;
+  outline: none;
+  border: 0px;
+  font-weight: 400;
+}
+.signupinputinfo {
+  width: 66%;
+}
+
+.signupbutton {
+  padding: 10px;
+  width: 66%;
+  background-color: #7cc5e5;
+  color: white;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+/* confirm sign in   */
+.confirmme {
+  background-image: url("../public/images/bglogin.svg");
+  background-size: cover;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  background-position: center;
+}
+.confirmme1 {
+  height: 100vh;
+  /* background-image: url("../public/images/bgrecm.svg"); */
+  background-size: cover;
+  background-color: #7cc5e5;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  background-position: center;
+}
+.confirm_container {
+  max-width: 50%;
+  /* background-image: url("../public/images/Rectangle\ 103.png"); */
+  background-color: #7cc5e5;
+  background-size: cover;
+  border-radius: 20px;
+  margin: 150px 0px;
+  text-align: center;
+}
+.confirm_container1 {
+  max-width: 50%;
+  background-image: url("../public/images/Rectangle\ 103.png");
+  background-size: cover;
+  border-radius: 20px;
+  text-align: center;
+  padding: 90px 50px;
+}
+.confirm_font {
+  color: white;
+  font-weight: 700;
+  padding: 90px 30px;
+  font-size: 30px;
+}
+
+.confirm_font1 {
+  color: white;
+  font-size: 30px;
+  font-weight: 700;
+}
+.confirm_font2 {
+  color: white;
+  font-weight: 700;
+  padding: 15px;
+  font-size: 30px;
+}
+@media only screen and (max-width: 1440px) {
+  .signupsignupcontainer {
+    width: 43%;
+    padding: 45px 40px;
+  }
+  .confirm_container {
+    max-width: 45%;
+  }
+
+  .confirm_font {
+    padding: 50px 50px;
+    font-size: 25px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .signupsignupcontainer {
+    width: 70%;
+    margin-top: 30px;
+  }
+  .captchabox{
+    width: 100%;
+  }
+}
+
+
+@media only screen and (max-width: 600px) and (min-width: 300px) {
+  .signupsignupcontainer {
+    width: 90%;
+    padding: 25px 20px;
+  }
+  .signupinputinfo {
+    width: 86%;
+  }
+  .signupinput {
+    width: 42%;
+  }
+  .resetbtntext{
+    font-size: 14px;
+  }
+}
