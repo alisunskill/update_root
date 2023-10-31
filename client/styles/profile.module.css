@@ -31,6 +31,12 @@
   border: none;
   color: black;
   padding: 7px 20px;
+}.editbtn1 {
+  background-color: #c4c1c1;
+  border-radius: 10px;
+  border: none;
+  color: black;
+  padding: 7px 20px;
 }
 .editbtn:hover {
   background-color: #f9f9f9;

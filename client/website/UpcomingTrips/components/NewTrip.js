@@ -37,7 +37,7 @@ export default function NewTrip(props) {
 
     if (
       !formData.title ||
-      !formData.region ||
+      //!formData.region ||
       !formData.email ||
       !formData.sdate ||
       !formData.edate

@@ -38,11 +38,11 @@ const ThanksPage = () => {
 
   return (
     <div style={containerStyle}>
-      <p style={{
+      <h1 style={{
         color: '#04104C',
         fontWeight: 'bold',
-        fontSize: '30px'
-      }}>Thanks for sharing!</p>
+        fontSize: '43px',textAlign:'center'
+      }}>Thanks for sharing!</h1>
       <div style={buttonContainerStyle}>
         <button onClick={() => {
           router.push("/");

@@ -5,7 +5,7 @@ import moneyicon from "../../public/images/moneyicon.svg";
 import burger from "../../public/images/burger.svg";
 import painticon from "../../public/images/painticon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import travelicon from "../../public/images/travelicon.svg";
 import Card from "react-bootstrap/Card";
 import Image from "next/image";
@@ -17,6 +17,27 @@ import {
 } from "../../store/actions/recommendationActions";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+
+import culture from "../../public/images/descriptors/culture.svg";
+import sculture from "../../public/images/descriptors/sculture.svg";
+import thrills from "../../public/images/descriptors/thrills.svg";
+import sthrills from "../../public/images/descriptors/sthrills.svg";
+import food from "../../public/images/descriptors/food.svg";
+import sfood from "../../public/images/descriptors/sfood.svg";
+
+import fgroup from "../../public/images/descriptors/fgroup.svg";
+import sfgroup from "../../public/images/descriptors/sfgroup.svg";
+import family from "../../public/images/descriptors/family.svg";
+import sfamily from "../../public/images/descriptors/sfamily.svg";
+import hanged from "../../public/images/descriptors/hanged.svg";
+import shanged from "../../public/images/descriptors/shanged.svg";
+
+import guitar from "../../public/images/descriptors/guitar.svg";
+import sguitar from "../../public/images/descriptors/sguitar.svg";
+import nature from "../../public/images/descriptors/nature.svg";
+import snature from "../../public/images/descriptors/snature.svg";
+import relaxation from "../../public/images/descriptors/relaxation.svg";
+import srelaxation from "../../public/images/descriptors/srelaxation.svg";
 
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -33,8 +54,11 @@ export default () => {
   const dispatch = useDispatch();
 
   const fileInputRef = useRef(null);
+  const [currency, setCurrency] = React.useState("USD");
+  const countryCodes = ['USD','EUR', 'PKR','IQD','IMP'];
 
   const [showAlert, setShowAlert] = useState(false);
+  const [Ittitle, setItTitle] = useState("");
   const [title, setTitle] = useState("");
   const [cost, setCost] = useState("");
   const [hours, setHours] = useState("");
@@ -50,7 +74,10 @@ export default () => {
 
   const [isFormInProgress, setIsFormInProgress] = useState(false)
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: 33.572423,
+    lng: 73.14675,
+  });
   const [address, setAddress] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const handleLocationSearch = (e) => {
@@ -210,14 +237,14 @@ export default () => {
       //   });
       // }
     }
-    
-    
+
+
     e.preventDefault();
 
     if (!isFormDataValid()) {
       Swal.fire({
         title: "Adding Itinerary",
-        text: "Title, Location, Descrptors & Upload Media Are Required ",
+        text: "Title & Upload Media Are Required ",
         icon: "warning",
       });
       setShowAlert(true);
@@ -265,6 +292,7 @@ export default () => {
       formData.append("description", description);
       formData.append("links", links);
       formData.append("isItenrary", true);
+      formData.append("currency", currency);
 
       // Append descriptors as an array
       descriptors.forEach((descriptor, index) => {
@@ -288,7 +316,6 @@ export default () => {
 
       addItineraryinBackend(postsss);
 
-      router.push("/thanksPage");
 
       // Rest of your code...
     } catch (error) {
@@ -300,13 +327,13 @@ export default () => {
   const isFormDataValid = () => {
     if (
       !title.trim() || // Title must not be empty
-      images.length === 0 || // At least one file must be selected
+      images.length === 0  // At least one file must be selected
       //!cost.trim() || // Cost must not be empty
       //!hours.trim() || // Hours must not be empty
       //!experience.trim() || // Experience must not be empty
-      !location.trim() || // Location must not be empty
+      //!location.trim() || // Location must not be empty
       // !region.trim() || // Region must not be empty
-      descriptors.length === 0  // At least one descriptor must be selected
+     // descriptors.length === 0  // At least one descriptor must be selected
       //!description.trim() || // Description must not be empty
       //!links.trim() // Links must not be empty
     ) {
@@ -319,13 +346,13 @@ export default () => {
     const isFormFilled = async () => {
       if (
         !title.trim() || // Title must not be empty
-        images.length === 0 || // At least one file must be selected
+        images.length === 0  // At least one file must be selected
         // !cost.trim() || // Cost must not be empty
         // !hours.trim() || // Hours must not be empty
         // !experience.trim() || // Experience must not be empty
-        !location.trim() || // Location must not be empty
+        //!location.trim() || // Location must not be empty
         //!region.trim() || // Region must not be empty
-        descriptors.length === 0  // At least one descriptor must be selected
+        //descriptors.length === 0  // At least one descriptor must be selected
         //!description.trim() || // Description must not be empty
         //!links.trim() // Links must not be empty
       ) {
@@ -353,15 +380,15 @@ export default () => {
     const ISFORMINPROGRESS = async () => {
       let isAnyFieldFilled =
         title.trim() || // Title is filled
-        images.length > 0 || // At least one file is selected
+        images.length > 0  // At least one file is selected
         //cost.trim() || // Cost is filled
         //hours.trim() || // Hours is filled
         //experience.trim() || // Experience is filled
-        location.trim() || // Location is filled
+       // location.trim() || // Location is filled
         //region.trim() || // Region is filled
-        descriptors.length > 0  // At least one descriptor is selected
-        //description.trim() || // Description is filled
-        //links.trim(); // Links is filled
+       // descriptors.length > 0  // At least one descriptor is selected
+      //description.trim() || // Description is filled
+      //links.trim(); // Links is filled
       setIsFormInProgress(isAnyFieldFilled);
     };
     ISFORMINPROGRESS();
@@ -379,7 +406,7 @@ export default () => {
   ]);
   const addItinerary = async () => {
     if (!isFormDataValid()) {
-      alert("Please fill in all required fields.");
+     // alert("Please fill in all required fields.");
       setShowAlert(true);
       return;
     }
@@ -426,6 +453,7 @@ export default () => {
     formData.append("description", description);
     formData.append("links", links);
     formData.append("isItenrary", true);
+    formData.append("currency", currency);
 
     // Append descriptors as an array
     descriptors.forEach((descriptor, index) => {
@@ -460,25 +488,37 @@ export default () => {
 
   const addItineraryinBackend = async (postsss) => {
     const userID = localStorage.getItem("userID");
-    const url = `${API_URL}api/itineraryposts/createItineraryPost`;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userID: userID,
-        posts: postsss,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        router.push("/thanksPage");
-      })
-      .catch((error) => {
-        console.log(error);
+    if (Ittitle.length < 5) {
+      Swal.fire({
+        title: "Adding Itinerary",
+        text: "Please enter the title of itenrary",
+        icon: "warning",
       });
+      return;
+    }
+    else {
+
+      const url = `${API_URL}api/itineraryposts/createItineraryPost`;
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itTitle: Ittitle,
+          userID: userID,
+          posts: postsss,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          router.push("/thanksPage");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const handleFilesSelected = (e) => {
@@ -511,89 +551,144 @@ export default () => {
         </div>
       )} */}
       <div className="container-fluid pb-5">
-        <div style={{ textAlign: 'center' }}>
-          <button style={{
-            display: 'block',
-            margin: '0 auto',
-            background: "#4562B2",
-            color: 'white',
-            borderStyle: 'none',
-            padding: "6px",
-            borderRadius: '8px',
-          }}
-            onClick={() => {
-              if (isFormFilled) { addItinerary() } else {
-                Swal.fire({
-                  title: "Adding Recommendation",
-                  text: "Title, Location, Descrptors and Upload Media are compulsory ",
-                  icon: "warning",
-                });
-              }
-            }}
-          >+ Recommendation</button>
-        </div>
-        {itineraries.length > 0 && (
-          <div className={`row ${styles.createdhero}`}>
-            <div className="col-12">
 
-              <h3 className="fw-600 px-3 pb-2">
-                {itineraries.length > 1 ? "Itinerary" : "Itinerary"}
-              </h3>
-              <div className="d-flex flex-wrap">
-                {itineraries.map((itinerary, index) => (
-                  <div>
-                    <h6 className="p-2 fw-600  mb">
-                      {itinerary.title.length > 20
-                        ? `${itinerary.title.slice(0, 20)}...`
-                        : itinerary.title}
-                    </h6>
-                    <Card
-                      key={index}
-                      className={`mr-3  ${styles.carditiner}`}
-                      style={{ width: "170px", marginLeft: index == 0 ? 0 : '10px' }}
-                    >
-
-                      <Card.Body className="p-0">
-                        <img
-                          src={URL.createObjectURL(itinerary?.images[0])}
-                          alt={`Image ${index}`}
-                          style={{ height: "100px", width: "100%" }}
-                          className="rounded-2"
-                          loading="lazy"
-                        />
-
-                      </Card.Body>
-
-                    </Card>
-                  </div>
-                ))}
-              </div>
+        <div className={`row ${styles.createdhero}`}>
+          <div className="col-12">
 
 
+            <div className="d-flex flex-wrap">
+              {itineraries.map((itinerary, index) => (
+                <div>
 
-
-              {/* <h3>{itineraries.length > 1 ? "Itinerary" : "Post"}</h3>
-              <div className="itinerary-cards" style={{ display: "flex" }}>
-                {itineraries.map((itinerary, index) => (
-                  <div
+                  <Card
                     key={index}
+                    className={`mr-3 rounded-5 ${styles.carditiner}`}
                     style={{
-                      marginRight: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #7CC5E5",
-                      padding: "4px",
+                      width: "100px",
+                      backgroundColor: "#D9D9D9",
+                      marginLeft: index === 0 ? 0 : "10px",
+                      position: "relative",
                     }}
                   >
-                    {itinerary.title}
-                  </div>
-                ))}
-              </div> */}
+                    <Card.Body
+                      className="p-0"
+                      style={{
+                        position: "relative",
+                        margin: 0, // Add this to remove the margin
+                      }}
+                    >
+                      <img
+                        src={URL.createObjectURL(itinerary?.images[0])}
+                        alt={`Image ${index}`}
+                        style={{
+                          height: "100px",
+                          width: "100%",
+                          margin: 0, // Add this to remove the margin
+                          padding: 0, // Add this to remove the padding
+                        }}
+                        className="rounded-5"
+                        loading="lazy"
+                      />
+
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          textAlign: "center",
+                          background: "rgba(255, 255, 255, 0.8)",
+                          padding: "5px",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        {itinerary.title.length > 5
+                          ? `${itinerary.title.slice(0, 5)}...`
+                          : itinerary.title}
+                      </div>
+
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        style={{
+                          position: "absolute",
+                          top: "0",
+                          right: "0",
+                          cursor: "pointer",
+                          color: "black",
+                          marginRight: '10px',
+                          marginTop: "4px"
+                        }}
+                        onClick={() => {
+                          const updatedItineraries = itineraries.filter(
+                            (it) => it.title !== itinerary.title
+                          );
+
+                          // Update the state with the filtered itineraries
+                          SetItineraries(updatedItineraries);
+                        }}
+                      />
+                    </Card.Body>
+                  </Card>
+
+
+                </div>
+              ))}
+              <div>
+                <div
+                  className="p-2 fw-600 mb rounded-5 d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    marginLeft: itineraries.length > 0 ? "10px" : "0",
+                    backgroundColor: "#D9D9D9",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    onClick={() => {
+                      if (isFormFilled) { addItinerary() } else {
+                        Swal.fire({
+                          title: "Adding Recommendation",
+                          text: "Title and Upload Media are compulsory ",
+                          icon: "warning",
+                        });
+                      }
+                    }}
+                    style={{
+                      color: 'black',
+                      fontSize: '50px',
+                    }}
+                  />
+                </div>
+
+
+              </div>
             </div>
+
+
+
+
+
           </div>
-        )}
+        </div>
+
 
         <div className={`row ${styles.createdhero}`}>
           <div className={`col-12 ${styles.scenerypara}`}>
+            <div className="form-group mb-3 d-flex justify-content-between align-items-center gap-3">
+              <input
+                type="text"
+                name="itineraryTitle"
+                className="form-control"
+                onChange={(e) => setItTitle(e.target.value)}
+                required
+                placeholder="Enter Itinerary title*"
+                style={{ width: "90%" }}
+              />
+              <div>
+
+              </div>
+            </div>
             <form
               id="recommendationForm"
               onSubmit={handleSubmit}
@@ -607,7 +702,7 @@ export default () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required={isFormInProgress ? true : false}
-                  placeholder="Enter a title..."
+                  placeholder="Enter Event title*"
                   style={{ width: "90%" }}
                 />
                 <div>
@@ -636,11 +731,11 @@ export default () => {
                     <div className="row justify-content-between mt-3 ">
                       <div>
                         <div>
-                          <label htmlFor="fileInput">
+                          <label htmlFor="fileInput" className="cursor-pointer fw-bold">
                             <IconButton component="span">
                               <PhotoCameraIcon />
                             </IconButton>
-                            Upload Media
+                            Upload Media*
                           </label>
                           <input
                             type="file"
@@ -763,34 +858,8 @@ export default () => {
                     ></textarea>
                   </div>
                 </div>
-                <div className="col-12 col-lg-1 col-md-1">
-                  <div className="row">
-                    <div
-                      className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
-                    >
-                      <DescriptorRadio
-                        descriptor="food"
-                        descriptors={descriptors}
-                        setDescriptors={setDescriptors}
-                        iconSrc={burger}
-                      />
-                      <DescriptorRadio
-                        descriptor="Art"
-                        descriptors={descriptors}
-                        setDescriptors={setDescriptors}
-                        iconSrc={painticon}
-                      />
-                      <DescriptorRadio
-                        descriptor="Hiking"
-                        descriptors={descriptors}
-                        setDescriptors={setDescriptors}
-                        iconSrc={travelicon}
-                      />
-                      {/* Add more DescriptorRadio components for other descriptors */}
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-4 col-md-5 col-12">
+            
+                <div className="col-lg-5 col-md-5 col-12">
                   <div style={{ width: "100%" }}>
                     <div class="responsive-map">
                       <input
@@ -819,7 +888,7 @@ export default () => {
                         onClick={handleMapClick}
                         style={{
                           width: "100%",
-                          height: "300px", // Adjust the height as needed
+                          height: "50px", // Adjust the height as needed
                         }}
                       >
                         {currentLocation && (
@@ -866,6 +935,7 @@ export default () => {
                       />
                       <h5 className="fw-600">Cost to Attend</h5>
                       <div className="d-flex justify-content-center align-items-center">
+                        <div style={{width:'70%'}}>
                         <input
                           type="number"
                           name="cost"
@@ -875,6 +945,143 @@ export default () => {
 
                           placeholder="Cost to Attend"
                         />
+                        </div>
+                        <div style={{width:'30%'}}>
+                                <select
+                                  name="country"
+                                  className="form-control py-2"
+                                  value={currency}
+                                  onChange={(e)=> setCurrency(e.target.value)                                  }
+                                >
+                                  {countryCodes.map((code) => (
+                                    <option key={code} value={code}>
+                                      {code}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                      </div>
+                    </div>
+                    {/* descriptors */}
+                    <div className="row justify-content-center pt-lg-0 pt-5 mb-3">
+                      <div
+                        className={`col-12 col-md-12 col-lg-12 d-flex flex-wrap gap-lg-5 gap-4 justify-content-lg-around justify-content-between text-center ${styles.eventmidicons}`}
+                      >
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="food"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={culture}
+                            selectedIconSrc={sculture}
+                          />{" "}
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Arts & Culture
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="Art"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={thrills}
+                            selectedIconSrc={sthrills}
+                          />
+
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Adventure
+                          </label>
+                        </div>
+
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="Hiking"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={food}
+                            selectedIconSrc={sfood}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Food & Drinks
+                          </label>
+                        </div>
+
+                        {/* second row */}
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="family"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={family}
+                            selectedIconSrc={sfamily}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Family Friendly{" "}
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="fgroup"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={fgroup}
+                            selectedIconSrc={sfgroup}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Group Friendly{" "}
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="hanged"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={hanged}
+                            selectedIconSrc={shanged}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Local Hangout
+                          </label>
+                        </div>
+
+                        {/* third row */}
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="guitar"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={guitar}
+                            selectedIconSrc={sguitar}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Music & Dance
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="nature"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={nature}
+                            selectedIconSrc={snature}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Nature
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="relaxation"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={relaxation}
+                            selectedIconSrc={srelaxation}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Relaxation
+                          </label>
+                        </div>
+                        {/* Add more DescriptorRadio components for other descriptors */}
                       </div>
                     </div>
                   </div>
@@ -914,35 +1121,33 @@ const DescriptorRadio = ({
   descriptors,
   setDescriptors,
   iconSrc,
+  selectedIconSrc,
 }) => {
+  const isSelected = descriptors.includes(descriptor);
+  const toggleDescriptor = () => {
+    setDescriptors((prevDescriptors) => {
+      if (prevDescriptors.includes(descriptor)) {
+        return prevDescriptors.filter((d) => d !== descriptor);
+      } else {
+        return [...prevDescriptors, descriptor];
+      }
+    });
+  };
+
   return (
-    <div className={styles.eventicons}>
+    <div onClick={toggleDescriptor}>
       <label>
-        <input
-          type="radio"
-          value={descriptor}
-          checked={descriptors.includes(descriptor)}
-          onChange={() => {
-            setDescriptors((prevDescriptors) => {
-              if (prevDescriptors.includes(descriptor)) {
-                return prevDescriptors.filter((d) => d !== descriptor);
-              } else {
-                return [...prevDescriptors, descriptor];
-              }
-            });
-          }}
-          style={{ display: "none" }}
-        />
         <Image
           className={`h-auto cursor-pointer ${styles.foodIcons}`}
-          src={iconSrc}
+          // src={iconSrc}
+          src={isSelected ? selectedIconSrc : iconSrc}
           alt=""
           style={
             descriptors.includes(descriptor)
               ? {
-                border: "2px solid green",
-                borderRadius: "50px",
-              }
+                  border: "2px solid green",
+                  borderRadius: "50px",
+                }
               : { border: "none" }
           }
         />

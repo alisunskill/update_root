@@ -7,7 +7,6 @@ import painticon from "../../public/images/painticon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import travelicon from "../../public/images/travelicon.svg";
-import Card from "react-bootstrap/Card";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import GoogleMapReact from "google-map-react";
@@ -24,6 +23,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import CloseIcon from "@mui/icons-material/Close"; // Icon for removing images
 import RoomIcon from "@mui/icons-material/Room";
 import { GoogleMapApiKey, API_URL } from "../../apiConfig";
+import Swal from "sweetalert2";
 
 const apiKey = process.env.SECRET_KEY;
 
@@ -32,6 +32,11 @@ export default () => {
   const dispatch = useDispatch();
 
   const fileInputRef = useRef(null);
+  const [currency, setCurrency] = React.useState("USD");
+  const countryCodes = ['USD','EUR', 'PKR','IQD','IMP'];
+
+  
+
 
   const [showAlert, setShowAlert] = useState(false);
   const [title, setTitle] = useState("");
@@ -47,7 +52,10 @@ export default () => {
 
   const [posts, setPosts] = useState([]);
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: 33.572423,
+    lng: 73.14675,
+  });
   const [address, setAddress] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const handleLocationSearch = (e) => {
@@ -80,9 +88,6 @@ export default () => {
       setCurrentLocation({ lat: latitude, lng: longitude });
     });
   }, []);
-  const handleMapClick = ({ lat, lng }) => {
-    setCurrentLocation({ lat, lng });
-  };
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -111,6 +116,10 @@ export default () => {
     fetchAddress();
   }, [currentLocation]);
 
+
+  const handleMapClick = ({ lat, lng }) => {
+    setCurrentLocation({ lat, lng });
+  };
   useEffect(() => {
     // Function to fetch the street address based on the current location
     const fetchAddress = async () => {
@@ -165,29 +174,6 @@ export default () => {
 
   }, [currentLocation]);
 
-  useEffect(() => {
-    // Function to fetch the street address based on the current location
-    const fetchAddress = async (lat, lng) => {
-      try {
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GoogleMapApiKey}`
-        );
-        const data = await response.json();
-        if (data.results && data.results.length > 0) {
-          setAddress(data.results[0].formatted_address);
-        } else {
-          setAddress("Address not found");
-        }
-      } catch (error) {
-        setAddress("Error fetching address");
-      }
-    };
-
-    if (currentLocation) {
-      fetchAddress(currentLocation.lat, currentLocation.lng);
-    }
-  }, [currentLocation]);
-
   const [isFormFilled, setIsFormFilled] = useState(false);
 
   //itineraries
@@ -197,8 +183,11 @@ export default () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormDataValid()) {
-      alert("Please fill in all required fields.");
-      setShowAlert(true);
+      Swal.fire({
+        title: "Adding Event",
+        text: "Title and Upload Media Are Required ",
+        icon: "warning",
+      }); setShowAlert(true);
       return;
     }
 
@@ -243,7 +232,7 @@ export default () => {
       formData.append("region", region);
       formData.append("description", description);
       formData.append("links", links);
-      formData.append("isItenrary", true);
+      formData.append("currency", currency);
 
       // Append descriptors as an array
       descriptors.forEach((descriptor, index) => {
@@ -261,13 +250,10 @@ export default () => {
       // Dispatch the fetchCreateRecommendations action with formData
       const data = await dispatch(fetchCreateRecommendations(formData, token));
       console.log(data);
-      setPosts((prevPosts) => [...prevPosts, data]);
 
-      const postsss = [...posts, data];
 
-      addItineraryinBackend(postsss);
+      router.push("/thanksPage");
 
-      router.push("/");
 
       // Rest of your code...
     } catch (error) {
@@ -276,18 +262,35 @@ export default () => {
     }
   };
 
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
+
+
+  useEffect(() => {
+    const formElement = document.getElementById("recommendationForm");
+    formElement.addEventListener("keypress", handleKeyPress);
+
+    return () => {
+      formElement.removeEventListener("keypress", handleKeyPress);
+    };
+  }, []);
+
   const isFormDataValid = () => {
     if (
       !title.trim() || // Title must not be empty
-      images.length === 0 || // At least one file must be selected
-      !cost.trim() || // Cost must not be empty
-      !hours.trim() || // Hours must not be empty
-      !experience.trim() || // Experience must not be empty
-      !location.trim() || // Location must not be empty
-      !region.trim() || // Region must not be empty
-      descriptors.length === 0 || // At least one descriptor must be selected
-      !description.trim() || // Description must not be empty
-      !links.trim() // Links must not be empty
+      images.length === 0  // At least one file must be selected
+      //!cost.trim() || // Cost must not be empty
+      // !hours.trim() || // Hours must not be empty
+      // !experience.trim() || // Experience must not be empty
+      // !location.trim() || // Location must not be empty
+      // !region.trim() || // Region must not be empty
+      //descriptors.length === 0 // At least one descriptor must be selected
+      // !description.trim() || // Description must not be empty
+      // !links.trim() // Links must not be empty
     ) {
       return false;
     }
@@ -299,14 +302,14 @@ export default () => {
       if (
         !title.trim() || // Title must not be empty
         images.length === 0 || // At least one file must be selected
-        !cost.trim() || // Cost must not be empty
-        !hours.trim() || // Hours must not be empty
-        !experience.trim() || // Experience must not be empty
+        // !cost.trim() || // Cost must not be empty
+        //!hours.trim() || // Hours must not be empty
+        //!experience.trim() || // Experience must not be empty
         !location.trim() || // Location must not be empty
-        !region.trim() || // Region must not be empty
-        descriptors.length === 0 || // At least one descriptor must be selected
-        !description.trim() || // Description must not be empty
-        !links.trim() // Links must not be empty
+        //!region.trim() || // Region must not be empty
+        descriptors.length === 0  // At least one descriptor must be selected
+        // !description.trim() || // Description must not be empty
+        // !links.trim() // Links must not be empty
       ) {
         setIsFormFilled(false);
       } else {
@@ -375,7 +378,7 @@ export default () => {
     formData.append("region", region);
     formData.append("description", description);
     formData.append("links", links);
-    formData.append("isItenrary", true);
+    formData.append("isItenrary", false);
 
     // Append descriptors as an array
     descriptors.forEach((descriptor, index) => {
@@ -455,59 +458,16 @@ export default () => {
 
   return (
     <>
-      {showAlert && (
+      {/* {showAlert && (
         <div className="alert alert-danger" role="alert">
           Please fill in all required fields...
         </div>
-      )}
+      )} */}
       <div className="container-fluid pb-5">
-        {console.log(itineraries, "itineraries itineraries")}
         {itineraries.length > 0 && (
           <div className={`row ${styles.createdhero}`}>
             <div className="col-12">
-              <h3 className="fw-600 px-3 pb-2">
-                {itineraries.length > 1 ? "Itinerary" : "Post"}
-              </h3>
-              <Card
-                className={`d-flex justify-content-center align-items-center ${styles.carditiner}`}
-              >
-                <Card.Body className="p-0">
-                  {itineraries.map((itinerary, index) => (
-                    <div key={index}>
-                      {itinerary.images.map((image, imgIndex) => (
-                        <div key={imgIndex}>
-                          {" "}
-                          {image.type.startsWith("image/") ? (
-                            <img
-                              src={URL.createObjectURL(image)}
-                              alt={`Image ${imgIndex}`}
-                              style={{ height: "100px", width: "170px" }}
-                              className="rounded-2"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <video controls width="100%">
-                              <source
-                                src={URL.createObjectURL(image)}
-                                type={image.type}
-                              />
-                              Your browser does not support the video tag.
-                            </video>
-                          )}
-                        </div>
-                      ))}
-                      <h5 className="p-2 fw-600 mt-1 mb-1">
-                        {itinerary.title.length > 20
-                          ? `${itinerary.title.slice(0, 20)}...`
-                          : itinerary.title}
-                      </h5>
-
-                    </div>
-                  ))}
-                </Card.Body>
-              </Card>
-
-              {/* <h3>{itineraries.length > 1 ? "Itinerary" : "Post"}</h3>
+              <h3>{itineraries.length > 1 ? "Itinerary" : "Post"}</h3>
               <div className="itinerary-cards" style={{ display: "flex" }}>
                 {itineraries.map((itinerary, index) => (
                   <div
@@ -515,14 +475,14 @@ export default () => {
                     style={{
                       marginRight: "10px",
                       borderRadius: "5px",
-                      border: "2px solid #7CC5E5",
+                      border: "2px solid #7CC5E5", // Specify border style and color here
                       padding: "4px",
                     }}
                   >
                     {itinerary.title}
                   </div>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
         )}
@@ -533,6 +493,7 @@ export default () => {
               id="recommendationForm"
               onSubmit={handleSubmit}
               encType="multipart/form-data"
+              autoComplete="off"
             >
               <div className="form-group mb-3 d-flex justify-content-between align-items-center gap-3">
                 <input
@@ -542,7 +503,7 @@ export default () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
-                  placeholder="Enter a title..."
+                  placeholder="Enter a title*"
                   style={{ width: "90%" }}
                 />
                 <div>
@@ -559,16 +520,16 @@ export default () => {
                     <div className="row justify-content-between mt-3 ">
                       <div>
                         <div>
-                          <label htmlFor="fileInput">
+                          <label htmlFor="fileInput" className="cursor-pointer fw-bold">
                             <IconButton component="span">
                               <PhotoCameraIcon />
                             </IconButton>
-                            Upload Media
+                            Upload Media*
                           </label>
                           <input
                             type="file"
                             id="fileInput"
-                            //accept="image/*, video/*"
+                            // accept="image/*, video/*"
                             accept="image/*"
                             multiple
                             onChange={handleFilesSelected}
@@ -589,18 +550,22 @@ export default () => {
                                     backgroundColor: "#7CC5E5",
                                     borderRadius: "50%",
                                     padding: "2px",
-                                    marginRight:'3px',
-                                    marginTop:'3px',
+                                    marginRight: '3px',
+                                    marginTop: '3px',
                                   }}
                                   onClick={() => handleRemoveFile(index)}
                                 >
-                                  <CloseIcon style={{ color: "white" }} />
+                                  <CloseIcon style={{
+
+                                    color: 'white'
+                                  }} />
                                 </IconButton>
                                 {item.type.startsWith("image/") ? (
                                   <img
                                     src={URL.createObjectURL(item)}
                                     alt={`Image ${index}`}
                                     loading="lazy"
+
                                   />
                                 ) : (
                                   <video controls width="100%">
@@ -639,7 +604,7 @@ export default () => {
                       id="exampleFormControlTextarea5"
                       value={region}
                       onChange={(e) => setRegion(e.target.value)}
-                      required
+
                       rows="5"
                       placeholder="General information you’d like to share..."
                     />
@@ -654,7 +619,7 @@ export default () => {
                       name="experience"
                       value={experience}
                       onChange={(e) => setExperience(e.target.value)}
-                      required
+
                       rows="5"
                     ></textarea>
                   </div>
@@ -669,7 +634,7 @@ export default () => {
                       name="description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      required
+
                     ></textarea>
                   </div>
                   <div className="form-group mt-4">
@@ -682,12 +647,12 @@ export default () => {
                       value={links}
                       name="links"
                       onChange={(e) => setLinks(e.target.value)}
-                      required
+
                     ></textarea>
                   </div>
                 </div>
                 <div className="col-12 col-lg-1 col-md-1">
-                  <div className="row">
+                  <div className="row justify-content-center">
                     <div
                       className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
                     >
@@ -767,55 +732,74 @@ export default () => {
                       />
                       <h5 className="fw-600">Hours of Operation</h5>
 
-                      <div className="d-flex justify-content-center align-items-center">
-                        <input
-                          type="text"
-                          name="hours"
-                          className="form-control py-2 w-lg-75 w-100"
-                          value={hours}
-                          onChange={(e) => setHours(e.target.value)}
-                          required
-                          placeholder="Hours of Operation"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group col-lg-12 col-12 text-center pt-2 pt-lg-2">
-                      <Image
-                        width="45"
-                        height="30"
-                        src={moneyicon}
-                        className="mt-3 mb-3"
-                        alt="calender"
-                      />
-                      <h5 className="fw-600">Cost to Attend</h5>
-                      <div className="d-flex justify-content-center align-items-center">
-                        <input
-                          type="number"
-                          name="cost"
-                          className="form-control py-2 w-lg-75 w-100"
-                          value={cost}
-                          onChange={(e) => setCost(e.target.value)}
-                          required
-                          placeholder="Cost to Attend"
-                        />
+                      <div className="d-flex justify-content-center  align-items-center">
+                        <div className="w-75">
+                          <input
+                            type="text"
+                            name="hours"
+                            className="form-control py-2"
+                            value={hours}
+                            onChange={(e) => setHours(e.target.value)}
+
+                            placeholder="Hours of Operation"
+                          />
+                          <div className="form-group col-lg-12 col-12 text-center align-items-center pt-3 pt-lg-5 justify-content-center flex-column d-flex">
+                            <Image
+                              width="45"
+                              height="30"
+                              src={moneyicon}
+                              className="mt-3 mb-3"
+                              alt="calender"
+                            />
+                            <h5 className="fw-600">Cost to Attend</h5>
+                            <div className="d-flex justify-content-center align-items-center w-100">
+                              <div style={{width:'70%'}}>
+                                <input
+                                  type="number"
+                                  name="cost"
+                                  className="form-control py-2"
+                                  value={cost}
+                                  onChange={(e) => setCost(e.target.value)}
+
+                                  placeholder="Cost to Attend"
+                                />
+                             
+                              </div>
+                              <div style={{width:'30%'}}>
+                                <select
+                                  name="country"
+                                  className="form-control py-2"
+                                  value={currency}
+                                  onChange={(e)=> setCurrency(e.target.value)                                  }
+                                >
+                                  {countryCodes.map((code) => (
+                                    <option key={code} value={code}>
+                                      {code}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </form>
-            {isFormFilled && (
+            {/* {isFormFilled && (
               <div className="d-flex justify-content-end mt-lg-5 mt-4">
                 <button
                   className="savebtn1"
                   style={{ marginRight: "50px", color: "white" }}
                   onClick={addItinerary}
                 >
-                  ➕ Recommendation
+                  Add Itinerary
                 </button>
               </div>
-            )}
-            <div className="d-flex justify-content-end mt-lg-5 mt-4">
+            )} */}
+            <div className="d-flex justify-content-end mt-lg-5 mt-4  pb-lg-5">
               <button
                 form="recommendationForm"
                 type="submit"
@@ -838,24 +822,22 @@ const DescriptorRadio = ({
   setDescriptors,
   iconSrc,
 }) => {
+  const toggleDescriptor = () => {
+    setDescriptors((prevDescriptors) => {
+      if (prevDescriptors.includes(descriptor)) {
+        return prevDescriptors.filter((d) => d !== descriptor);
+      } else {
+        return [...prevDescriptors, descriptor];
+      }
+    });
+  };
+
   return (
-    <div className={styles.eventicons}>
+    <div
+      className={styles.eventicons}
+      onClick={toggleDescriptor}
+    >
       <label>
-        <input
-          type="radio"
-          value={descriptor}
-          checked={descriptors.includes(descriptor)}
-          onChange={() => {
-            setDescriptors((prevDescriptors) => {
-              if (prevDescriptors.includes(descriptor)) {
-                return prevDescriptors.filter((d) => d !== descriptor);
-              } else {
-                return [...prevDescriptors, descriptor];
-              }
-            });
-          }}
-          style={{ display: "none" }}
-        />
         <Image
           className={`h-auto cursor-pointer ${styles.foodIcons}`}
           src={iconSrc}

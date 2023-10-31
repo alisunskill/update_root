@@ -1,10 +1,10 @@
 import React from "react";
-import EventDetail from "../HomePage/[EventDetial]";
+import EventDetaill from "../HomePage/[EventDetial]";
 
 export default function eventDetail()  {
   return (
     <div>
-      <EventDetail />
+      <EventDetaill />
     </div>
   );
 };

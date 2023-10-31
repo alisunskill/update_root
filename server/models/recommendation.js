@@ -27,12 +27,15 @@ const recommendationSchema = new mongoose.Schema({
   cost: {
     type: Number,
   },
+  currency: {
+    type: String,
+    default: "USD",
+  },
   experience: {
     type: String,
   },
   descriptors: {
     type: [String],
-    required: true,
   },
 
   region: {
@@ -46,19 +49,15 @@ const recommendationSchema = new mongoose.Schema({
 
   location: {
     type: String,
-    required: true,
   },
   location: {
     type: String,
-    required: true,
   },
   longitude: {
     type: String,
-    required: true,
   },
   latitude: {
     type: String,
-    required: true,
   },
   links: {
     type: String,

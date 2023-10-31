@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost:8000/";
-export const Files_URL = "http://localhost:8000";
+export const API_URL = "http://im-onroot.com:8000/";
+export const Files_URL = "http://im-onroot.com:8000";
 export const GoogleMapApiKey = "AIzaSyAX815OLgYZi7EbfQOgbBn6XeyCzwexMlM";
-export const sitekey='6LdNryEnAAAAAHvI4ty3RvMc2dnX0fR9aF1dXq7r'
+export const sitekey='AIzaSyCpXXGT6l0YOrrkOyrbITXVa5vuXKU2VDw'

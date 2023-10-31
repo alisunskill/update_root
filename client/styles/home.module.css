@@ -12,14 +12,18 @@
   transition: right 0.3s ease;
   z-index: 9999;
 }
-
+.boxslider{
+  height: 200px;
+  width: 100%;
+  margin-bottom: 15px;
+}
 .eventicons {
   padding-top: 35px;
   padding-right: 40px;
 }
 
 .foodIcons {
-  max-width: 80px;
+  max-width: 30px;
 }
 
 .dropdownprofile {
@@ -500,6 +504,11 @@
   transform: scale(1.2);
   overflow: hidden;
 }
+.grp_text{
+  font-size: 15px;
+  line-height: 16px;
+  margin-bottom: 0px;
+}
 .landingimage3 {
   border-radius: 20px;
   /* background-image: url("../public/Images/card1.png"); */
@@ -764,14 +773,14 @@
   cursor: auto;
 }
 .descripthero {
-  width: 25%;
+  width: 200px;
   border: 1px solid rgb(228, 228, 228);
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
 }
+
 .descripthero:hover {
   background-color: #0f3d95;
-  border-radius: 7px;
   color: #fff;
 }
 .landing_btn_width {
@@ -891,13 +900,18 @@
     top: 20px;
     margin-bottom: 20px;
   }
-
+.titlehero{
+  font-size: 16px;
+}
   .filterhero {
     top: 3px;
   }
   .descripthero {
-    width: 120px;
+    width: 45%;
     padding: 0px 10px !important;
+  }
+  .grp_text{
+    font-size: 14px;
   }
 }
 
@@ -946,6 +960,9 @@
 @media only screen and (max-width: 444px) {
   .globe {
     height: 300px;
+  }
+  .descripthero{
+    width: 100%;
   }
 }
 

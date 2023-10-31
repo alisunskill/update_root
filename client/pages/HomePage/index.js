@@ -1,4 +1,4 @@
-import axios from "axios"; 
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +8,27 @@ import Box from "@mui/material/Box";
 import Sliderm from "@mui/material/Slider";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
+import culture from "../../public/images/descriptors/culture.svg";
+import sculture from "../../public/images/descriptors/sculture.svg";
+import thrills from "../../public/images/descriptors/thrills.svg";
+import sthrills from "../../public/images/descriptors/sthrills.svg";
+import food from "../../public/images/descriptors/food.svg";
+import sfood from "../../public/images/descriptors/sfood.svg";
+
+import fgroup from "../../public/images/descriptors/fgroup.svg";
+import sfgroup from "../../public/images/descriptors/sfgroup.svg";
+import family from "../../public/images/descriptors/family.svg";
+import sfamily from "../../public/images/descriptors/sfamily.svg";
+import hanged from "../../public/images/descriptors/hanged.svg";
+import shanged from "../../public/images/descriptors/shanged.svg";
+
+import guitar from "../../public/images/descriptors/guitar.svg";
+import sguitar from "../../public/images/descriptors/sguitar.svg";
+import nature from "../../public/images/descriptors/nature.svg";
+import snature from "../../public/images/descriptors/snature.svg";
+import relaxation from "../../public/images/descriptors/relaxation.svg";
+import srelaxation from "../../public/images/descriptors/srelaxation.svg";
+
 import "slick-carousel/slick/slick.css";
 import burger from "../../public/images/burger.svg";
 import filter from "../../public/images/filter.svg";
@@ -85,22 +106,24 @@ export default function YourComponentName({ data1 }) {
   }, [region]);
   const recommendationData =
     (recommendations && recommendations.Recommendations) || [];
-    useEffect(() => {
-      // Use a Set to keep track of unique locations
-      const uniqueLocations = new Set();
-  
-      // Filter recommendations to remove duplicates based on the 'location' attribute
-      const filteredRecommendations = recommendationData.filter((recommendation) => {
+  useEffect(() => {
+    // Use a Set to keep track of unique locations
+    const uniqueLocations = new Set();
+
+    // Filter recommendations to remove duplicates based on the 'location' attribute
+    const filteredRecommendations = recommendationData.filter(
+      (recommendation) => {
         if (!uniqueLocations.has(recommendation.location)) {
           uniqueLocations.add(recommendation.location);
           return true;
         }
         return false;
-      });
-  
-      // Set the 'region' state with filtered recommendations
-      setRegion(filteredRecommendations);
-    }, [recommendationData]);
+      }
+    );
+
+    // Set the 'region' state with filtered recommendations
+    setRegion(filteredRecommendations);
+  }, [recommendationData]);
 
   const handleDescriptorChange = (descriptor) => {
     if (selectedDescriptors.includes(descriptor)) {
@@ -123,7 +146,6 @@ export default function YourComponentName({ data1 }) {
     }
   }, [region, regionData]);
 
-  
   // discripttors urls
   useEffect(() => {
     if (descriptor) {
@@ -145,7 +167,7 @@ export default function YourComponentName({ data1 }) {
       setMinValue(minCost);
       setMinValue1(minCost);
       setMaxValue(maxCost);
-      setMaxValue1(maxCost)
+      setMaxValue1(maxCost);
       if (value[0] < minCost || value[1] > maxCost) {
         setValue([minCost, maxCost]);
       }
@@ -191,8 +213,8 @@ export default function YourComponentName({ data1 }) {
     const regionQuery =
       selectedRegions.length > 0
         ? `region=${selectedRegions
-          .map((region) => encodeURIComponent(region))
-          .join(",")}`
+            .map((region) => encodeURIComponent(region))
+            .join(",")}`
         : "";
     const minQuery = `min=${value[0]}`;
     const maxQuery = `max=${value[1]}`;
@@ -211,8 +233,8 @@ export default function YourComponentName({ data1 }) {
     setSelectedRegions([]);
     setValue([0, 1000]);
     setSelectedValue("a");
-    setMaxValue(maxValue1)
-    setMinValue(minValue1)
+    setMaxValue(maxValue1);
+    setMinValue(minValue1);
     // setModalShow(false);
   };
   return (
@@ -314,50 +336,215 @@ export default function YourComponentName({ data1 }) {
 
               <div className="py-3">
                 <div
-                  className={`btn-group px-2 d-flex w-100 d-flex align-center justify-content-between flex-wrap gap-lg-0 gap-2`}
+                  className={`btn-group px-2 d-flex w-100 d-flex align-center justify-content-between flex-wrap gap-lg-0 gap-1`}
                 >
+                  {/* 1 */}
                   <div
-                    className={`justify-between d-flex text-decoration-none  gap-3 px-3 py-2 ${styles.descripthero
-                      }  ${selectedDescriptors.includes("food")
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 mt-1
+                    ${styles.descripthero}  ${
+                      selectedDescriptors.includes("food")
                         ? styles.selected
                         : ""
-                      }`}
+                    }`}
                     onClick={() => handleDescriptorChange("food")}
                   >
                     <Image
-                      className={`h-auto ${styles.foodIcons}`}
-                      src={burger}
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("food")
+                          ? sculture
+                          : culture
+                      }
+                      width={40}
+                      height={40}
                       alt=""
                     />
-                    <span>Food</span>
+                    <span className={styles.grp_text}> Arts & Culture</span>
                   </div>
+                  {/* 2 */}
                   <div
-                    className={`justify-between d-flex text-decoration-none align-items-center  gap-3 px-3 py-2 ${styles.descripthero
-                      } ${selectedDescriptors.includes("Hiking")
-                        ? styles.selected
-                        : ""
-                      }`}
-                    onClick={() => handleDescriptorChange("Hiking")}
-                  >
-                    <Image
-                      className={`h-auto ${styles.foodIcons}`}
-                      src={travelicon}
-                      alt=""
-                    />
-                    <span>Hiking</span>
-                  </div>
-                  <div
-                    className={`justify-between d-flex text-decoration-none align-items-center gap-3 px-3 py-2 ${styles.descripthero
-                      } ${selectedDescriptors.includes("Art") ? styles.selected : ""
-                      }`}
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 mt-1
+                   ${styles.descripthero} ${
+                      selectedDescriptors.includes("Art") ? styles.selected : ""
+                    }`}
                     onClick={() => handleDescriptorChange("Art")}
                   >
                     <Image
-                      className={`h-auto ${styles.foodIcons}`}
-                      src={painticon}
+                      className={` ${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("Art") ? sthrills : thrills
+                      }
+                      width={40}
+                      height={40}
                       alt=""
                     />
-                    <span>Art</span>
+                    <span className={styles.grp_text}>Adventure</span>
+                  </div>
+                  {/* 3 */}
+                  <div
+                    className={`justify-between mt-1 d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("Hiking")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("Hiking")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("Hiking") ? sfood : food
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Food & Drinks</span>
+                  </div>
+                  {/* 4 */}
+                  <div
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-3 gap-1 mt-1 px-lg-3 px-0 py-2 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("family")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("family")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("family")
+                          ? sfamily
+                          : family
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Family Friendly</span>
+                  </div>
+                  {/* 5 */}
+                  <div
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-1 px-0 py-2 mt-1 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("fgroup")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("fgroup")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("fgroup")
+                          ? sfgroup
+                          : fgroup
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Group Friendly</span>
+                  </div>
+                  {/* 6 */}
+                  <div
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 mt-1 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("hanged")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("hanged")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("hanged")
+                          ? shanged
+                          : hanged
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Local Hangout</span>
+                  </div>
+                  {/* 7 */}
+                  <div
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 mt-1 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("guitar")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("guitar")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("guitar")
+                          ? sguitar
+                          : guitar
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Music & Dance</span>
+                  </div>
+                  {/* 8 */}
+                  <div
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 mt-1 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("nature")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("nature")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("nature")
+                          ? snature
+                          : nature
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Nature</span>
+                  </div>
+                  {/* 9 */}
+                  <div
+                    className={`justify-between d-flex text-decoration-none align-items-center  gap-lg-2 gap-1 px-lg-2 px-2 py-1 mt-1 ${
+                      styles.descripthero
+                    } ${
+                      selectedDescriptors.includes("relaxation")
+                        ? styles.selected
+                        : ""
+                    }`}
+                    onClick={() => handleDescriptorChange("relaxation")}
+                  >
+                    <Image
+                      className={`${styles.foodIcons}`}
+                      src={
+                        selectedDescriptors.includes("relaxation")
+                          ? srelaxation
+                          : relaxation
+                      }
+                      width={40}
+                      height={40}
+                      alt=""
+                    />
+                    <span className={styles.grp_text}> Relaxation</span>
                   </div>
                 </div>
               </div>
@@ -407,4 +594,4 @@ export default function YourComponentName({ data1 }) {
       )}
     </>
   );
-};
+}

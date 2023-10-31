@@ -41,17 +41,7 @@ export default () => {
             </div>
           </div>
           <br /> <br />
-          <div className="text-light text-center mb-4">
-            {/* <button className="savebtn1">Next</button> */}
-            <Link
-              href="/createitinerary"
-              className="text-decoration-none text-light"
-            >
-              <button style={{ color: "white" }} className="savebtn1">
-                Next
-              </button>
-            </Link>
-          </div>
+         
         </div>
       </div>
     </>

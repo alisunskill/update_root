@@ -235,6 +235,63 @@ const userVisitedCountriesRegions = async (req, res) => {
   }
 };
 
+const addPostToTrip = async (req, res) => {
+  try {
+    const { tripIDs, post } = req.body; // Assuming you have 'tripIDs' and 'post' in your request
+
+    const addedTrips = [];
+    const existingTrips = [];
+
+    for (const tripID of tripIDs) {
+      // Find each trip by ID
+      const trip = await Trips.findById(tripID);
+
+      if (!trip) {
+        // Handle the case where a trip is not found
+        return res.status(404).json({ error: `Trip with ID ${tripID} not found` });
+      }
+
+      // Make sure 'posts' is an array before using indexOf
+      if (!Array.isArray(trip.posts)) {
+        trip.posts = [];
+      }
+
+      // Check if the post is not already in the 'posts' array
+      if (trip.posts.indexOf(post) === -1) {
+        // If the post is not in the array, add it
+        trip.posts.push(post);
+
+        // Save the trip with the updated 'posts' array
+        await trip.save();
+
+        addedTrips.push(tripID);
+      } else {
+        existingTrips.push(tripID);
+      }
+    }
+
+    if (addedTrips.length > 0) {
+      return res.status(201).json({
+        status: true,
+        message: `Post added in the following trips: ${addedTrips.join(', ')}`,
+      });
+    } else if (existingTrips.length === tripIDs.length) {
+      return res.status(201).json({
+        status: true,
+        message: `Post already exists in all specified trips: ${existingTrips.join(', ')}`,
+      });
+    } else {
+      return res.status(201).json({
+        status: true,
+        message: `Post already exists in some of the specified trips: ${existingTrips.join(', ')}`,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 
 
@@ -245,5 +302,6 @@ module.exports = {
   deleteTripPost,
   getTripsPost,
   updateTripPost,
-  userVisitedCountriesRegions
+  userVisitedCountriesRegions,
+  addPostToTrip
 };

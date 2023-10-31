@@ -29,6 +29,7 @@ const tripSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
+  posts:Array,
 });
 
 const Trip = mongoose.model("Trip", tripSchema);

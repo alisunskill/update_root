@@ -22,14 +22,31 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [recaptchaError, setRecaptchaError] = useState("");
   const recaptchaValueRef = useRef("");
+  const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false); // Added state for the checkbox
+
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
+    if (!values.username) {
+      // Generate 4 random numbers and append them to the beginning of firstName
+      const randomNumbers = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
+      values.username = `${values.firstName}${randomNumbers}`;
+    }
+  
     const emptyFields = Object.keys(values).filter((key) => !values[key]);
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.join(", ");
       Swal.fire({
         title: "Empty Fields",
         text: `Please fill out the following fields: ${fieldNames}`,
+        icon: "error",
+      });
+      setSubmitting(false);
+      return;
+    }
+    if (!privacyPolicyAccepted) {
+      Swal.fire({
+        title: "Privacy Policy Not Accepted",
+        text: "Please accept the Privacy Policy to proceed.",
         icon: "error",
       });
       setSubmitting(false);
@@ -62,7 +79,7 @@ function Signup() {
         //localStorage.setItem("email", email);
         Swal.fire({
           title: "Account Created",
-          text: `Welcome, ${response.data.user.username.charAt(0).toUpperCase() + response.data.user.username.slice(1)}! Your account has been successfully created.`,
+          text: `Welcome, ${response.data.user.firstName.charAt(0).toUpperCase() + response.data.user.firstName.slice(1)}! Your account has been successfully created.`,
           icon: "success",
         });        
         // resetForm();
@@ -132,10 +149,10 @@ function Signup() {
     //   .required("Region is required"),
 
     email: Yup.string().email("Email is invalid").required("Email is required"),
-    username: Yup.string()
-      .min(2, "Too Short!")
-      .max(20, "Too Long!")
-      .required("Username is required"),
+    // username: Yup.string()
+    //   .min(2, "Too Short!")
+    //   .max(20, "Too Long!")
+    //   .required("Username is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters long")
       .matches(
@@ -261,6 +278,25 @@ function Signup() {
                     component="div"
                     className="text-light"
                   />
+                  
+                  <div className="mt-2">
+  {/* Privacy Policy Checkbox */}
+  <label style={{ fontSize: "16px", display: "flex", alignItems: "center" }}>
+    <Field
+      type="checkbox"
+      name="privacyPolicyAccepted"
+      checked={privacyPolicyAccepted}
+      onChange={(e) => setPrivacyPolicyAccepted(e.target.checked)}
+      style={{ zoom: 1.5 }} // Adjust the zoom value to change the size of the checkbox
+    />{" "}
+    <span style={{ fontSize: "16px",fontWeight:"bold", marginLeft:'5px',color:"white" }}>Accept the Privacy Policy</span>
+  </label>
+  {errors.privacyPolicyAccepted && (
+    <div className="text-light" style={{ fontSize: "16px" }}>
+      {errors.privacyPolicyAccepted}
+    </div>
+  )}
+</div>
 
                   <div className="text-center">
                     <div className="w-100 d-flex justify-content-center mt-3">

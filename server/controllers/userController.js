@@ -315,7 +315,7 @@ exports.updateProfile = async (req, res) => {
     // const { userID } = req.params;
     let { userID } = req.params;
     userID = userID.trim();
-    const { username, region, email, language, password } = req.body;
+    const { username, region, email, language, password,about } = req.body;
 
     const user = await User.findById(userID);
 
@@ -344,6 +344,9 @@ exports.updateProfile = async (req, res) => {
 
     if (language) {
       user.language = language;
+    }
+    if (about) {
+      user.about = about;
     }
 
     if (password) {

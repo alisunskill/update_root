@@ -20,6 +20,7 @@ import { fetchRecommendations } from "../store/actions/recommendationActions";
 import { useRouter } from "next/navigation";
 import Button from "react-bootstrap/Button";
 import { fetchLoginUser } from "../store/actions/recommendationActions";
+import profileicon from "../public/images/men.svg";
 
 const Navbar = () => {
   const router = useRouter();
@@ -155,13 +156,22 @@ const Navbar = () => {
 
                 <div>
                   <button style={{borderWidth:'0px',backgroundColor:'white'}} className="mx-3">
-                    <FontAwesomeIcon
+                    <Image
+                    width={50}
+                    height={50}
+                    src={profileicon}
+                    alt="profileicon"
+                    onClick={toggleSidebar}
+
+                    className={`mx-4 ${styles.plusicon}`}
+                    />
+                    {/* <FontAwesomeIcon
                       icon={faBars}
                       onClick={toggleSidebar}
                       style={{
                         fontSize: "30px",
                       }}
-                    />
+                    /> */}
                     {/* Render the menu icon */}
                   </button>
                 </div>
@@ -220,32 +230,44 @@ const Navbar = () => {
                   <Dropdown.Item
                     className={styles.dropdownprofile}
                     style={{fontSize:'17px',marginTop:'3px'}}
-                    href="/profile"
+                    onClick={()=>    router.push("/profile")}
                   >
                     Profile
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px'}}
-                    href="/globemap"
-                  >
-                    Globe
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    style={{fontSize:'17px'}}
-                    href="/upcomingtrips"
-                  >
-                    Upcoming Trips
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.dropdownprofile}
-                    href="/viewsave"
-                    style={{fontSize:'17px'}}
+                    style={{fontSize:'17px',marginTop:'3px'}}
+                    onClick={()=>    router.push("/upcomingtrips")}
 
                   >
-                    Saved Posts
+                    Your Upcoming Trips
                   </Dropdown.Item>
+                  <Dropdown.Item
+                    className={styles.dropdownprofile}
+                    style={{fontSize:'17px',marginTop:'3px'}}
+                    onClick={()=>    router.push("/viewsave")}
+
+                  >
+                    Your Likes
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className={styles.dropdownprofile}
+                    style={{fontSize:'17px',marginTop:'3px'}}
+                    onClick={()=>    router.push("/infinitescroll")}
+                  >
+                    Your Experiences
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className={styles.dropdownprofile}
+                    style={{fontSize:'17px',marginTop:'3px'}}
+                    onClick={()=>    router.push("/createposts")}
+
+                  >
+                    Create Post
+                  </Dropdown.Item>
+                  
+                 
+                  
                   <Dropdown.Item
                     className={styles.dropdownprofile}
                     style={{fontSize:'17px'}}

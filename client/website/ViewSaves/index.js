@@ -49,6 +49,7 @@ function ViewSaves() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [selectedEventID, setSelectedEventID] = useState('');
   const [numColumns, setNumColumns] = useState(4);
   const updateNumColumns = () => {
     if (window.innerWidth >= 1500) {
@@ -210,6 +211,7 @@ function ViewSaves() {
                               <FontAwesomeIcon
                                 // onClick={() => setModalShow(true)}
                                 onClick={() => {
+                                  setSelectedEventID(post._id)
                                   setSelectedImage(post.images[0]);
                                   setModalShow(true);
                                 }}
@@ -266,6 +268,7 @@ function ViewSaves() {
                         onHide={() => setModalShow(false)}
                         setModalShow={setModalShow}
                         selectedImage={selectedImage}
+                        post={selectedEventID}
                       />
                     </div>
                   </Masonry>

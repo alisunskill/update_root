@@ -7,7 +7,7 @@ import NewTrip from "./NewTrip";
 // import { setTripId } from "../../../store/actions/tripsAction";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
- 
+
 export default function Trip(props) {
   const router = useRouter();
   const { setModalShow } = props;
@@ -30,7 +30,7 @@ export default function Trip(props) {
   };
   const fetchTrips = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/trips");
+      const response = await axios.get(`${API_URL}api/trips`);
       setTrips(response.data);
       setFullList(response.data);
     } catch (error) {
@@ -233,14 +233,15 @@ export default function Trip(props) {
               Trip to “EUROPE”
             </label>
           </div> */}
-          
+
           <button className={`fw-500 ${styles.herobtn}`} onClick={handleClick}>
             + New Trip
           </button>
           <div className="d-flex justify-content-center">
             <button
-              className={`fw-500 savebtn mt-3 mt-lg-4 text-light`}
+              className={`fw-500 savebtn mt-3 mt-lg-4  `}
               onClick={handleSaveBtn}
+              style={{color:"white", background:'#4562B2'}}
             >
               Save Trips
             </button>

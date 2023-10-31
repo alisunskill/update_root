@@ -11,6 +11,7 @@ import Profile from "./components/Profile";
 // import { setTripId } from "../../../store/actions/tripsAction";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 export default () => {
   const router = useRouter();
@@ -207,7 +208,20 @@ export default () => {
                                 )}
                               </label>
                               <button
-                                onClick={() => handleRemoveTrips(item._id)}
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: `Delete Trip`,
+                                    text: `Are you sure you want to delete the trip ${item.title}?`,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Delete",
+                                    cancelButtonText: "Cancel",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      // User clicked the "Delete" button in the confirmation modal
+                                      handleRemoveTrips(item._id)                                    }
+                                  });
+                                  }}
                                 className="bg-transparent border-0 text-dark px-3 py-2 rounded-5"
                                 style={{ fontSize: "25px" }}
                               >
@@ -221,12 +235,12 @@ export default () => {
                           >
                             ♥
                           </button> */}
-                              <button
+                              {/* <button
                                 onClick={() => addPlan(item)}
                                 className=" border-0 text-dark px-3 fw-600 py-1 bg-gray1 rounded-5 z-1"
                               >
                                 Plans
-                              </button>
+                              </button> */}
                             </div>
                           )}
                         </div>

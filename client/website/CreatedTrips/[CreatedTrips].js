@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Files_URL } from "../../apiConfig";
+import Swal from "sweetalert2";
 
 function CreatedTrips() {
   const router = useRouter();
@@ -37,6 +38,7 @@ function CreatedTrips() {
   const { recommendations, loading, error } = recommendationsData;
 
   const recData = recommendations.Recommendations;
+  const [tripId, setTripId] = useState(router.query?.id);
   const [tripIds, setTripIds] = useState(new Set());
   const [singleTrips, setSingleTrips] = useState(null);
   const saveTripsData = useSelector((state) => state.tripIdSave.savetrips);
@@ -48,6 +50,7 @@ function CreatedTrips() {
   const [postid, setPostId] = useState("");
   const [note, setNote] = useState("");
   const [listTrip, setListTrip] = useState(1);
+  const [numbeOfPostsInTrip, setnumbeOfPostsInTrip] = useState(false);
   const [numColumns, setNumColumns] = useState(4);
   const updateNumColumns = () => {
     if (window.innerWidth >= 1500) {
@@ -90,6 +93,7 @@ function CreatedTrips() {
       setUserId(uid);
     };
     fetchTrips();
+
   }, []);
 
   // const filteredData = recData?.find((item) => item._id === postid);
@@ -143,6 +147,9 @@ function CreatedTrips() {
     fetchTrips();
   }, []);
 
+  
+  
+
   const fetchTrips = async () => {
     setTrips(saveTripsData);
   };
@@ -168,16 +175,7 @@ function CreatedTrips() {
   const [tripsList, setTripsList] = useState([]);
 
   // trips
-  const fetchTripsList = async () => {
-    try {
-      // const response = await axios.get("http://localhost:8000/api/trips");
-      const response = await axios.get(`${API_URL}api/trips`);
-      setTripsList(response.data);
-      // setFullList(response.data);
-    } catch (error) {
-      console.error("Error fetching trips:", error);
-    }
-  };
+
   const handleRemoveTrips = async (tripId) => {
     try {
       // const response = await axios.delete(
@@ -192,6 +190,7 @@ function CreatedTrips() {
   };
 
   const { id: id } = router.query;
+
   const matchingTrip = trips.find((trip) => trip?._id === id);
 
   // note message
@@ -218,22 +217,35 @@ function CreatedTrips() {
     setEditModalShow(true);
   };
 
-  const handleLinkClick = (itemId, postTitle,trip) => {
-    if (trip.isItenrary==true) {
+  const handleLinkClick = (itemId, postTitle, trip) => {
+    if (trip.isItenrary == true) {
       router.push({
         pathname: "/Itenraries",
         query: {
           id: JSON.stringify(trip._id),
         },
-      });}
-      else {
-    router.push(
-      `/eventdetail/${encodeURIComponent(
-        postTitle.replace(/ /g, "-")
-      )}?id=${itemId}`
-    );
-      }
+      });
+    }
+    else {
+      router.push(
+        `/eventdetail/${encodeURIComponent(
+          postTitle.replace(/ /g, "-")
+        )}?id=${itemId}`
+      );
+    }
   };
+
+  useEffect(() => {
+    const checkHasPosttoID = async () => {
+      for (const post of recData) {
+        if (matchingTrip?.posts.includes(post?._id)) {
+          setnumbeOfPostsInTrip(true);
+          break; // Exit the loop after the first match
+        }
+      }
+    }
+    checkHasPosttoID();
+  }, [tripId, recData,matchingTrip]);
 
   const userIDPerson1 =
     typeof window !== "undefined" ? localStorage.getItem("userID") : null;
@@ -335,44 +347,63 @@ function CreatedTrips() {
                 dataLength={trips.length}
                 loader={<h4>Loading...</h4>}
               >
-                <Box sx={{ minHeight: 829 }}>
+                {!numbeOfPostsInTrip && (
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                      
+                        <p style={{
+                          textAlign: 'center',
+                        }}>
+                          There's no post added to the trip yet.
+                        </p>
+                    
+                  </div>
+                )}
+                <Box sx={{ minHeight: numbeOfPostsInTrip ? 829 : 50 }}>
                   <Masonry columns={numColumns} spacing={1}>
+
                     {trips.length > 0 ? (
                       <>
                         {recData?.map((trip, index) => {
-                          return (
-                            <div key={trip?._id}>
-                              <div
-                                className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                                onClick={() =>
-                                  handleLinkClick(trip?._id, trip.title,trip)
-                                }
-                              >
-                                <img
-                                  className={styles.uploadimg}
-                                  src={`${Files_URL}${trip.images[0]}`}
-                                  alt="Uploaded Image"
-                                />
 
+                          if (matchingTrip?.posts.includes(trip?._id)) {
+                            return (
+                              <div key={trip?._id}>
                                 <div
-                                  style={{ position: "absolute ", zIndex: 999 }}
+                                  className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
+                                  onClick={() =>
+                                    handleLinkClick(trip?._id, trip.title, trip)
+                                  }
                                 >
-                                  <div className="text-center">
-                                    <p className={`mb-0 letterspac text-white`}>
-                                      Event
-                                    </p>
-                                    <h3 className="w-700 text-white">
-                                      {trip.title}
-                                    </h3>
-                                    <p className={`mb-0 m1 text-white`}>
-                                      {/* {trip.region} */}
-                                      Paris, France
-                                    </p>
+                                  <img
+                                    className={styles.uploadimg}
+                                    src={`${Files_URL}${trip?.images[0]}`}
+                                    alt="Uploaded Image"
+                                  />
+
+                                  <div
+                                    style={{ position: "absolute ", zIndex: 999 }}
+                                  >
+                                    <div className="text-center">
+
+                                      <h3 className="w-700 text-white">
+                                        {trip?.title}
+                                      </h3>
+                                      <p className={`mb-0 m1 text-white`}>
+                                        {/* {trip.region} */}
+                                        {trip?.location}
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          );
+                            );
+
+                          }
                         })}
                       </>
                     ) : (
@@ -385,6 +416,7 @@ function CreatedTrips() {
                     )}
                   </Masonry>
                 </Box>
+
               </InfiniteScroll>
             ) : (
               <div>
@@ -420,10 +452,13 @@ function CreatedTrips() {
                                   {/* <label>{item.sdate.slice(0, 7)}</label> */}
                                   <label className="mx-3 text-light">
                                     {item && item.sdate
-                                      ? item.sdate.slice(0, 7)
-                                      : item
-                                      ? item.sdate
-                                      : "No item available"}
+                                      ? new Date(item.sdate).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric"
+                                      })
+                                      : "Date not available"}
+
                                   </label>
                                 </div>
                                 <button
@@ -441,54 +476,64 @@ function CreatedTrips() {
                     </div>
 
                     <div className="pt-4 pb-lg-5">
+                      {!numbeOfPostsInTrip && (
+                        <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                            <p style={{
+                              textAlign: 'center',
+                            }}>
+                              There's no post added to the trip yet.
+                            </p>
+                          
+                        </div>
+                      )}
                       {trips.length > 0 ? (
                         <>
                           {recData?.map((trip, index) => {
-                            return (
-                              <div>
-                                {trip.userID === userIDPerson1 && (
+                            if (matchingTrip?.posts.includes(trip?._id)) {
+                              return (
+                                <div
+                                  key={trip?._id}
+                                  className={styles.trillistpost}
+                                >
                                   <div
-                                    key={trip?._id}
-                                    className={styles.trillistpost}
+                                    className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
+                                    onClick={() =>
+                                      handleLinkClick(trip?._id, trip.title, trip)
+                                    }
                                   >
-                                    <div
-                                      className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                                      onClick={() =>
-                                        handleLinkClick(trip?._id, trip.title,trip)
-                                      }
-                                    >
-                                      <img
-                                        className={styles.uploadimg}
-                                        src={`${Files_URL}${trip.images[0]}`}
-                                        alt="Uploaded Image"
-                                      />
+                                    <img
+                                      className={styles.uploadimg}
+                                      src={`${Files_URL}${trip.images[0]}`}
+                                      alt="Uploaded Image"
+                                    />
 
-                                      <div
-                                        style={{
-                                          position: "absolute ",
-                                          zIndex: 999,
-                                        }}
-                                      >
-                                        <div className="text-center">
-                                          <p
-                                            className={`mb-0 letterspac text-white`}
-                                          >
-                                            Event
-                                          </p>
-                                          <h3 className="w-700 text-white">
-                                            {trip.title}
-                                          </h3>
-                                          <p className={`mb-0 m1 text-white`}>
-                                            {/* {trip.region} */}
-                                            Paris, France
-                                          </p>
-                                        </div>
+                                    <div
+                                      style={{
+                                        position: "absolute ",
+                                        zIndex: 999,
+                                      }}
+                                    >
+                                      <div className="text-center">
+
+                                        <h3 className="w-700 text-white">
+                                          {trip.title}
+                                        </h3>
+                                        <p className={`mb-0 m1 text-white`}>
+                                          {/* {trip.region} */}
+                                          {trip?.location}
+                                        </p>
                                       </div>
                                     </div>
                                   </div>
-                                )}
-                              </div>
-                            );
+                                </div>
+
+                              );
+                            }
                           })}
                         </>
                       ) : (
@@ -599,6 +644,14 @@ export default CreatedTrips;
 
 function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
   const [editedTrip, setEditedTrip] = useState(updateTrip);
+  const [isTripDeleted, setIsTripDeleted] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isTripDeleted) {
+      router.push("/upcomingtrips");
+    }
+  }, [isTripDeleted]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -664,10 +717,50 @@ function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
           className="savebtn1 px-4 w-100 rounded-4 "
           onClick={() => {
             handleUpdateSubmit(editedTrip);
-            onHide();
+
           }}
         >
           Finish
+        </Button>
+        <Button
+          className="savebtn1 px-4 w-100 rounded-4 "
+          onClick={async () => {
+            Swal.fire({
+              title: `Delete Trip`,
+              text: `Are you sure you want to delete the trip "${editedTrip.title}"?`,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Delete",
+              cancelButtonText: "Cancel",
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                try {
+                  const response = await axios.delete(`${API_URL}api/trips/${editedTrip.id}`);
+
+                  if (response.status === 200) {
+                    setIsTripDeleted(true)
+                    onHide();
+
+
+                  } else {
+                    Swal.fire({
+                      title: "Deleting Trip",
+                      text: "Something went wrong in server while deleting the trip",
+                      icon: "error",
+                    });
+                  }
+                } catch (error) {
+                  console.error("Error deleting trip:", error);
+                }
+              }
+              if (result.isDenied) {
+                onHide();
+              }
+            });
+
+          }}
+        >
+          Delete Trip
         </Button>
       </Modal.Footer>
     </Modal>

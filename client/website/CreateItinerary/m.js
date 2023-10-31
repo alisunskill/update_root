@@ -5,7 +5,7 @@ import moneyicon from "../../public/images/moneyicon.svg";
 import burger from "../../public/images/burger.svg";
 import painticon from "../../public/images/painticon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import travelicon from "../../public/images/travelicon.svg";
 import Card from "react-bootstrap/Card";
 import Image from "next/image";
@@ -16,6 +16,7 @@ import {
   fetchCreateRecommendations,
 } from "../../store/actions/recommendationActions";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -34,6 +35,7 @@ export default () => {
   const fileInputRef = useRef(null);
 
   const [showAlert, setShowAlert] = useState(false);
+  const [Ittitle, setItTitle] = useState("");
   const [title, setTitle] = useState("");
   const [cost, setCost] = useState("");
   const [hours, setHours] = useState("");
@@ -47,7 +49,12 @@ export default () => {
 
   const [posts, setPosts] = useState([]);
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [isFormInProgress, setIsFormInProgress] = useState(false)
+
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: 33.572423,
+    lng: 73.14675,
+  });
   const [address, setAddress] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const handleLocationSearch = (e) => {
@@ -195,13 +202,31 @@ export default () => {
   console.log("ITS", itineraries);
 
   const handleSubmit = async (e) => {
+    if (!isFormInProgress) {
+      if (posts.length != 0) {
+        addItineraryinBackend(posts);
+      }
+      // else {
+      //   Swal.fire({
+      //     title: "Adding Recommendation",
+      //     text: "Title, Location, Descrptors & Upload Media Are Required ",
+      //     icon: "warning",
+      //   });
+      // }
+    }
+
+
     e.preventDefault();
+
     if (!isFormDataValid()) {
-      alert("Please fill in all required fields.");
+      Swal.fire({
+        title: "Adding Itinerary",
+        text: "Title, Location, Descrptors & Upload Media Are Required ",
+        icon: "warning",
+      });
       setShowAlert(true);
       return;
     }
-
     try {
       const token = localStorage.getItem("token");
       const userID = localStorage.getItem("userID");
@@ -267,7 +292,6 @@ export default () => {
 
       addItineraryinBackend(postsss);
 
-      router.push("/");
 
       // Rest of your code...
     } catch (error) {
@@ -280,14 +304,14 @@ export default () => {
     if (
       !title.trim() || // Title must not be empty
       images.length === 0 || // At least one file must be selected
-      !cost.trim() || // Cost must not be empty
-      !hours.trim() || // Hours must not be empty
-      !experience.trim() || // Experience must not be empty
+      //!cost.trim() || // Cost must not be empty
+      //!hours.trim() || // Hours must not be empty
+      //!experience.trim() || // Experience must not be empty
       !location.trim() || // Location must not be empty
-      !region.trim() || // Region must not be empty
-      descriptors.length === 0 || // At least one descriptor must be selected
-      !description.trim() || // Description must not be empty
-      !links.trim() // Links must not be empty
+      // !region.trim() || // Region must not be empty
+      descriptors.length === 0  // At least one descriptor must be selected
+      //!description.trim() || // Description must not be empty
+      //!links.trim() // Links must not be empty
     ) {
       return false;
     }
@@ -299,14 +323,14 @@ export default () => {
       if (
         !title.trim() || // Title must not be empty
         images.length === 0 || // At least one file must be selected
-        !cost.trim() || // Cost must not be empty
-        !hours.trim() || // Hours must not be empty
-        !experience.trim() || // Experience must not be empty
+        // !cost.trim() || // Cost must not be empty
+        // !hours.trim() || // Hours must not be empty
+        // !experience.trim() || // Experience must not be empty
         !location.trim() || // Location must not be empty
-        !region.trim() || // Region must not be empty
-        descriptors.length === 0 || // At least one descriptor must be selected
-        !description.trim() || // Description must not be empty
-        !links.trim() // Links must not be empty
+        //!region.trim() || // Region must not be empty
+        descriptors.length === 0  // At least one descriptor must be selected
+        //!description.trim() || // Description must not be empty
+        //!links.trim() // Links must not be empty
       ) {
         setIsFormFilled(false);
       } else {
@@ -327,6 +351,35 @@ export default () => {
     links,
   ]);
 
+  //is Form in progress
+  useEffect(() => {
+    const ISFORMINPROGRESS = async () => {
+      let isAnyFieldFilled =
+        title.trim() || // Title is filled
+        images.length > 0 || // At least one file is selected
+        //cost.trim() || // Cost is filled
+        //hours.trim() || // Hours is filled
+        //experience.trim() || // Experience is filled
+        location.trim() || // Location is filled
+        //region.trim() || // Region is filled
+        descriptors.length > 0  // At least one descriptor is selected
+      //description.trim() || // Description is filled
+      //links.trim(); // Links is filled
+      setIsFormInProgress(isAnyFieldFilled);
+    };
+    ISFORMINPROGRESS();
+  }, [
+    title,
+    images,
+    cost,
+    hours,
+    experience,
+    location,
+    region,
+    descriptors,
+    description,
+    links,
+  ]);
   const addItinerary = async () => {
     if (!isFormDataValid()) {
       alert("Please fill in all required fields.");
@@ -400,7 +453,7 @@ export default () => {
     setCost("");
     setHours("");
     setExperience("");
-    setLocation("");
+    //  setLocation("");
     setRegion("");
     setDescription("");
     setDescriptors([]);
@@ -410,25 +463,37 @@ export default () => {
 
   const addItineraryinBackend = async (postsss) => {
     const userID = localStorage.getItem("userID");
-    const url = `${API_URL}api/itineraryposts/createItineraryPost`;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userID: userID,
-        posts: postsss,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        router.push("/thanksPage");
-      })
-      .catch((error) => {
-        console.log(error);
+    if (Ittitle.length < 5) {
+      Swal.fire({
+        title: "Adding Itinerary",
+        text: "Please enter the title of itenrary",
+        icon: "warning",
       });
+      return;
+    }
+    else {
+
+      const url = `${API_URL}api/itineraryposts/createItineraryPost`;
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itTitle: Ittitle,
+          userID: userID,
+          posts: postsss,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          router.push("/thanksPage");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const handleFilesSelected = (e) => {
@@ -455,80 +520,150 @@ export default () => {
 
   return (
     <>
-      {showAlert && (
+      {/* {showAlert && (
         <div className="alert alert-danger" role="alert">
           Please fill in all required fields...
         </div>
-      )}
+      )} */}
       <div className="container-fluid pb-5">
-        {console.log(itineraries, "itineraries itineraries")}
-        {itineraries.length > 0 && (
-          <div className={`row ${styles.createdhero}`}>
-            <div className="col-12">
-              <h3 className="fw-600 px-3 pb-2">
-                {itineraries.length > 1 ? "Itinerary" : "Post"}
-              </h3>
-              <Card
-                className={`d-flex justify-content-center align-items-center ${styles.carditiner}`}
-              >
-                <Card.Body className="p-0">
-                  {itineraries.map((itinerary, index) => (
-                    <div key={index}>
-                      {itinerary.images.map((image, imgIndex) => (
-                        <div key={imgIndex}>
-                          {" "}
-                          {image.type.startsWith("image/") ? (
-                            <img
-                              src={URL.createObjectURL(image)}
-                              alt={`Image ${imgIndex}`}
-                              style={{ height: "100px", width: "170px" }}
-                              className="rounded-2"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <video controls width="100%">
-                              <source
-                                src={URL.createObjectURL(image)}
-                                type={image.type}
-                              />
-                              Your browser does not support the video tag.
-                            </video>
-                          )}
-                        </div>
-                      ))}
-                      <h5 className="p-2 fw-600 mt-1 mb-1">
-                        {itinerary.title.length > 20
-                          ? `${itinerary.title.slice(0, 20)}...`
-                          : itinerary.title}
-                      </h5>
 
-                    </div>
-                  ))}
-                </Card.Body>
-              </Card>
+        <div className={`row ${styles.createdhero}`}>
+          <div className="col-12">
 
-              {/* <h3>{itineraries.length > 1 ? "Itinerary" : "Post"}</h3>
-              <div className="itinerary-cards" style={{ display: "flex" }}>
-                {itineraries.map((itinerary, index) => (
-                  <div
+
+            <div className="d-flex flex-wrap">
+              {itineraries.map((itinerary, index) => (
+                <div>
+
+                  <Card
                     key={index}
+                    className={`mr-3 rounded-5 ${styles.carditiner}`}
                     style={{
-                      marginRight: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #7CC5E5",
-                      padding: "4px",
+                      width: "100px",
+                      backgroundColor: "#D9D9D9",
+                      marginLeft: index === 0 ? 0 : "10px",
+                      position: "relative",
                     }}
                   >
-                    {itinerary.title}
-                  </div>
-                ))}
-              </div> */}
+                    <Card.Body
+                      className="p-0"
+                      style={{
+                        position: "relative",
+                        margin: 0, // Add this to remove the margin
+                      }}
+                    >
+                      <img
+                        src={URL.createObjectURL(itinerary?.images[0])}
+                        alt={`Image ${index}`}
+                        style={{
+                          height: "100px",
+                          width: "100%",
+                          margin: 0, // Add this to remove the margin
+                          padding: 0, // Add this to remove the padding
+                        }}
+                        className="rounded-5"
+                        loading="lazy"
+                      />
+
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          textAlign: "center",
+                          background: "rgba(255, 255, 255, 0.8)",
+                          padding: "5px",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        {itinerary.title.length > 5
+                          ? `${itinerary.title.slice(0, 5)}...`
+                          : itinerary.title}
+                      </div>
+
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        style={{
+                          position: "absolute",
+                          top: "0",
+                          right: "0",
+                          cursor: "pointer",
+                          color: "black",
+                          marginRight: '10px',
+                          marginTop: "4px"
+                        }}
+                        onClick={() => {
+                          const updatedItineraries = itineraries.filter(
+                            (it) => it.title !== itinerary.title
+                          );
+
+                          // Update the state with the filtered itineraries
+                          SetItineraries(updatedItineraries);
+                        }}
+                      />
+                    </Card.Body>
+                  </Card>
+
+
+                </div>
+              ))}
+              <div>
+                <div
+                  className="p-2 fw-600 mb rounded-5 d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    marginLeft: itineraries.length > 0 ? "10px" : "0",
+                    backgroundColor: "#D9D9D9",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    onClick={() => {
+                      if (isFormFilled) { addItinerary() } else {
+                        Swal.fire({
+                          title: "Adding Recommendation",
+                          text: "Title, Location, Descrptors and Upload Media are compulsory ",
+                          icon: "warning",
+                        });
+                      }
+                    }}
+                    style={{
+                      color: 'black',
+                      fontSize: '50px',
+                    }}
+                  />
+                </div>
+
+
+              </div>
             </div>
+
+
+
+
+
           </div>
-        )}
+        </div>
+
 
         <div className={`row ${styles.createdhero}`}>
           <div className={`col-12 ${styles.scenerypara}`}>
+            <div className="form-group mb-3 d-flex justify-content-between align-items-center gap-3">
+              <input
+                type="text"
+                name="itineraryTitle"
+                className="form-control"
+                onChange={(e) => setItTitle(e.target.value)}
+                required
+                placeholder="Enter Itinerary title..."
+                style={{ width: "90%" }}
+              />
+              <div>
+
+              </div>
+            </div>
             <form
               id="recommendationForm"
               onSubmit={handleSubmit}
@@ -541,12 +676,24 @@ export default () => {
                   className="form-control"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  required
-                  placeholder="Enter a title..."
+                  required={isFormInProgress ? true : false}
+                  placeholder="Enter Event title*"
                   style={{ width: "90%" }}
                 />
                 <div>
                   <FontAwesomeIcon
+                    onClick={() => {
+                      setTitle("");
+                      setCost("");
+                      setHours("");
+                      setExperience("");
+                      //  setLocation("");
+                      setRegion("");
+                      setDescription("");
+                      setDescriptors([]);
+                      setLinks("");
+                      setImages([]);
+                    }}
                     icon={faTimes}
                     className={` bg-light border-0 rounded-5 position-absolute z-3 p-2 fw-700  cursor-pointer  ${styles.crossbtn}`}
                   />
@@ -559,11 +706,11 @@ export default () => {
                     <div className="row justify-content-between mt-3 ">
                       <div>
                         <div>
-                          <label htmlFor="fileInput">
+                          <label htmlFor="fileInput" className="cursor-pointer fw-bold">
                             <IconButton component="span">
                               <PhotoCameraIcon />
                             </IconButton>
-                            Upload Media
+                            Upload Media*
                           </label>
                           <input
                             type="file"
@@ -589,8 +736,8 @@ export default () => {
                                     backgroundColor: "#7CC5E5",
                                     borderRadius: "50%",
                                     padding: "2px",
-                                    marginRight:'3px',
-                                    marginTop:'3px',
+                                    marginRight: '3px',
+                                    marginTop: '3px',
                                   }}
                                   onClick={() => handleRemoveFile(index)}
                                 >
@@ -639,7 +786,7 @@ export default () => {
                       id="exampleFormControlTextarea5"
                       value={region}
                       onChange={(e) => setRegion(e.target.value)}
-                      required
+
                       rows="5"
                       placeholder="General information you’d like to share..."
                     />
@@ -654,7 +801,7 @@ export default () => {
                       name="experience"
                       value={experience}
                       onChange={(e) => setExperience(e.target.value)}
-                      required
+
                       rows="5"
                     ></textarea>
                   </div>
@@ -669,7 +816,7 @@ export default () => {
                       name="description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      required
+
                     ></textarea>
                   </div>
                   <div className="form-group mt-4">
@@ -682,7 +829,7 @@ export default () => {
                       value={links}
                       name="links"
                       onChange={(e) => setLinks(e.target.value)}
-                      required
+
                     ></textarea>
                   </div>
                 </div>
@@ -774,7 +921,7 @@ export default () => {
                           className="form-control py-2 w-lg-75 w-100"
                           value={hours}
                           onChange={(e) => setHours(e.target.value)}
-                          required
+
                           placeholder="Hours of Operation"
                         />
                       </div>
@@ -795,7 +942,7 @@ export default () => {
                           className="form-control py-2 w-lg-75 w-100"
                           value={cost}
                           onChange={(e) => setCost(e.target.value)}
-                          required
+
                           placeholder="Cost to Attend"
                         />
                       </div>
@@ -804,7 +951,7 @@ export default () => {
                 </div>
               </div>
             </form>
-            {isFormFilled && (
+            {/* {isFormFilled && (
               <div className="d-flex justify-content-end mt-lg-5 mt-4">
                 <button
                   className="savebtn1"
@@ -814,7 +961,7 @@ export default () => {
                   ➕ Recommendation
                 </button>
               </div>
-            )}
+            )} */}
             <div className="d-flex justify-content-end mt-lg-5 mt-4">
               <button
                 form="recommendationForm"
@@ -838,24 +985,22 @@ const DescriptorRadio = ({
   setDescriptors,
   iconSrc,
 }) => {
+  const toggleDescriptor = () => {
+    setDescriptors((prevDescriptors) => {
+      if (prevDescriptors.includes(descriptor)) {
+        return prevDescriptors.filter((d) => d !== descriptor);
+      } else {
+        return [...prevDescriptors, descriptor];
+      }
+    });
+  };
+
   return (
-    <div className={styles.eventicons}>
+    <div
+      className={styles.eventicons}
+      onClick={toggleDescriptor}
+    >
       <label>
-        <input
-          type="radio"
-          value={descriptor}
-          checked={descriptors.includes(descriptor)}
-          onChange={() => {
-            setDescriptors((prevDescriptors) => {
-              if (prevDescriptors.includes(descriptor)) {
-                return prevDescriptors.filter((d) => d !== descriptor);
-              } else {
-                return [...prevDescriptors, descriptor];
-              }
-            });
-          }}
-          style={{ display: "none" }}
-        />
         <Image
           className={`h-auto cursor-pointer ${styles.foodIcons}`}
           src={iconSrc}

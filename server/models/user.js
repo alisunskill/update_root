@@ -31,6 +31,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dp: {
+    type: String,
+    default:"/uploads/dps/Default_DP.png"
+  },
+  about: {
+    type: String,
+    default:"Fell in love with traveling and want to share my experiences with the world!",
+  },
   emailVerified: {
     type: Boolean,
     default:false,

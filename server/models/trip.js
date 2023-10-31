@@ -11,6 +11,7 @@ const tripSchema = new mongoose.Schema({
       ref: "Recommendation",
     },
   ],
+  posts:Array,
 });
 
 const Trip = mongoose.model("Trip", tripSchema);

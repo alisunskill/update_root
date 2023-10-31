@@ -9,7 +9,7 @@ import profileicon from "../../public/images/men.svg";
 import { fetchRecommendations } from "../../store/actions/recommendationActions";
 import { fetchUserData } from "../../store/actions/userAction";
 import styles from "../../styles/profile.module.css";
-import { API_URL } from "../../apiConfig";
+import { API_URL ,Files_URL} from "../../apiConfig";
 
 const itemData = [
   {
@@ -110,6 +110,37 @@ function Profile() {
   }, []);
 
   useEffect(() => {
+    const getUserInfo = async (userID) => {
+      const uid = await localStorage.getItem("userID");
+      try {
+        const url = `${API_URL}api/users/userInfo`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: uid,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setUser(data.data);
+          } else {
+            // Handle error if needed
+          }
+        } else {
+          // Handle HTTP error if needed
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+
+    };
     const fetchTotalCountryCitiesVisited = async () => {
       const uid = await localStorage.getItem("userID");
       try {
@@ -135,6 +166,7 @@ function Profile() {
         console.error(error);
       }
     };
+    getUserInfo()
     fetchTotalCountryCitiesVisited();
   }, []);
 
@@ -143,19 +175,24 @@ function Profile() {
       <div className="row px-lg-5 px-4 pt-lg-5 pt-4">
         <div className=" col-lg-4 align-items-center gap-2 ">
           <div className="d-flex align-items-center gap-3">
-            <Image
+          {user?.dp && (
+            <img
               width={100}
               height={100}
+              style={{
+                borderRadius: '50%',
+
+              }}
               className={`${styles.menicon} mt-2`}
-              src={profileicon}
+              src={`${Files_URL}${user?.dp}`}
               alt="profile"
             />
+          )}
             <p>
-              Fell in love with traveling and want to share my experiences with
-              the world!
+            {user?.about}
             </p>
           </div>
-          <h6 className="fw-600 mb-0 mt-4">{user?.userId?.username}</h6>
+          <h6 className="fw-600 mb-0 mt-4">{user?.username}</h6>
           <p className="pt-3">
             Where you've been:
             {totalCities === 0 && totalCountries === 0 && " Nowhere yet"}

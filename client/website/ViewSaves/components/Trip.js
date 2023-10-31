@@ -7,10 +7,11 @@ import NewTrip from "./NewTrip";
 // import { setTripId } from "../../../store/actions/tripsAction";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 export default function Trip(props) {
   const router = useRouter();
-  const { setModalShow } = props;
+  const { setModalShow, post } = props;
   const dispatch = useDispatch();
   const [modalTrip, setModalTrip] = useState(false);
   const [trips, setTrips] = useState([]);
@@ -19,6 +20,16 @@ export default function Trip(props) {
   const [fullList, setFullList] = useState([]);
   const [showAllImages, setShowAllImages] = useState(false);
   const [selectedTrips, setSelectedTrips] = useState([]);
+  const [selectedTripIDS, setSelectedTripIDS] = useState([]);
+
+  const addTripID = (tripID) => {
+    // Check if the tripID is already selected
+    if (selectedTripIDS.includes(tripID)) {
+      setSelectedTripIDS(selectedTripIDS.filter((id) => id !== tripID)); // Deselect the trip
+    } else {
+      setSelectedTripIDS([...selectedTripIDS, tripID]); // Select the trip
+    }
+  };
 
   useEffect(() => {
     fetchTrips();
@@ -79,7 +90,47 @@ export default function Trip(props) {
   };
   const handleSaveBtn = () => {
     // sendFavListToBackend(selectedTrips);
-    router.push("/upcomingtrips");
+    if (selectedTripIDS.length != 0) {
+      const url = `${API_URL}api/trips/addPostToTrip`;
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          post: post,
+          tripIDs: selectedTripIDS,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status) {
+            Swal.fire({
+              title: "Adding Event To Trip",
+              text: "Added successfully",
+              icon: "warning",
+            });
+          } else {
+            Swal.fire({
+              title: "Adding Event To Trip",
+              text: "Failed to add",
+              icon: "error",
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    }
+    else {
+      Swal.fire({
+        title: "Adding Event To Trip",
+        text: "Please select atleat one trip.",
+        icon: "warning",
+      });
+    }
+    // router.push("/upcomingtrips");
   };
   const sendFavListToBackend = async (selectedIds) => {
     const userIDPerson = localStorage.getItem("userID"); // Use "userID" key
@@ -166,12 +217,15 @@ export default function Trip(props) {
                       >
                         <div>
                           <input
-                            className={`form-check-input ${styles.radiobtn}`}
-                            type="radio"
-                            name="exampleRadios"
-                            id={`exampleRadios${item._id}`}
-                            value="option1"
-                            onChange={() => handleFavoriteTrips(item._id)}
+                            className={`form-check-input ${styles.checkbox}`}
+                            type="checkbox"
+                            name="exampleCheckboxes"
+                            id={`exampleCheckboxes${item._id}`}
+                            value={item._id}
+                            checked={selectedTripIDS.includes(item._id)}
+                            onChange={() => {
+                              addTripID(item._id);
+                            }}
                           />
                           <label
                             className={`form-check-label fw-500 h4 text-dark ${styles.titleheader}`}
@@ -239,8 +293,9 @@ export default function Trip(props) {
           </button>
           <div className="d-flex justify-content-center">
             <button
-              className={`fw-500 savebtn mt-3 mt-lg-4 text-light`}
+              className={`fw-500 savebtn mt-3 mt-lg-4  `}
               onClick={handleSaveBtn}
+              style={{ color: "white", background: '#4562B2' }}
             >
               Save Trips
             </button>

@@ -121,6 +121,10 @@ input {
   background-color: #d9d9d9;
 }
 
+.cgray{
+  color: #767676 !important;
+}
+
 .w-80 {
   min-width: 80% !important;
 }
@@ -374,6 +378,11 @@ iframe {
   height: 100%;
   width: 100%;
   position: absolute;
+}
+@media only screen and (max-width: 1440px) {
+  .savebtn1 {
+    font-size: 18px;
+  }
 }
 @media only screen and (max-width: 991px) {
   .experience-saves-header {

@@ -17,7 +17,7 @@ const {
   UserTotalRecommendations,
   recommendationDetail,
   updateLikes,
-  isRecommendationAlreadyLiked
+  isRecommendationAlreadyLiked,
 } = require("../controllers/recommendations");
 
 router.route("/").get(getAllRecommendations);
@@ -42,6 +42,7 @@ router.post('/createrecommendation', upload.array('images'), async (req, res) =>
     userID,
     title,
     cost,
+    currency,
     hours,
     experience,
     description,
@@ -56,7 +57,7 @@ router.post('/createrecommendation', upload.array('images'), async (req, res) =>
 
   try {
     // Check for missing required fields
-    if (!userID || !title || !location || !descriptors ) {
+    if (!userID || !title  ) {
       return res.status(400).json({ error: "Missing required fields in the request." });
     }
 
@@ -81,6 +82,7 @@ router.post('/createrecommendation', upload.array('images'), async (req, res) =>
       title,
       images: fileUrls, // Store the file URLs
       cost,
+      currency,
       hours,
       experience,
       description,

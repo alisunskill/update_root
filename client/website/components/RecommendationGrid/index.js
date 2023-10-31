@@ -22,28 +22,28 @@ const RecommendationGrid = ({
   const [currentRecommendations, setCurrentRecommendations] = useState([]);
   const [numColumns, setNumColumns] = useState(4);
   const updateNumColumns = () => {
-    if (window.innerWidth >= 1500) {
+    if (window.innerWidth >= 1300) {
+      setNumColumns(7);
+    } else if (window.innerWidth >= 1250) {
       setNumColumns(5);
-    }else if (window.innerWidth >= 1200) {
-      setNumColumns(4);
     } else if (window.innerWidth >= 768) {
-      setNumColumns(3);
+      setNumColumns(4);
     } else if (window.innerWidth >= 500) {
+      setNumColumns(3);
+    } else if (window.innerWidth >= 350) {
       setNumColumns(2);
     } else {
       setNumColumns(1);
     }
   };
 
-  
-useEffect(() => {
-  window.addEventListener("resize", updateNumColumns);
-  updateNumColumns(); 
-  return () => {
-    window.removeEventListener("resize", updateNumColumns);
-  };
-}, []);
-
+  useEffect(() => {
+    window.addEventListener("resize", updateNumColumns);
+    updateNumColumns();
+    return () => {
+      window.removeEventListener("resize", updateNumColumns);
+    };
+  }, []);
 
   useEffect(() => {
     // Fetch initial 5 recommendations
@@ -67,43 +67,42 @@ useEffect(() => {
   };
   const handleScroll = () => {
     const scrollPosition = window.scrollY;
-    localStorage.setItem('scrollPosition', scrollPosition);
+    localStorage.setItem("scrollPosition", scrollPosition);
   };
   useEffect(() => {
     // Fetch initial 5 recommendations
     fetchRecommendations(currentPage);
-    
+
     // Retrieve the scroll position from local storage
-    const scrollPosition = parseInt(localStorage.getItem('scrollPosition'));
+    const scrollPosition = parseInt(localStorage.getItem("scrollPosition"));
     if (!isNaN(scrollPosition)) {
       window.scrollTo(0, scrollPosition);
     }
   }, [fetchRecommendations, currentPage]);
-  
 
   const handleLinkClick = async (itemId, postTitle, item) => {
     handleScroll();
     console.log("ITEMMMMM", item);
-  
+
     if (item.isItenrary === false) {
       router.push(
-        `/eventdetail/${encodeURIComponent(postTitle.replace(/ /g, "-"))}?id=${itemId}`
+        `/eventdetail/${encodeURIComponent(
+          postTitle.replace(/ /g, "-")
+        )}?id=${itemId}`
       );
     } else if (item.isItenrary === true) {
       // Handle the redirection based on your requirements.
       // You can add a condition or further logic here to determine the correct route.
-      
-        router.push({
-          pathname: "/Itenraries",
-          query: {
-            id: JSON.stringify(item._id),
-          },
-        });
-     
-      
+
+      router.push({
+        pathname: "/Itenraries",
+        query: {
+          id: JSON.stringify(item._id),
+        },
+      });
     }
   };
-  
+
   return (
     <>
       <div className="container-fluid">
@@ -116,36 +115,42 @@ useEffect(() => {
               hasMore={hasMore}
             >
               <Box sx={{ minHeight: 829 }}>
-                <Masonry  columns={numColumns}  spacing={1}>
+                <Masonry columns={numColumns} spacing={1}>
                   {currentRecommendations.map((item, index) => {
                     return (
                       <div key={index} className="">
                         <div
                           className={`text-decoration-none d-flex justify-content-center flex-column ${styles.savelink}`}
-                          onClick={() => handleLinkClick(item._id, item.title,item)}
+                          onClick={() =>
+                            handleLinkClick(item._id, item.title, item)
+                          }
                         >
-                          <Link
+                          {/* <Link
                             href={`/eventdetail/${encodeURIComponent(
                               item.title.replace(/ /g, "-")
                             )}?id=${item._id}`}
                             className="w-100"
-                          >
-                            <img
-                              className={styles.uploadimg}
-                              src={`${Files_URL}${item.images[0]}`}
-                              alt="Uploaded Image"
-                              style={{borderRadius:'20px'}}
-                            />
-                          </Link>
+                          > */}
+                          <img
+                            className={styles.uploadimg}
+                            src={`${Files_URL}${item.images[0]}`}
+                            alt="Uploaded Image"
+                            style={{ borderRadius: "20px" }}
+                          />
+                          {/* </Link> */}
 
                           <div style={{ position: "absolute ", zIndex: 999 }}>
                             <div className="text-center">
                               {/* <p className={`mb-0 letterspac text-white`}>
                                 Event
                               </p> */}
-                              <h3 className="w-700 text-white">{item.title.length <= 40
-                                    ? item.title
-                                    : `${item.title.slice(0, 40)}...`}</h3>
+                              <h3
+                                className={`w-700 text-white ${styles.titlehero}`}
+                              >
+                                {item.title.length <= 40
+                                  ? item.title
+                                  : `${item.title.slice(0, 40)}...`}
+                              </h3>
                               <p className={`mb-0 m1 text-white`}>
                                 {item.location}
                               </p>

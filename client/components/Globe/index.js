@@ -63,15 +63,15 @@ export default function Flobe(props) {
   if (recommendations && recommendations.length > 0) {
     const uniqueRegions = new Set();
     cityData = recommendations.reduce((acc, recommendation) => {
-      if (!uniqueRegions.has(recommendation.region)) {
-        uniqueRegions.add(recommendation.region);
+      if (!uniqueRegions.has(recommendation.location)) {
+        uniqueRegions.add(recommendation.location);
         acc.push({
-          label: recommendation.region.slice(0, 9),
+          label: recommendation.location,
           lat: recommendation.latitude,
           lng: recommendation.longitude,
           size: 18,
           color: "white",
-          descriptor: recommendation.descriptor,
+          descriptor: recommendation.descriptors,
         });
       }
       return acc;

@@ -3,6 +3,27 @@ import styles from "../../styles/singular.module.css";
 import calender from "../../public/images/calender.svg";
 import moneyicon from "../../public/images/moneyicon.svg";
 import burger from "../../public/images/burger.svg";
+import culture from "../../public/images/descriptors/culture.svg";
+import sculture from "../../public/images/descriptors/sculture.svg";
+import thrills from "../../public/images/descriptors/thrills.svg";
+import sthrills from "../../public/images/descriptors/sthrills.svg";
+import food from "../../public/images/descriptors/food.svg";
+import sfood from "../../public/images/descriptors/sfood.svg";
+
+import fgroup from "../../public/images/descriptors/fgroup.svg";
+import sfgroup from "../../public/images/descriptors/sfgroup.svg";
+import family from "../../public/images/descriptors/family.svg";
+import sfamily from "../../public/images/descriptors/sfamily.svg";
+import hanged from "../../public/images/descriptors/hanged.svg";
+import shanged from "../../public/images/descriptors/shanged.svg";
+
+import guitar from "../../public/images/descriptors/guitar.svg";
+import sguitar from "../../public/images/descriptors/sguitar.svg";
+import nature from "../../public/images/descriptors/nature.svg";
+import snature from "../../public/images/descriptors/snature.svg";
+import relaxation from "../../public/images/descriptors/relaxation.svg";
+import srelaxation from "../../public/images/descriptors/srelaxation.svg";
+
 import painticon from "../../public/images/painticon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -32,6 +53,8 @@ export default () => {
   const dispatch = useDispatch();
 
   const fileInputRef = useRef(null);
+  const [currency, setCurrency] = React.useState("USD");
+  const countryCodes = ["USD", "EUR", "PKR", "IQD", "IMP"];
 
   const [showAlert, setShowAlert] = useState(false);
   const [title, setTitle] = useState("");
@@ -47,7 +70,10 @@ export default () => {
 
   const [posts, setPosts] = useState([]);
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: 33.572423,
+    lng: 73.14675,
+  });
   const [address, setAddress] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const handleLocationSearch = (e) => {
@@ -85,29 +111,28 @@ export default () => {
     const fetchAddress = async () => {
       try {
         const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation.lat},${currentLocation?.lng}&key=${GoogleMapApiKey}`,
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation.lat},${currentLocation?.lng}&key=${GoogleMapApiKey}`
         );
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data)
+          console.log(data);
           const { results } = data;
           if (results.length > 0) {
             const streetAddress = results[0].formatted_address;
-            console.log(streetAddress)
+            console.log(streetAddress);
           } else {
-            console.log('No results found.');
+            console.log("No results found.");
           }
         } else {
-          console.log('Error:', response.status);
+          console.log("Error:", response.status);
         }
       } catch (error) {
-        console.log('Error:', error);
+        console.log("Error:", error);
       }
     };
     fetchAddress();
   }, [currentLocation]);
-
 
   const handleMapClick = ({ lat, lng }) => {
     setCurrentLocation({ lat, lng });
@@ -126,17 +151,17 @@ export default () => {
           if (results.length > 0) {
             // Filter the address components to find the city
             const addressComponents = results[0].address_components;
-            let cityName = '';
-            let districtName = '';
-            let stateName = '';
+            let cityName = "";
+            let districtName = "";
+            let stateName = "";
 
             for (const component of addressComponents) {
               for (const type of component.types) {
-                if (type === 'locality' || type === 'sublocality') {
+                if (type === "locality" || type === "sublocality") {
                   cityName = component.long_name;
-                } else if (type === 'administrative_area_level_2') {
+                } else if (type === "administrative_area_level_2") {
                   districtName = component.long_name;
-                } else if (type === 'administrative_area_level_1') {
+                } else if (type === "administrative_area_level_1") {
                   stateName = component.long_name;
                 }
               }
@@ -148,22 +173,22 @@ export default () => {
               setLocation(districtName);
               console.log(`State: ${stateName}`);
             } else {
-              console.log('City, district, or state name not found in the address components.');
+              console.log(
+                "City, district, or state name not found in the address components."
+              );
             }
-
           } else {
-            console.log('No results found.');
+            console.log("No results found.");
           }
         } else {
-          console.log('Error:', response.status);
+          console.log("Error:", response.status);
         }
       } catch (error) {
-        console.log('Error:', error);
+        console.log("Error:", error);
       }
     };
 
-      fetchAddress();
-    
+    fetchAddress();
   }, [currentLocation]);
 
   const [isFormFilled, setIsFormFilled] = useState(false);
@@ -177,9 +202,10 @@ export default () => {
     if (!isFormDataValid()) {
       Swal.fire({
         title: "Adding Event",
-        text: "Title, Location, Descrptors & Upload Media Are Required ",
+        text: "Title and Upload Media Are Required ",
         icon: "warning",
-      });      setShowAlert(true);
+      });
+      setShowAlert(true);
       return;
     }
 
@@ -224,6 +250,7 @@ export default () => {
       formData.append("region", region);
       formData.append("description", description);
       formData.append("links", links);
+      formData.append("currency", currency);
 
       // Append descriptors as an array
       descriptors.forEach((descriptor, index) => {
@@ -241,15 +268,8 @@ export default () => {
       // Dispatch the fetchCreateRecommendations action with formData
       const data = await dispatch(fetchCreateRecommendations(formData, token));
       console.log(data);
-      setPosts((prevPosts) => [...prevPosts, data]);
 
-      const postsss = [...posts, data];
-
-      if (postsss.length > 1) {
-        addItineraryinBackend(postsss);
-      } else {
-        router.push("/");
-      }
+      router.push("/thanksPage");
 
       // Rest of your code...
     } catch (error) {
@@ -258,18 +278,33 @@ export default () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
+
+  useEffect(() => {
+    const formElement = document.getElementById("recommendationForm");
+    formElement.addEventListener("keypress", handleKeyPress);
+
+    return () => {
+      formElement.removeEventListener("keypress", handleKeyPress);
+    };
+  }, []);
+
   const isFormDataValid = () => {
     if (
       !title.trim() || // Title must not be empty
-      images.length === 0 || // At least one file must be selected
+      images.length === 0 // At least one file must be selected
       //!cost.trim() || // Cost must not be empty
-     // !hours.trim() || // Hours must not be empty
-     // !experience.trim() || // Experience must not be empty
-      !location.trim() || // Location must not be empty
-     // !region.trim() || // Region must not be empty
-      descriptors.length === 0 // At least one descriptor must be selected
-     // !description.trim() || // Description must not be empty
-     // !links.trim() // Links must not be empty
+      // !hours.trim() || // Hours must not be empty
+      // !experience.trim() || // Experience must not be empty
+      // !location.trim() || // Location must not be empty
+      // !region.trim() || // Region must not be empty
+      //descriptors.length === 0 // At least one descriptor must be selected
+      // !description.trim() || // Description must not be empty
+      // !links.trim() // Links must not be empty
     ) {
       return false;
     }
@@ -281,14 +316,14 @@ export default () => {
       if (
         !title.trim() || // Title must not be empty
         images.length === 0 || // At least one file must be selected
-       // !cost.trim() || // Cost must not be empty
+        // !cost.trim() || // Cost must not be empty
         //!hours.trim() || // Hours must not be empty
         //!experience.trim() || // Experience must not be empty
         !location.trim() || // Location must not be empty
         //!region.trim() || // Region must not be empty
-        descriptors.length === 0  // At least one descriptor must be selected
-       // !description.trim() || // Description must not be empty
-       // !links.trim() // Links must not be empty
+        descriptors.length === 0 // At least one descriptor must be selected
+        // !description.trim() || // Description must not be empty
+        // !links.trim() // Links must not be empty
       ) {
         setIsFormFilled(false);
       } else {
@@ -389,7 +424,7 @@ export default () => {
     setLinks("");
     setImages([]);
   };
- 
+
   const addItineraryinBackend = async (postsss) => {
     const userID = localStorage.getItem("userID");
     const url = `${API_URL}api/itineraryposts/createItineraryPost`;
@@ -472,6 +507,7 @@ export default () => {
               id="recommendationForm"
               onSubmit={handleSubmit}
               encType="multipart/form-data"
+              autoComplete="off"
             >
               <div className="form-group mb-3 d-flex justify-content-between align-items-center gap-3">
                 <input
@@ -481,7 +517,7 @@ export default () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
-                  placeholder="Enter a title..."
+                  placeholder="Enter a title*"
                   style={{ width: "90%" }}
                 />
                 <div>
@@ -498,11 +534,14 @@ export default () => {
                     <div className="row justify-content-between mt-3 ">
                       <div>
                         <div>
-                          <label htmlFor="fileInput">
+                          <label
+                            htmlFor="fileInput"
+                            className="cursor-pointer fw-bold"
+                          >
                             <IconButton component="span">
                               <PhotoCameraIcon />
                             </IconButton>
-                            Upload Media
+                            Upload Media*
                           </label>
                           <input
                             type="file"
@@ -528,22 +567,22 @@ export default () => {
                                     backgroundColor: "#7CC5E5",
                                     borderRadius: "50%",
                                     padding: "2px",
-                                    marginRight:'3px',
-                                    marginTop:'3px',
+                                    marginRight: "3px",
+                                    marginTop: "3px",
                                   }}
                                   onClick={() => handleRemoveFile(index)}
                                 >
-                                  <CloseIcon style={{
-                                     
-                                      color:'white'
-                                    }} />
+                                  <CloseIcon
+                                    style={{
+                                      color: "white",
+                                    }}
+                                  />
                                 </IconButton>
                                 {item.type.startsWith("image/") ? (
                                   <img
                                     src={URL.createObjectURL(item)}
                                     alt={`Image ${index}`}
                                     loading="lazy"
-                                    
                                   />
                                 ) : (
                                   <video controls width="100%">
@@ -582,7 +621,6 @@ export default () => {
                       id="exampleFormControlTextarea5"
                       value={region}
                       onChange={(e) => setRegion(e.target.value)}
-                      
                       rows="5"
                       placeholder="General information you’d like to share..."
                     />
@@ -597,7 +635,6 @@ export default () => {
                       name="experience"
                       value={experience}
                       onChange={(e) => setExperience(e.target.value)}
-                      
                       rows="5"
                     ></textarea>
                   </div>
@@ -612,7 +649,6 @@ export default () => {
                       name="description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      
                     ></textarea>
                   </div>
                   <div className="form-group mt-4">
@@ -625,38 +661,11 @@ export default () => {
                       value={links}
                       name="links"
                       onChange={(e) => setLinks(e.target.value)}
-                      
                     ></textarea>
                   </div>
                 </div>
-                <div className="col-12 col-lg-1 col-md-1">
-                  <div className="row justify-content-center">
-                    <div
-                      className={`col-12 col-md-12 col-lg-12 text-center ${styles.eventmidicons}`}
-                    >
-                      <DescriptorRadio
-                        descriptor="food"
-                        descriptors={descriptors}
-                        setDescriptors={setDescriptors}
-                        iconSrc={burger}
-                      />
-                      <DescriptorRadio
-                        descriptor="Art"
-                        descriptors={descriptors}
-                        setDescriptors={setDescriptors}
-                        iconSrc={painticon}
-                      />
-                      <DescriptorRadio
-                        descriptor="Hiking"
-                        descriptors={descriptors}
-                        setDescriptors={setDescriptors}
-                        iconSrc={travelicon}
-                      />
-                      {/* Add more DescriptorRadio components for other descriptors */}
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-4 col-md-5 col-12">
+
+                <div className="col-lg-5 col-md-6 col-12">
                   <div style={{ width: "100%" }}>
                     <div class="responsive-map">
                       <input
@@ -685,7 +694,7 @@ export default () => {
                         onClick={handleMapClick}
                         style={{
                           width: "100%",
-                          height: "300px", // Adjust the height as needed
+                          height: "50px", // Adjust the height as needed
                         }}
                       >
                         {currentLocation && (
@@ -700,6 +709,7 @@ export default () => {
                       </GoogleMapReact>
                     </div>
 
+                    {/* descripttors */}
                     <div className="form-group col-lg-12 col-12 text-center pt-2 pt-lg-2">
                       <Image
                         width="40"
@@ -718,7 +728,6 @@ export default () => {
                             className="form-control py-2"
                             value={hours}
                             onChange={(e) => setHours(e.target.value)}
-                            
                             placeholder="Hours of Operation"
                           />
                           <div className="form-group col-lg-12 col-12 text-center align-items-center pt-3 pt-lg-5 justify-content-center flex-column d-flex">
@@ -731,18 +740,155 @@ export default () => {
                             />
                             <h5 className="fw-600">Cost to Attend</h5>
                             <div className="d-flex justify-content-center align-items-center w-100">
-                              <input
-                                type="number"
-                                name="cost"
-                                className="form-control py-2"
-                                value={cost}
-                                onChange={(e) => setCost(e.target.value)}
-                                
-                                placeholder="Cost to Attend"
-                              />
+                              <div style={{ width: "70%" }}>
+                                <input
+                                  type="number"
+                                  name="cost"
+                                  className="form-control py-2"
+                                  value={cost}
+                                  onChange={(e) => setCost(e.target.value)}
+                                  placeholder="Cost to Attend"
+                                />
+                              </div>
+                              <div style={{ width: "30%" }}>
+                                <select
+                                  name="country"
+                                  className="form-control py-2"
+                                  value={currency}
+                                  onChange={(e) => setCurrency(e.target.value)}
+                                >
+                                  {countryCodes.map((code) => (
+                                    <option key={code} value={code}>
+                                      {code}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    {/* descriptors */}
+                    <div className="row justify-content-center pt-lg-0 pt-5 mb-3">
+                      <div
+                        className={`col-12 col-md-12 px-lg0 px-3 col-lg-12 d-flex flex-wrap gap-lg-5 gap-4 justify-content-lg-around justify-content-between text-center ${styles.eventmidicons}`}
+                      >
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="food"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={culture}
+                            selectedIconSrc={sculture}
+                          />{" "}
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Arts & Culture
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="Art"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={thrills}
+                            selectedIconSrc={sthrills}
+                          />
+
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Adventure
+                          </label>
+                        </div>
+
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="Hiking"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={food}
+                            selectedIconSrc={sfood}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Food & Drinks
+                          </label>
+                        </div>
+
+                        {/* second row */}
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="family"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={family}
+                            selectedIconSrc={sfamily}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Family Friendly{" "}
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="fgroup"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={fgroup}
+                            selectedIconSrc={sfgroup}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Group Friendly{" "}
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="hanged"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={hanged}
+                            selectedIconSrc={shanged}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Local Hangout
+                          </label>
+                        </div>
+
+                        {/* third row */}
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="guitar"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={guitar}
+                            selectedIconSrc={sguitar}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Music & Dance
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="nature"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={nature}
+                            selectedIconSrc={snature}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Nature
+                          </label>
+                        </div>
+                        <div className="text-center">
+                          <DescriptorRadio
+                            descriptor="relaxation"
+                            descriptors={descriptors}
+                            setDescriptors={setDescriptors}
+                            iconSrc={relaxation}
+                            selectedIconSrc={srelaxation}
+                          />
+                          <label className="fw-600 cgray pt-lg-3 pt-2">
+                            Relaxation
+                          </label>
+                        </div>
+                        {/* Add more DescriptorRadio components for other descriptors */}
                       </div>
                     </div>
                   </div>
@@ -782,35 +928,33 @@ const DescriptorRadio = ({
   descriptors,
   setDescriptors,
   iconSrc,
+  selectedIconSrc,
 }) => {
+  const isSelected = descriptors.includes(descriptor);
+  const toggleDescriptor = () => {
+    setDescriptors((prevDescriptors) => {
+      if (prevDescriptors.includes(descriptor)) {
+        return prevDescriptors.filter((d) => d !== descriptor);
+      } else {
+        return [...prevDescriptors, descriptor];
+      }
+    });
+  };
+
   return (
-    <div className={styles.eventicons}>
+    <div onClick={toggleDescriptor}>
       <label>
-        <input
-          type="radio"
-          value={descriptor}
-          checked={descriptors.includes(descriptor)}
-          onChange={() => {
-            setDescriptors((prevDescriptors) => {
-              if (prevDescriptors.includes(descriptor)) {
-                return prevDescriptors.filter((d) => d !== descriptor);
-              } else {
-                return [...prevDescriptors, descriptor];
-              }
-            });
-          }}
-          style={{ display: "none" }}
-        />
         <Image
           className={`h-auto cursor-pointer ${styles.foodIcons}`}
-          src={iconSrc}
+          // src={iconSrc}
+          src={isSelected ? selectedIconSrc : iconSrc}
           alt=""
           style={
             descriptors.includes(descriptor)
               ? {
-                border: "2px solid green",
-                borderRadius: "50px",
-              }
+                  border: "2px solid green",
+                  borderRadius: "50px",
+                }
               : { border: "none" }
           }
         />
