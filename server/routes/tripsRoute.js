@@ -7,11 +7,15 @@ const {
   getTripsPost,
   updateTripPost,
   userVisitedCountriesRegions,
-  addPostToTrip
+  addPostToTrip,
+  addEventToSpecificDateInPlans,
+  updateTrip
 } = require("../controllers/trips");
 
 router.route("/").post(createTripsPost);
 router.route("/addPostToTrip").post(addPostToTrip);
+router.route("/addEventToSpecificDateInPlans").post(addEventToSpecificDateInPlans);
+router.route("/updateTrip").post(updateTrip);
 
 router.route("/userVisitedCountriesRegions").post(userVisitedCountriesRegions);
 

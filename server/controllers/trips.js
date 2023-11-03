@@ -34,7 +34,7 @@ const Trips = require("../models/trips");
 const createTripsPost = async (req, res) => {
   try {
     const { title, region, email, sdate, edate, note, userID } = req.body;
-    console.log(title, region, email, sdate, edate, note, userID, "allfields");
+    console.log(sdate,"sdate");
 
     // Check if there is an existing trip with the same userID and overlapping date range
     const existingTrip = await Trips.findOne({
@@ -42,8 +42,8 @@ const createTripsPost = async (req, res) => {
       $or: [
         {
           $and: [
-            { sdate: { $lte: edate } }, // New trip start date is before or on the end date of existing trip
-            { edate: { $gte: sdate } }, // New trip end date is after or on the start date of existing trip
+            { sdate: { $lte: edate } }, // New trip start date is before or on the end date of the existing trip
+            { edate: { $gte: sdate } }, // New trip end date is after or on the start date of the existing trip
           ],
         },
       ],
@@ -51,6 +51,19 @@ const createTripsPost = async (req, res) => {
 
     if (existingTrip) {
       return res.status(201).json({ status: false, message: "A trip already exists for this date range." });
+    }
+
+    // Create an array of objects for all dates between sdate and edate
+    const plans = [];
+    let currentDate = new Date(sdate);
+    const endDate = new Date(edate);
+
+    while (currentDate <= endDate) {
+      plans.push({
+        date: currentDate.toISOString().split('T')[0], // Convert date to yyyy-mm-dd format
+        events: [],
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
     }
 
     const itinerary = await Trips.create({
@@ -61,9 +74,10 @@ const createTripsPost = async (req, res) => {
       edate,
       note,
       userID,
+      plans, // Include the plans array in the document
     });
 
-    return res.status(201).json({ status: true, message: "Trip added succesfully",itinerary });
+    return res.status(201).json({ status: true, message: "Trip added successfully", itinerary });
   } catch (err) {
     if (err.name === "ValidationError") {
       const errorMessages = Object.values(err.errors).map(
@@ -75,6 +89,43 @@ const createTripsPost = async (req, res) => {
     }
   }
 };
+const addEventToSpecificDateInPlans = async (req, res) => {
+  try {
+    const { tripId, planDate, eventIds } = req.body;
+    console.log(tripId, planDate, eventIds);
+
+    // Find the trip by its ID
+    const trip = await Trips.findById(tripId);
+
+    if (!trip) {
+      return res.status(404).json({ status: false, message: "Trip not found." });
+    }
+
+    // Find the plan for the specified date in the trip
+    const plan = trip.plans.find((p) => p.date === planDate);
+
+    if (!plan) {
+      return res.status(404).json({ status: false, message: "Plan date not found." });
+    }
+
+    // Add the event ID to the plan's events array
+    plan.events=[];
+    for (const eventId of eventIds) {
+      plan.events.push(eventId);
+    }
+
+    // Inform Mongoose that you've modified the plans array
+    trip.markModified('plans');
+
+    // Save the updated trip
+    await trip.save();
+
+    res.status(200).json({ status: true, message: "Event added to plan successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Unable to add event to plan" });
+  }
+};
+
 
 
 // Get Trips
@@ -137,21 +188,44 @@ const updateTripPost = async (req, res) => {
   const { title, region, email, sdate, edate } = req.body;
 
   try {
-    const updatedTrip = await Trips.findByIdAndUpdate(
-      tripId,
-      {
-        title,
-        region,
-        email,
-        sdate,
-        edate,
-      },
-      { new: true }
-    );
+    // Find the existing trip
+    const existingTrip = await Trips.findById(tripId);
 
-    if (!updatedTrip) {
+    if (!existingTrip) {
       return res.status(404).json({ error: "Trip not found." });
     }
+
+    // Calculate the date range difference
+    const existingStartDate = new Date(existingTrip.sdate);
+    const existingEndDate = new Date(existingTrip.edate);
+    const newStartDate = new Date(sdate);
+    const newEndDate = new Date(edate);
+
+    // Find the plans that need to be removed or added
+    const plansToRemove = existingTrip.plans.filter(
+      (plan) => plan.date < sdate || plan.date > edate
+    );
+
+    const plansToAdd = [];
+    let currentDate = newStartDate;
+    while (currentDate <= newEndDate) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      if (!existingTrip.plans.some((plan) => plan.date === dateStr)) {
+        plansToAdd.push({ date: dateStr, events: [] });
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Update the trip with the new data and modified plans array
+    existingTrip.title = title;
+    existingTrip.region = region;
+    existingTrip.email = email;
+    existingTrip.sdate = sdate;
+    existingTrip.edate = edate;
+    existingTrip.plans = [...existingTrip.plans.filter((plan) => !plansToRemove.some((r) => r.date === plan.date)), ...plansToAdd];
+
+    // Save the updated trip
+    const updatedTrip = await existingTrip.save();
 
     res.status(200).json(updatedTrip);
   } catch (err) {
@@ -165,6 +239,62 @@ const updateTripPost = async (req, res) => {
     }
   }
 };
+const updateTrip = async (req, res) => {
+  const { tripId,title, region, sdate, edate } = req.body;
+  console.log(tripId,title, region, sdate, edate)
+
+  try {
+    // Find the existing trip
+    const existingTrip = await Trips.findById(tripId);
+
+    if (!existingTrip) {
+      return res.status(404).json({ error: "Trip not found." });
+    }
+
+    // Calculate the date range difference
+    const existingStartDate = new Date(existingTrip.sdate);
+    const existingEndDate = new Date(existingTrip.edate);
+    const newStartDate = new Date(sdate);
+    const newEndDate = new Date(edate);
+
+    // Find the plans that need to be removed or added
+    const plansToRemove = existingTrip.plans.filter(
+      (plan) => plan.date < sdate || plan.date > edate
+    );
+
+    const plansToAdd = [];
+    let currentDate = newStartDate;
+    while (currentDate <= newEndDate) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      if (!existingTrip.plans.some((plan) => plan.date === dateStr)) {
+        plansToAdd.push({ date: dateStr, events: [] });
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Update the trip with the new data and modified plans array
+    existingTrip.title = title;
+    existingTrip.region = region;
+    existingTrip.sdate = sdate;
+    existingTrip.edate = edate;
+    existingTrip.plans = [...existingTrip.plans.filter((plan) => !plansToRemove.some((r) => r.date === plan.date)), ...plansToAdd];
+
+    // Save the updated trip
+    const updatedTrip = await existingTrip.save();
+
+    res.status(200).json({ status: true, message: "Trip Updated successfully" });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const errorMessages = Object.values(err.errors).map(
+        (error) => error.message
+      );
+      res.status(400).json({ error: errorMessages });
+    } else {
+      res.status(500).json({ error: "Unable to update the trip." });
+    }
+  }
+};
+
 
 const userVisitedCountriesRegions = async (req, res) => {
   try {
@@ -303,5 +433,7 @@ module.exports = {
   getTripsPost,
   updateTripPost,
   userVisitedCountriesRegions,
-  addPostToTrip
+  addPostToTrip,
+  addEventToSpecificDateInPlans,
+  updateTrip,
 };

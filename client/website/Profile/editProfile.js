@@ -158,6 +158,8 @@ function EditProfile() {
         setProfileUpdated(true);
         setIsEditing(false);
         setIsSaving(false);
+
+       router.push("/profile");
         // window.location.reload();
       } else {
         setIsSaving(false);

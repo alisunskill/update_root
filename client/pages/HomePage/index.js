@@ -292,7 +292,7 @@ export default function YourComponentName({ data1 }) {
                       max={maxValue}
                     />
                     <div className="lgray">
-                      Min: ${value[0]} &#160; &#160; Max: ${value[1]}
+                      Min: ${minValue1} &#160; &#160; Max: ${maxValue1}
                     </div>
                   </Box>
                 </div>

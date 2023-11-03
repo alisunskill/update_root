@@ -147,6 +147,23 @@ function ViewSaves() {
     fetchPosts()
   }, []);
 
+  const handleLinkClick = (itemId, postTitle, post) => {
+    if (post?.isItenrary) {
+      router.push({
+        pathname: "/Itenraries",
+        query: {
+          id: JSON.stringify(post._id),
+        },
+      });
+    } else {
+      router.push(
+        `/eventdetail/${encodeURIComponent(
+          postTitle.replace(/ /g, "-")
+        )}?id=${itemId}`
+      );
+    }
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -165,19 +182,19 @@ function ViewSaves() {
               </div>
               <div className="col-lg-4 col-md-4 col-6 d-flex justify-content-lg-end justify-content-start px-lg-4 px-2 pb-lg-3 pt-lg-0 pt-2 pb-md-1">
                 <div className="d-flex gap-3">
-                    <Link
-                      href="/infinitescroll"
-                      className=" rounded-5 bg-gray1 border-0 px-3 py-1 fw-600 text-decoration-none text-light"
-                    >
-                      Experiences{" "}
-                    </Link>
-                    <Link
-                      href="/upcomingtrips"
-                      className=" rounded-5 bg-gray1 border-0 px-3 py-1 fw-600 text-decoration-none text-light"
-                    >
-                      Trips
-                    </Link>
-               </div>
+                  <Link
+                    href="/infinitescroll"
+                    className=" rounded-5 bg-gray1 border-0 px-3 py-1 fw-600 text-decoration-none text-light"
+                  >
+                    Experiences{" "}
+                  </Link>
+                  <Link
+                    href="/upcomingtrips"
+                    className=" rounded-5 bg-gray1 border-0 px-3 py-1 fw-600 text-decoration-none text-light"
+                  >
+                    Trips
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -228,21 +245,24 @@ function ViewSaves() {
                               }
                             />
                           </div>
-                          <Link
+                          <div
                             key={index}
                             // onClick={() => handleLinkClick(post._id)}
                             // href={`/region/${encodeURIComponent(
                             //   post.title.replace(/ /g, "-")
                             // )}`}
-                            href={`/eventdetail/${encodeURIComponent(
-                              post.title.replace(/ /g, "-")
-                            )}?id=${post._id}`}
+                            // href={`/eventdetail/${encodeURIComponent(
+                            //   post?.title.replace(/ /g, "-")
+                            // )}?id=${post?._id}`}
+                            onClick={() =>
+                              handleLinkClick(post?._id, post?.title, post)
+                            }
                             className={styles.savelink}
                           >
 
                             <img
                               className={styles.uploadimg}
-                              src={`${Files_URL}${post.images[0]}`}
+                              src={`${Files_URL}${post?.images[0]}`}
                               alt="Uploaded Image"
                             />
                             <div
@@ -251,13 +271,13 @@ function ViewSaves() {
                             >
 
                               <h3 className="w-700 text-white">
-                                {post.title}
+                                {post?.title}
                               </h3>
                               <p className={`mb-0 m1 text-white`}>
-                                {post.location}
+                                {post?.location}
                               </p>
                             </div>
-                          </Link>
+                          </div>
                         </div>
                       )
 
@@ -275,16 +295,18 @@ function ViewSaves() {
                 </Box>
               </InfiniteScroll>
             )}
-            {!isLoading && !posts.length>0 && (
+            {!isLoading && !posts.length > 0 && (
               <div className="d-flex justify-content-center align-items-center">
                 <p>No saved posts</p>
               </div>
             )}
           </div>
         </div>
-        <div className="text-center">
-          <p>Add your saves to an upcoming trip!</p>
-        </div>
+        {posts.length > 0 && (
+          <div className="text-center">
+            <p>Add your saves to an upcoming trip!</p>
+          </div>
+        )}
       </div>
       <br />
     </>

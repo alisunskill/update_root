@@ -5,9 +5,9 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import profileicon from "../../../public/images/men.svg";
 import styles from "../../../styles/profile.module.css";
-import { API_URL } from "../../../apiConfig";
+import { API_URL,Files_URL } from "../../../apiConfig";
 // import Globe from "./Globe";
-
+ 
 export default function Profile({ trips }) {
   const userID =
     typeof window !== "undefined" ? localStorage.getItem("userID") : null;
@@ -15,6 +15,7 @@ export default function Profile({ trips }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userId);
+
 
   // login Data id, email
   // const { userID, email } = useSelector((state) => state.recommendation);
@@ -47,6 +48,37 @@ export default function Profile({ trips }) {
     fetchTrips();
   }, [trips]);
   useEffect(() => {
+    const getUserInfo = async (userID) => {
+      const uid = await localStorage.getItem("userID");
+      try {
+        const url = `${API_URL}api/users/userInfo`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: uid,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setUser(data.data);
+          } else {
+            // Handle error if needed
+          }
+        } else {
+          // Handle HTTP error if needed
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+
+    };
     const fetchTotalCountryCitiesVisited = async () => {
       const uid = await localStorage.getItem("userID")
       try {
@@ -73,19 +105,26 @@ export default function Profile({ trips }) {
       }
 
     }
+    getUserInfo()
     fetchTotalCountryCitiesVisited();
   }, []);
 
   return (
     <div className=" align-items-center gap-2 ">
       <div className="d-flex align-items-center gap-3">
-        <Image
-          width={100}
-          height={100}
-          className={`${styles.menicon} mt-2`}
-          src={profileicon}
-          alt="profile"
-        />
+      {user?.dp && (
+            <img
+              width={100}
+              height={100}
+              style={{
+                borderRadius: '50%',
+
+              }}
+              className={`${styles.menicon} mt-2`}
+              src={`${Files_URL}${user?.dp}`}
+              alt="profile"
+            />
+          )}
         <p>
           Fell in love with traveling and want to share my experiences with the
           world!

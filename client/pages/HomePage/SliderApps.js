@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import styles from "../../styles/singular.module.css";
 import "swiper/css";
@@ -10,8 +9,7 @@ import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Files_URL } from "../../apiConfig";
 
 export default function SliderApps({ images1 }) {
-  console.log(images1, "ali");
-  const [selectedImage, setSelectedImage] = useState(images1?images1[0]:null);
+  const [selectedImage, setSelectedImage] = useState(images1 ? images1[0] : null);
 
   useEffect(() => {
     // Set selectedImage to the first item in the images1 array when the component mounts
@@ -23,6 +21,7 @@ export default function SliderApps({ images1 }) {
   const handleClick = (image) => {
     setSelectedImage(image);
   };
+
   return (
     <>
       <Swiper
@@ -38,23 +37,43 @@ export default function SliderApps({ images1 }) {
       >
         {selectedImage ? (
           <SwiperSlide className="m-0">
-            <img
-              key={selectedImage}
-              className={`${styles.scenery} object-cover`}
-              src={`${Files_URL}${selectedImage}`}
-              alt=""
-              loading="lazy"
-            />
+            {selectedImage.endsWith(".mp4") || selectedImage.endsWith(".webm") ? (
+              <video
+                key={selectedImage}
+                className={`${styles.scenery} object-cover`}
+                src={`${Files_URL}${selectedImage}`}
+                alt=""
+                controls
+              />
+            ) : (
+              <img
+                key={selectedImage}
+                className={`${styles.scenery} object-cover`}
+                src={`${Files_URL}${selectedImage}`}
+                alt=""
+                loading="lazy"
+              />
+            )}
           </SwiperSlide>
         ) : (
           images1?.map((item, index) => (
             <SwiperSlide key={index} className="m-0">
-              <img
-                className={`${styles.scenery} object-cover`}
-                src={item}
-                alt=""
-                onClick={() => handleClick(item)}
-              />
+              {item.endsWith(".mp4") || item.endsWith(".webm") ? (
+                <video
+                  className={`${styles.scenery} object-cover`}
+                  src={item}
+                  alt=""
+                  onClick={() => handleClick(item)}
+                  
+                />
+              ) : (
+                <img
+                  className={`${styles.scenery} object-cover`}
+                  src={item}
+                  alt=""
+                  onClick={() => handleClick(item)}
+                />
+              )}
             </SwiperSlide>
           ))
         )}
@@ -73,7 +92,20 @@ export default function SliderApps({ images1 }) {
             onClick={() => handleClick(item)}
             style={{ marginRight: "0px", width: "10%" }}
           >
-            <img className={styles.smallimg} src={`${Files_URL}${item}`} alt="" />
+            {item.endsWith(".mp4") || item.endsWith(".webm") ? (
+              <video
+                className={styles.smallimg}
+                src={`${Files_URL}${item}`}
+                alt=""
+                
+              />
+            ) : (
+              <img
+                className={styles.smallimg}
+                src={`${Files_URL}${item}`}
+                alt=""
+              />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

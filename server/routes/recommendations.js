@@ -104,6 +104,82 @@ router.post('/createrecommendation', upload.array('images'), async (req, res) =>
   }
 });
 
+router.post('/updatecommendation', upload.array('newImages'), async (req, res) => {
+  const {
+    recommendationId,
+    oldImages,
+    userID,
+    title,
+    cost,
+    currency,
+    hours,
+    experience,
+    description,
+    location,
+    descriptors,
+    region,
+    links,
+    longitude,
+    latitude,
+    isItenrary,
+  } = req.body;
+
+  console.log(typeof oldImages);
+
+  try {
+    // Check for missing required fields
+    if (!userID || !title) {
+      res.status(400).json({ status: false, message: "Missing title or user" });
+      return; // Return early to prevent further code execution
+    }
+
+    // Find the existing recommendation by ID
+    const existingRecommendation = await Recommendation.findById(recommendationId);
+
+    if (!existingRecommendation) {
+      res.status(404).json({ status: false, message: "Recommendation not exists" });
+      return; // Return early to prevent further code execution
+    }
+
+    // Process uploaded new images (if any)
+    let newImages = oldImages; // Initialize with oldImages
+
+    if (req.files && req.files.length > 0) {
+      // Update the "images" field with new image URLs
+      const newFileUrls = req.files.map((file) => `/uploads/${file.filename}`);
+      newImages = oldImages.concat(newFileUrls);
+    }
+    console.log(newImages)
+
+    // Update the recommendation fields
+    existingRecommendation.userID = userID;
+    existingRecommendation.title = title;
+    existingRecommendation.images = newImages;
+    existingRecommendation.cost = cost;
+    existingRecommendation.currency = currency;
+    existingRecommendation.hours = hours;
+    existingRecommendation.experience = experience;
+    existingRecommendation.description = description;
+    existingRecommendation.location = location;
+    existingRecommendation.descriptors = descriptors;
+    existingRecommendation.region = region;
+    existingRecommendation.links = links;
+    existingRecommendation.longitude = longitude;
+    existingRecommendation.latitude = latitude;
+    existingRecommendation.isItenrary = isItenrary;
+
+    // Save the updated recommendation
+    const updatedRecommendation = await existingRecommendation.save();
+
+    res.status(201).json({ status: true, message: "Recommendation updated successfully", data: updatedRecommendation });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ status: false, message: "Failed to update recommendation. " + error.message });
+  }
+});
+
+
+
 router.route("/recommendationDetail").post(recommendationDetail);
 
 // router.route("/").post(

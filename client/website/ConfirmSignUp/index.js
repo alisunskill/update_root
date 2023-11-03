@@ -11,10 +11,10 @@ export default () => {
     <>
       <div className={`row ${styles.confirmme}`}>
         <div className={` col-lg-12 ${styles.confirm_container}`}>
-          <p className={styles.confirm_font2}>
-            Thank You for Signing Up! <br />
-            Please check your email for confirmation
-          </p>
+        <p className={styles.confirm_font1}>
+  Thank you for signing up! <br />
+  An email with a verification link has been sent to your inbox. Please check your email and click the verification link to complete the registration process.
+</p>
           <button
             className="savebtn1 text-light mb-5 cursor-pointer"
             onClick={handleLoginButtonClick}

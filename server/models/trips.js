@@ -30,6 +30,7 @@ const tripSchema = new mongoose.Schema({
     // required: true,
   },
   posts:Array,
+  plans:Array,
 });
 
 const Trip = mongoose.model("Trip", tripSchema);

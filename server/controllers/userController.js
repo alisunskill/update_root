@@ -129,26 +129,26 @@ exports.verifyEmail = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password, recaptchaResponse } = req.body;
-    console.log(recaptchaResponse, "recaptchaResponse");
+    //console.log(recaptchaResponse, "recaptchaResponse");
     const recaptchaSecretKey = process.env.RECAPETCHA_SECRET_KEY;
-    // const recaptchaVerificationURL = `https://www.google.com/recaptcha/api/siteverify`;
-    // const verificationResponse = await axios.post(
-    //   recaptchaVerificationURL,
-    //   null,
-    //   {
-    //     params: {
-    //       secret: recaptchaSecretKey,
-    //       response: recaptchaResponse,
-    //     },
-    //   }
-    // );
-    // verificationResponse.data.success = true;
+    const recaptchaVerificationURL = `https://www.google.com/recaptcha/api/siteverify`;
+    const verificationResponse = await axios.post(
+      recaptchaVerificationURL,
+      null,
+      {
+        params: {
+          secret: recaptchaSecretKey,
+          response: recaptchaResponse,
+        },
+      }
+    );
+    verificationResponse.data.success = true;
 
-    // if (!verificationResponse.data.success) {
-    //   return res.status(401).json({ message: "reCAPTCHA verification failed" });
-    // }
+    if (!verificationResponse.data.success) {
+      return res.status(401).json({ message: "reCAPTCHA verification failed" });
+    }
 
-    // console.log(email, password, "jjj");
+    console.log(email, password, "jjj");
 
     // Find the user by email
     const user = await User.findOne({ email });
@@ -169,7 +169,7 @@ exports.loginUser = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id, email: user.email }, jwtKey, {
-      expiresIn: "1h",
+      expiresIn: "24h",
     });
     user.token = token;
     res.status(200).json({

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import logo from "../public/images/logo.svg";
 import men from "../public/images/men.svg";
-import plusicon from "../public/images/plusicon.svg";
+import plusicon from "../public/images/Plusss.svg";
 import earth from "../public/images/earth.webp";
 import logout from "../public/images/logout.png";
 import styles from "../styles/home.module.css";
@@ -20,7 +20,7 @@ import { fetchRecommendations } from "../store/actions/recommendationActions";
 import { useRouter } from "next/navigation";
 import Button from "react-bootstrap/Button";
 import { fetchLoginUser } from "../store/actions/recommendationActions";
-import profileicon from "../public/images/men.svg";
+import profileicon from "../public/images/HeaderMen.svg";
 
 const Navbar = () => {
   const router = useRouter();
@@ -116,12 +116,12 @@ const Navbar = () => {
                   >
                     <Link href="/globemap">
                       <Image
-                        width={50}
-                        height={50}
+                        width={40}
+                        height={40}
                         src={earth}
                         alt="earth"
                         style={{ objectFit: "contain" }}
-                        className={`mx-3" ${styles.plusicon}`}
+                        className={`mx-lg-3 mx-1 " ${styles.plusicon}`}
                       />
                     </Link>
                   </Button>
@@ -130,11 +130,11 @@ const Navbar = () => {
                 {!userIDs ? (
                   <div onClick={handleCreateItinerary}>
                     <Image
-                      width={50}
-                      height={50}
+                      width={40}
+                      height={40}
                       src={plusicon}
                       alt="plusicon"
-                      className={`mx-4 ${styles.plusicon}`}
+                      className={`mx-lg-4 mx-1 ${styles.plusicon}`}
                       style={{ cursor: !userID ? "not-allowed" : "pointer" }}
                     />
                   </div>
@@ -145,25 +145,26 @@ const Navbar = () => {
                   >
                     {" "}
                     <Image
-                      width={50}
-                      height={50}
+                      width={40}
+                      height={40}
                       src={plusicon}
                       alt="plusicon"
-                      className={`mx-4 ${styles.plusicon}`}
+                      className={`mx-lg-4 mx-1 ${styles.plusicon}`}
                     />
                   </div>
                 )}
 
                 <div>
-                  <button style={{borderWidth:'0px',backgroundColor:'white'}} className="mx-3">
+                  <button
+                    style={{ borderWidth: "0px", backgroundColor: "white" }}
+                  >
                     <Image
-                    width={50}
-                    height={50}
-                    src={profileicon}
-                    alt="profileicon"
-                    onClick={toggleSidebar}
-
-                    className={`mx-4 ${styles.plusicon}`}
+                      width={40}
+                      height={40}
+                      src={profileicon}
+                      alt="profileicon"
+                      onClick={toggleSidebar}
+                      className={`mx-lg-4 mx-1 ${styles.plusicon}`}
                     />
                     {/* <FontAwesomeIcon
                       icon={faBars}
@@ -229,48 +230,43 @@ const Navbar = () => {
                 <div className="">
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px',marginTop:'3px'}}
-                    onClick={()=>    router.push("/profile")}
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/profile")}
                   >
                     Profile
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px',marginTop:'3px'}}
-                    onClick={()=>    router.push("/upcomingtrips")}
-
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/upcomingtrips")}
                   >
                     Your Upcoming Trips
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px',marginTop:'3px'}}
-                    onClick={()=>    router.push("/viewsave")}
-
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/viewsave")}
                   >
                     Your Likes
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px',marginTop:'3px'}}
-                    onClick={()=>    router.push("/infinitescroll")}
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/yourExperiences")}
                   >
                     Your Experiences
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px',marginTop:'3px'}}
-                    onClick={()=>    router.push("/createposts")}
-
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/createposts")}
                   >
                     Create Post
                   </Dropdown.Item>
-                  
-                 
-                  
+
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px'}}
+                    style={{ fontSize: "17px" }}
                     onClick={handleLogout1}
                   >
                     Logout
@@ -282,10 +278,17 @@ const Navbar = () => {
                 <div className="">
                   <Dropdown.Item
                     className={styles.dropdownprofile}
-                    style={{fontSize:'17px',marginTop:'3px'}}
-                    href="/login"
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/login")}
                   >
                     Login
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className={styles.dropdownprofile}
+                    style={{ fontSize: "17px", marginTop: "3px" }}
+                    onClick={() => router.push("/signup")}
+                  >
+                    Sign Up
                   </Dropdown.Item>
                 </div>
               )}

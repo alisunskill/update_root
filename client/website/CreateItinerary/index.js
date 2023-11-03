@@ -55,7 +55,7 @@ export default () => {
 
   const fileInputRef = useRef(null);
   const [currency, setCurrency] = React.useState("USD");
-  const countryCodes = ['USD','EUR', 'PKR','IQD','IMP'];
+  const countryCodes = ['USD', 'EUR', 'PKR', 'IQD', 'IMP'];
 
   const [showAlert, setShowAlert] = useState(false);
   const [Ittitle, setItTitle] = useState("");
@@ -65,7 +65,7 @@ export default () => {
   const [experience, setExperience] = useState("");
   const [location, setLocation] = useState("");
   const [region, setRegion] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("•");
   const [descriptors, setDescriptors] = useState([]);
   const [links, setLinks] = useState("");
   const [images, setImages] = useState([]);
@@ -250,6 +250,16 @@ export default () => {
       setShowAlert(true);
       return;
     }
+
+    if(!hasAtLeastOneImage(images)){
+      Swal.fire({
+        title: "Selecting Media",
+        text: "Please select atleast one image. ",
+        icon: "warning",
+      });
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       const userID = localStorage.getItem("userID");
@@ -333,7 +343,7 @@ export default () => {
       //!experience.trim() || // Experience must not be empty
       //!location.trim() || // Location must not be empty
       // !region.trim() || // Region must not be empty
-     // descriptors.length === 0  // At least one descriptor must be selected
+      // descriptors.length === 0  // At least one descriptor must be selected
       //!description.trim() || // Description must not be empty
       //!links.trim() // Links must not be empty
     ) {
@@ -381,12 +391,12 @@ export default () => {
       let isAnyFieldFilled =
         title.trim() || // Title is filled
         images.length > 0  // At least one file is selected
-        //cost.trim() || // Cost is filled
-        //hours.trim() || // Hours is filled
-        //experience.trim() || // Experience is filled
-       // location.trim() || // Location is filled
-        //region.trim() || // Region is filled
-       // descriptors.length > 0  // At least one descriptor is selected
+      //cost.trim() || // Cost is filled
+      //hours.trim() || // Hours is filled
+      //experience.trim() || // Experience is filled
+      // location.trim() || // Location is filled
+      //region.trim() || // Region is filled
+      // descriptors.length > 0  // At least one descriptor is selected
       //description.trim() || // Description is filled
       //links.trim(); // Links is filled
       setIsFormInProgress(isAnyFieldFilled);
@@ -406,8 +416,16 @@ export default () => {
   ]);
   const addItinerary = async () => {
     if (!isFormDataValid()) {
-     // alert("Please fill in all required fields.");
+      // alert("Please fill in all required fields.");
       setShowAlert(true);
+      return;
+    }
+    if(!hasAtLeastOneImage(images)){
+      Swal.fire({
+        title: "Selecting Media",
+        text: "Please select atleast one image. ",
+        icon: "warning",
+      });
       return;
     }
     let newItinerary = {
@@ -524,19 +542,39 @@ export default () => {
   const handleFilesSelected = (e) => {
     const files = e.target.files;
     const updatedFiles = [...images];
-
+    let hasImage = false;
+  
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-
+  
       // Check the MIME type to determine if it's an image or video
-      if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
-        // It's an image or video file
+      if (file.type.startsWith("image/")) {
+        // It's an image file
+        if (!hasImage) {
+          // Add the first image to the beginning of the array
+          updatedFiles.unshift(file);
+          hasImage = true;
+        } else {
+          // Add additional images to the end of the array
+          updatedFiles.push(file);
+        }
+      } else if (file.type.startsWith("video/")) {
+        // It's a video file
         updatedFiles.push(file);
       }
     }
-
+  
     setImages(updatedFiles);
   };
+  
+  function hasAtLeastOneImage(files) {
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type && files[i].type.startsWith("image/")) {
+        return true; // Found at least one image
+      }
+    }
+    return false; // No images found
+  }
 
   const handleRemoveFile = (indexToRemove) => {
     const updatedFiles = images.filter((_, index) => index !== indexToRemove);
@@ -551,7 +589,21 @@ export default () => {
         </div>
       )} */}
       <div className="container-fluid pb-5">
-
+        <p style={{
+          textAlign: 'center',
+          fontSize: '23px',
+          fontWeight: 'bold',
+          fontFamily: 'poppins'
+        }}>
+          Itinerary
+        </p>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '17px',
+          color: 'black'
+        }}>
+          Create a series of events to share.
+        </p>
         <div className={`row ${styles.createdhero}`}>
           <div className="col-12">
 
@@ -662,7 +714,46 @@ export default () => {
                 </div>
 
 
+
               </div>
+              <div
+                className="ml-4 d-flex align-items-center justify-content-center"
+                style={{
+                  marginLeft: '10px',
+
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  className="p-2 fw-600 mb rounded-5 d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "100px",
+                    height: "50px",
+                    marginLeft: itineraries.length > 0 ? "10px" : "0",
+                    backgroundColor: "#4562B2",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: '2px',
+                    cursor: 'pointer', // Add this line to set the cursor to a pointer
+
+                  }}
+                  onClick={()=>{
+                    addItineraryinBackend(posts);
+
+                  }}
+                >
+                  <p style={{
+                    textAlign: 'center',
+                    color: 'white',
+                    margin: 0, // Add this line to remove any default margin
+                  }}>Post</p>
+                </div>
+
+              </div>
+
+
             </div>
 
 
@@ -741,7 +832,7 @@ export default () => {
                             type="file"
                             id="fileInput"
                             //accept="image/*, video/*"
-                            accept="image/*"
+                            accept=".heic,image/*,video/*"
                             multiple
                             onChange={handleFilesSelected}
                             style={{ display: "none" }}
@@ -832,7 +923,7 @@ export default () => {
                   </div>
 
                   <div className="form-group mt-4">
-                    <h5 className="fw-600"> Tips </h5>
+                    <h5 className="fw-600">Tips</h5>
                     <textarea
                       placeholder="List some important tips..."
                       className="form-control p-3"
@@ -841,7 +932,13 @@ export default () => {
                       name="description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-
+                      style={{ whiteSpace: 'pre-line' }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          setDescription(description + "\n• ");
+                        }
+                      }}
                     ></textarea>
                   </div>
                   <div className="form-group mt-4">
@@ -858,7 +955,7 @@ export default () => {
                     ></textarea>
                   </div>
                 </div>
-            
+
                 <div className="col-lg-5 col-md-5 col-12">
                   <div style={{ width: "100%" }}>
                     <div class="responsive-map">
@@ -935,31 +1032,31 @@ export default () => {
                       />
                       <h5 className="fw-600">Cost to Attend</h5>
                       <div className="d-flex justify-content-center align-items-center">
-                        <div style={{width:'70%'}}>
-                        <input
-                          type="number"
-                          name="cost"
-                          className="form-control py-2 w-lg-75 w-100"
-                          value={cost}
-                          onChange={(e) => setCost(e.target.value)}
+                        <div style={{ width: '70%' }}>
+                          <input
+                            type="number"
+                            name="cost"
+                            className="form-control py-2 w-lg-75 w-100"
+                            value={cost}
+                            onChange={(e) => setCost(e.target.value)}
 
-                          placeholder="Cost to Attend"
-                        />
+                            placeholder="Cost to Attend"
+                          />
                         </div>
-                        <div style={{width:'30%'}}>
-                                <select
-                                  name="country"
-                                  className="form-control py-2"
-                                  value={currency}
-                                  onChange={(e)=> setCurrency(e.target.value)                                  }
-                                >
-                                  {countryCodes.map((code) => (
-                                    <option key={code} value={code}>
-                                      {code}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
+                        <div style={{ width: '30%' }}>
+                          <select
+                            name="country"
+                            className="form-control py-2"
+                            value={currency}
+                            onChange={(e) => setCurrency(e.target.value)}
+                          >
+                            {countryCodes.map((code) => (
+                              <option key={code} value={code}>
+                                {code}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
                     </div>
                     {/* descriptors */}
@@ -1145,9 +1242,9 @@ const DescriptorRadio = ({
           style={
             descriptors.includes(descriptor)
               ? {
-                  border: "2px solid green",
-                  borderRadius: "50px",
-                }
+                border: "2px solid green",
+                borderRadius: "50px",
+              }
               : { border: "none" }
           }
         />

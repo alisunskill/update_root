@@ -141,9 +141,9 @@ const RecommendationGrid = ({
 
                           <div style={{ position: "absolute ", zIndex: 999 }}>
                             <div className="text-center">
-                              {/* <p className={`mb-0 letterspac text-white`}>
-                                Event
-                              </p> */}
+                            <h3 className="w-700 text-white">
+                                {item.isItenrary?"Itinerary":'Event'}
+                              </h3>
                               <h3
                                 className={`w-700 text-white ${styles.titlehero}`}
                               >

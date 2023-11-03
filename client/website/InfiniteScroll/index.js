@@ -13,7 +13,7 @@ import { Files_URL } from "../../apiConfig";
 const InfiniteScrollComponent = () => {
   const router = useRouter();
   //const region = router.query.region?.toLowerCase();
-  const { min, max,region,descriptor } = router.query;
+  const { min, max,region,descriptor, type } = router.query;
   console.log(region, "region");
   const minCost = parseInt(min) || 0;
   const maxCost = parseInt(max) || 0;
@@ -275,12 +275,12 @@ const InfiniteScrollComponent = () => {
               </div>
               <div className="col-lg-4 col-md-4 col-7 pb-lg-3 pb-0">
                 <h1 className="dark bold fw-700 pt-lg-0 text-center  mb-lg-2 mb-2 experience-saves-header">
-                  Your Experiences
+                 {type=="Globe"?region:"Experiences"}
                 </h1>
               </div>
               <div className="col-lg-4 col-md-4 col-6 d-flex justify-content-lg-end justify-content-md-end justify-content-start  px-lg-4 px-3 pb-lg-3 pt-lg-0 pt-2 pb-md-1 pb-3">
                 <div className="d-flex gap-3">
-                  
+               
                     <Link
                       href="/viewsave"
                       className=" rounded-5 bg-gray1 border-0 px-3 py-1 fw-600 text-decoration-none text-light"
@@ -330,6 +330,9 @@ const InfiniteScrollComponent = () => {
 
                           <div style={{ position: "absolute", zIndex: 999 }}>
                             <div className="text-center">
+                            <h3 className="w-700 text-white">
+                                {item.isItenrary?"Itinerary":'Event'}
+                              </h3>
                               <h3 className="w-700 text-white">
                                 {item.title.length <= 45
                                   ? item.title
@@ -445,4 +448,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InfiniteScrollComponent);
+)(InfiniteScrollComponent); 

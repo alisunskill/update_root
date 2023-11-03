@@ -45,6 +45,7 @@ import CloseIcon from "@mui/icons-material/Close"; // Icon for removing images
 import RoomIcon from "@mui/icons-material/Room";
 import { GoogleMapApiKey, API_URL } from "../../apiConfig";
 import Swal from "sweetalert2";
+import { fontSize } from "@mui/system";
 
 const apiKey = process.env.SECRET_KEY;
 
@@ -63,7 +64,7 @@ export default () => {
   const [experience, setExperience] = useState("");
   const [location, setLocation] = useState("");
   const [region, setRegion] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("•");
   const [descriptors, setDescriptors] = useState([]);
   const [links, setLinks] = useState("");
   const [images, setImages] = useState([]);
@@ -199,6 +200,7 @@ export default () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!isFormDataValid()) {
       Swal.fire({
         title: "Adding Event",
@@ -206,6 +208,14 @@ export default () => {
         icon: "warning",
       });
       setShowAlert(true);
+      return;
+    }
+    if(!hasAtLeastOneImage(images)){
+      Swal.fire({
+        title: "Selecting Media",
+        text: "Please select atleast one image. ",
+        icon: "warning",
+      });
       return;
     }
 
@@ -451,20 +461,40 @@ export default () => {
   const handleFilesSelected = (e) => {
     const files = e.target.files;
     const updatedFiles = [...images];
-
+    let hasImage = false;
+  
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-
+  
       // Check the MIME type to determine if it's an image or video
-      if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
-        // It's an image or video file
+      if (file.type.startsWith("image/")) {
+        // It's an image file
+        if (!hasImage) {
+          // Add the first image to the beginning of the array
+          updatedFiles.unshift(file);
+          hasImage = true;
+        } else {
+          // Add additional images to the end of the array
+          updatedFiles.push(file);
+        }
+      } else if (file.type.startsWith("video/")) {
+        // It's a video file
         updatedFiles.push(file);
       }
     }
-
+  
     setImages(updatedFiles);
   };
-
+  
+  function hasAtLeastOneImage(files) {
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type && files[i].type.startsWith("image/")) {
+        return true; // Found at least one image
+      }
+    }
+    return false; // No images found
+  }
+  
   const handleRemoveFile = (indexToRemove) => {
     const updatedFiles = images.filter((_, index) => index !== indexToRemove);
     setImages(updatedFiles);
@@ -478,29 +508,21 @@ export default () => {
         </div>
       )} */}
       <div className="container-fluid pb-5">
-        {itineraries.length > 0 && (
-          <div className={`row ${styles.createdhero}`}>
-            <div className="col-12">
-              <h3>{itineraries.length > 1 ? "Itinerary" : "Post"}</h3>
-              <div className="itinerary-cards" style={{ display: "flex" }}>
-                {itineraries.map((itinerary, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      marginRight: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #7CC5E5", // Specify border style and color here
-                      padding: "4px",
-                    }}
-                  >
-                    {itinerary.title}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
+        <p style={{
+          textAlign: 'center',
+          fontSize: '23px',
+          fontWeight: 'bold',
+          fontFamily: 'poppins'
+        }}>
+          Event
+        </p>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '17px',
+          color: 'black'
+        }}>
+          Create a post about an experience you had.
+        </p>
         <div className={`row ${styles.createdhero}`}>
           <div className={`col-12 ${styles.scenerypara}`}>
             <form
@@ -546,13 +568,13 @@ export default () => {
                           <input
                             type="file"
                             id="fileInput"
-                            // accept="image/*, video/*"
-                            accept="image/*"
+                            accept=".heic,image/*,video/*"
                             multiple
                             onChange={handleFilesSelected}
                             style={{ display: "none" }}
                             ref={fileInputRef}
                           />
+
                         </div>
 
                         <div>
@@ -640,7 +662,7 @@ export default () => {
                   </div>
 
                   <div className="form-group mt-4">
-                    <h5 className="fw-600"> Tips </h5>
+                    <h5 className="fw-600">Tips</h5>
                     <textarea
                       placeholder="List some important tips..."
                       className="form-control p-3"
@@ -649,6 +671,13 @@ export default () => {
                       name="description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
+                      style={{ whiteSpace: 'pre-line' }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          setDescription(description + "\n• ");
+                        }
+                      }}
                     ></textarea>
                   </div>
                   <div className="form-group mt-4">
@@ -670,7 +699,7 @@ export default () => {
                     <div class="responsive-map">
                       <input
                         type="text"
-                        placeholder="Search for a location"
+                        placeholder="Enter Location..."
                         onChange={handleLocationSearch}
                         value={searchValue}
                         style={{
@@ -694,7 +723,8 @@ export default () => {
                         onClick={handleMapClick}
                         style={{
                           width: "100%",
-                          height: "50px", // Adjust the height as needed
+                          height: "30px", // Adjust the height as needed
+
                         }}
                       >
                         {currentLocation && (
@@ -952,9 +982,9 @@ const DescriptorRadio = ({
           style={
             descriptors.includes(descriptor)
               ? {
-                  border: "2px solid green",
-                  borderRadius: "50px",
-                }
+                border: "2px solid green",
+                borderRadius: "50px",
+              }
               : { border: "none" }
           }
         />

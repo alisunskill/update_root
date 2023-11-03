@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import ReCAPTCHA from "react-google-recaptcha";
 import { sitekey } from "../../apiConfig";
 import Link from "next/link";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 function Signup() {
   const router = useRouter();
@@ -23,6 +24,7 @@ function Signup() {
   const [recaptchaError, setRecaptchaError] = useState("");
   const recaptchaValueRef = useRef("");
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false); // Added state for the checkbox
+  const [privacyPolicyModalOpen, setPrivacyPolicyModalOpen] = useState(false);
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
@@ -31,7 +33,7 @@ function Signup() {
       const randomNumbers = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
       values.username = `${values.firstName}${randomNumbers}`;
     }
-  
+
     const emptyFields = Object.keys(values).filter((key) => !values[key]);
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.join(", ");
@@ -44,11 +46,13 @@ function Signup() {
       return;
     }
     if (!privacyPolicyAccepted) {
-      Swal.fire({
-        title: "Privacy Policy Not Accepted",
-        text: "Please accept the Privacy Policy to proceed.",
-        icon: "error",
-      });
+      // Swal.fire({
+      //   title: "Privacy Policy Not Accepted",
+      //   text: "Please accept the Privacy Policy to proceed.",
+      //   icon: "error",
+      // });
+      setPrivacyPolicyModalOpen(true); // Open the privacy policy modal
+
       setSubmitting(false);
       return;
     }
@@ -61,7 +65,7 @@ function Signup() {
       setSubmitting(false);
       return;
     }
- 
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(`${API_URL}api/users`, values, {
@@ -81,7 +85,7 @@ function Signup() {
           title: "Account Created",
           text: `Welcome, ${response.data.user.firstName.charAt(0).toUpperCase() + response.data.user.firstName.slice(1)}! Your account has been successfully created.`,
           icon: "success",
-        });        
+        });
         // resetForm();
         // if (fileInputRef.current) {
         //   fileInputRef.current.value = "";
@@ -89,7 +93,7 @@ function Signup() {
         // setSubmitting(false);
         router.push("/confirmsignup");
       }
-      else if (!response.data.status){
+      else if (!response.data.status) {
         if (response.data.message === "Email already exists") {
           Swal.fire({
             title: "Account Exists",
@@ -102,15 +106,16 @@ function Signup() {
             text: "Provided Username is Already Exists.",
             icon: "warning",
           });
-      }}
+        }
+      }
 
     } catch (error) {
       Swal.fire({
-            title: "Server Error",
-            text: "Something went wrong in backend. Please try again later",
-            icon: "error",
-          });
-      
+        title: "Server Error",
+        text: "Something went wrong in backend. Please try again later",
+        icon: "error",
+      });
+
       setSubmitting(false);
     }
   };
@@ -278,15 +283,15 @@ function Signup() {
                     component="div"
                     className="text-light"
                   />
-                  
-                  <div className="mt-2">
+
+<div className="mt-2">
   {/* Privacy Policy Checkbox */}
   <label style={{ fontSize: "16px", display: "flex", alignItems: "center" }}>
     <Field
       type="checkbox"
       name="privacyPolicyAccepted"
       checked={privacyPolicyAccepted}
-      onChange={(e) => setPrivacyPolicyAccepted(e.target.checked)}
+      onChange={(e) => setPrivacyPolicyModalOpen(e.target.checked)}
       style={{ zoom: 1.5 }} // Adjust the zoom value to change the size of the checkbox
     />{" "}
     <span style={{ fontSize: "16px",fontWeight:"bold", marginLeft:'5px',color:"white" }}>Accept the Privacy Policy</span>
@@ -313,27 +318,98 @@ function Signup() {
                       className="savebtn1 text-light mt-4"
                       // disabled={!isValid}
                       disabled={!!recaptchaError}
-                    > 
+                    >
                       Sign Up
                     </button>
-                    
+
                   </div>
                   <div className="text-center mt-2 " >
-                  <Link
-                        href="/login"
-                        style={{ color: "#fff", textDecoration: "none" }}
-                      >
-                        Already have an account? Login here.
-                      </Link>
-                      </div>
+                    <Link
+                      href="/login"
+                      style={{ color: "#fff", textDecoration: "none" }}
+                    >
+                      Already have an account? Login here.
+                    </Link>
+                  </div>
                 </Form>
               )}
             </Formik>
           </div>
         </div>
+        <PrivacyPolicyModal
+          open={privacyPolicyModalOpen}
+          setPrivacyPolicyAccepted={setPrivacyPolicyAccepted}
+          onClose={() => setPrivacyPolicyModalOpen(false)}
+        />
       </div>
     </>
   );
 }
 
 export default Signup;
+
+function PrivacyPolicyModal({ open, onClose, setPrivacyPolicyAccepted }) {
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>Privacy Policy</DialogTitle>
+      <DialogContent dividers>
+        <div style={{ fontSize: '16px', lineHeight: '1.5' }}>
+          <p>Welcome to OnRoot - Your Ultimate Travel Companion!</p>
+
+          <p>At OnRoot, we are committed to protecting your privacy and ensuring a secure and enjoyable user experience. This Privacy Policy outlines how we collect, use, and safeguard your personal information while you explore and make the most of our platform.</p>
+
+          <p><strong>1. Information We Collect</strong></p>
+          <p>When you use OnRoot, we may collect the following information:</p>
+          <ul>
+            <li>- Personal Information: We may collect your name, email address, and other contact information when you sign up for an account or use our services.</li>
+            <li>- User-Generated Content: Any content you create or upload to the platform, such as photos, posts, and comments, may be collected and displayed on OnRoot.</li>
+            <li>- Usage Information: We collect information about how you interact with our platform, including your browsing history, search queries, and the pages you visit.</li>
+          </ul>
+
+          <p><strong>2. How We Use Your Information</strong></p>
+          <p>We use the information we collect for the following purposes:</p>
+          <ul>
+            <li>- Providing Services: We use your information to offer you a personalized and engaging experience on OnRoot, such as creating and sharing travel content, connecting with other users, and receiving recommendations.</li>
+            <li>- Communication: We may send you updates, notifications, and promotional messages related to OnRoot services. You can opt out of receiving these communications at any time.</li>
+            <li>- Improving Our Services: We use data analytics to enhance our services, make informed decisions, and optimize your experience on the platform.</li>
+          </ul>
+
+          <p><strong>3. Protecting Your Information</strong></p>
+          <p>We take security seriously and implement measures to safeguard your personal information. However, please be aware that no system is entirely secure, and there is always a small risk associated with sharing information online.</p>
+
+          <p><strong>4. Third-Party Links and Services</strong></p>
+          <p>OnRoot may contain links to third-party websites and services. Please note that this Privacy Policy does not cover the privacy practices of those third parties. We recommend reviewing their privacy policies when using their services.</p>
+
+          <p><strong>5. Your Choices</strong></p>
+          <p>You have choices regarding the information you share with OnRoot. You can:</p>
+          <ul>
+            <li>- Access, Correct, or Delete Your Data: You can access and update your account information. You can also delete your account or specific content you have shared on the platform.</li>
+            <li>- Control Notifications: You can manage your notification preferences in your account settings.</li>
+          </ul>
+
+          <p><strong>6. Contact Us</strong></p>
+          <p>If you have any questions, concerns, or requests related to your privacy, please contact us at [email address].</p>
+
+          <p>By using OnRoot, you agree to this Privacy Policy. We may update this policy from time to time, and we will notify you of any significant changes.</p>
+
+          <p>Thank you for choosing OnRoot as your travel companion!</p>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Close
+        </Button>
+        <Button
+          onClick={() => {
+            setPrivacyPolicyAccepted(true);
+            onClose();
+          }}
+          color="primary"
+        >
+          Accept
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+

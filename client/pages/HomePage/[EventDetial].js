@@ -35,7 +35,7 @@ import srelaxation from "../../public/images/descriptors/srelaxation.svg";
 import travelicon from "../../public/images/travelicon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { faHeart, circleBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faTimes, circleBookmark } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { API_URL, Files_URL } from "../../apiConfig";
 import SliderApps from "./SliderApps";
@@ -44,6 +44,13 @@ import GoogleMapReact from "google-map-react";
 import { fetchUserData } from "../../store/actions/userAction";
 import axios from "axios";
 import Trip from "../../website/ViewSaves/components/Trip";
+
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import IconButton from "@mui/material/IconButton";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import CloseIcon from "@mui/icons-material/Close"; // Icon for removing images
+
 import NearSlider from "./component/NearSlider";
 import RoomIcon from "@mui/icons-material/Room";
 import { GoogleMapApiKey } from "../../apiConfig";
@@ -77,6 +84,94 @@ export default function EventDetail() {
   const [isPostSaved, setIsPostSaved] = useState(false);
   const [isPostLiked, setIsPostLiked] = useState(false);
   const [userIDofLogin, setUserIDofLogin] = useState("");
+  const [previousImages, setPreviousImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+  const [editedFields, setEditedFields] = useState({});
+
+  const [currency, setCurrency] = React.useState("USD");
+  const [searchValue, setSearchValue] = useState("");
+
+  const countryCodes = ["USD", "EUR", "PKR", "IQD", "IMP"];
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: 33.572423,
+    lng: 73.14675,
+  });
+  const [descriptors, setDescriptors] = useState(
+    []
+  );
+
+  useEffect(() => {
+    // Function to fetch the street address based on the current location
+    const fetchAddresssss = async () => {
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${currentLocation?.lat},${currentLocation?.lng}&key=${GoogleMapApiKey}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const { results } = data;
+          if (results.length > 0) {
+            // Filter the address components to find the city
+            const addressComponents = results[0].address_components;
+            let cityName = "";
+            let districtName = "";
+            let stateName = "";
+
+            for (const component of addressComponents) {
+              for (const type of component.types) {
+                if (type === "locality" || type === "sublocality") {
+                  cityName = component.long_name;
+                } else if (type === "administrative_area_level_2") {
+                  districtName = component.long_name;
+                } else if (type === "administrative_area_level_1") {
+                  stateName = component.long_name;
+                }
+              }
+            }
+
+            if (cityName && districtName && stateName) {
+              console.log(`City: ${cityName}`);
+              console.log(`District: ${districtName}`);
+              setEditedFields({
+                ...editedFields,
+                location: districtName,
+              })
+              console.log(`State: ${stateName}`);
+            } else {
+              console.log(
+                "City, district, or state name not found in the address components."
+              );
+            }
+          } else {
+            console.log("No results found.");
+          }
+        } else {
+          console.log("Error:", response.status);
+        }
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    };
+
+    fetchAddresssss();
+  }, [currentLocation]);
+
+
+  const handleLocationSearch = (e) => {
+    const inputValue = e.target.value;
+    setSearchValue(inputValue);
+
+    if (inputValue) {
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address: inputValue }, (results, status) => {
+        if (status === "OK" && results.length > 0) {
+          const { lat, lng } = results[0].geometry.location;
+          setCurrentLocation({ lat: lat(), lng: lng() });
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     const idssUser = localStorage.getItem("userID");
@@ -108,10 +203,14 @@ export default function EventDetail() {
           const data = await response.json();
           if (data.status) {
             setEvenDetail(data.data);
+            setEditedFields(data.data)
             getUserInfo(data.data.userID);
             getTotalExperiencesOfUser(data.data.userID);
             setPostUserID(data.data.userID);
             checkUserOwnership(data.data.userID);
+            setPreviousImages(data.data.images)
+            setCurrentLocation({ lat: data.data.latitude, lng: data.data.longitude })
+            setDescriptors(data.data.descriptors)
           } else {
             // Handle error if needed
           }
@@ -229,6 +328,7 @@ export default function EventDetail() {
         setIsOwnPost(true);
       }
     };
+
     const isPostAlreadyLikes = async () => {
       try {
         const url = `${API_URL}api/recommendations/isRecommendationAlreadyLiked`;
@@ -305,16 +405,15 @@ export default function EventDetail() {
   const [description, setDescription] = useState(
     filteredData?.description || ""
   );
-  const [descriptors, setDescriptors] = useState(
-    filteredData?.descriptors || []
-  );
+  
   //console.log(descriptors, "descriptorsdescriptorsdescriptors");
   const [links, setLinks] = useState(filteredData?.links || "");
   const [images, setImages] = useState(filteredData?.images || []);
 
+
+
   const filteredd = recData?.find((item) => item._id === id);
 
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [address, setAddress] = useState("");
 
   const defaultProps = {
@@ -358,63 +457,70 @@ export default function EventDetail() {
   //console.log("ITS", itineraries);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editedFields, setEditedFields] = useState({
-    title: "",
-    cost: "",
-    hours: "",
-    experience: "",
-    location: "",
-    region: "",
-    description: "",
-    descriptors: [],
-    links: "",
-  });
+  const [editedImage, setEditedImage] = useState(null);
+
   //console.log(filteredd, "filteredd");
+  const handleImageEdit = (image) => {
+    setIsEditing(true);
+    setEditedImage(image);
+  };
+
 
   const handleEditClick = () => {
     setIsEditing(true);
-    setEditedFields({
-      title: filteredd.title,
-      cost: filteredd.cost,
-      hours: filteredd.hours,
-      experience: filteredd.experience,
-      location: filteredd.location,
-      region: filteredd.region,
-      description: filteredd.description,
-      descriptors: filteredd.descriptors,
-      links: filteredd.links,
-    });
+    //setEditedFields(eventDetail);
+    // setEditedFields({
+    //   title: filteredd.title,
+    //   images: filteredd.images || editedFields.images,
+    //   cost: filteredd.cost,
+    //   hours: filteredd.hours,
+    //   experience: filteredd.experience,
+    //   location: filteredd.location,
+    //   region: filteredd.region,
+    //   description: filteredd.description,
+    //   descriptors: filteredd.descriptors,
+    //   links: filteredd.links,
+    //   links: filteredd.links,
+    //   links: filteredd.links,
+    // });
   };
 
-  const handleSaveClick = (recommendationId) => {
-    const editedPost = {
-      title: editedFields.title,
-      cost: editedFields.cost,
-      hours: editedFields.hours,
-      experience: editedFields.experience,
-      location: editedFields.location,
-      region: editedFields.region,
-      description: editedFields.description,
-      descriptors: editedFields.descriptors,
-      links: editedFields.links,
-      // images: images,
-    };
-    // console.log(setEditedFields, "editedFields");
+  // const handleSaveClick = (recommendationId) => {
+  //   const editedPost = {
+  //     title: editedFields.title,
+  //     images: editedFields.images,
+  //     cost: editedFields.cost,
+  //     hours: editedFields.hours,
+  //     experience: editedFields.experience,
+  //     location: editedFields.location,
+  //     region: editedFields.region,
+  //     description: editedFields.description,
+  //     descriptors: editedFields.descriptors,
+  //     links: editedFields.links,
+  //     // images: images,
+  //   };
 
-    axios
-      .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
-      .then((response) => {
-        console.log("Post edited successfully:", response.data);
-        setDescriptors(response.data.descriptors); // Update descriptors state with data from API response
+  //   for (let i = 0; i < images.length; i++) {
+  //     formData.append("images", images[i]);
+  //     console.log(images[i]);
+  //   }
 
-        // router.push("/");
-        setDescriptors(response.data.descriptors); // Update descriptors state with data from API response
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error("Error editing post:", error);
-      });
-  };
+  //   console.log(editedPost, "editedFields");
+
+  //   axios
+  //     .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
+  //     .then((response) => {
+  //       console.log("Post edited successfully:", response.data);
+  //       setDescriptors(response.data.descriptors); // Update descriptors state with data from API response
+
+  //       // router.push("/");
+  //       setDescriptors(response.data.descriptors); // Update descriptors state with data from API response
+  //       setIsEditing(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error editing post:", error);
+  //     });
+  // };
   const handleDeleteClick = (recommendationId) => {
     axios
       .delete(`${API_URL}api/recommendations/${recommendationId}`)
@@ -634,61 +740,7 @@ export default function EventDetail() {
     }
   }, [editPost]);
 
-  const handleApiLoaded = (map, maps) => {
-    if (loading || !filteredData) {
-      return;
-    }
 
-    filteredData?.arrayProperty?.forEach((form) => {
-      const formMarker = new maps.Marker({
-        position: {
-          lat: form.location.coordinates[1],
-          lng: form.location.coordinates[0],
-        },
-        map,
-        title: form.title,
-      });
-
-      formMarker.addListener("click", () => {
-        alert(`Title: ${form.title}\nCost: ${form.cost}\nHours: ${form.hours}`);
-      });
-    });
-
-    filteredData?.arrayProperty?.forEach((form) => {
-      const formMarker = new maps.Marker({
-        position: {
-          lat: form.location.coordinates[1],
-          lng: form.location.coordinates[0],
-        },
-        map,
-        title: form.title,
-      });
-
-      formMarker.addListener("click", () => {
-        alert(`Title: ${form.title}\nCost: ${form.cost}\nHours: ${form.hours}`);
-      });
-    });
-  };
-
-  const calculateCenter = (locations) => {
-    if (!locations || locations.length === 0) {
-      return { lat: 31.5204, lng: 74.3587 };
-    }
-
-    const sumLat = locations.reduce(
-      (sum, location) => sum + location.location.coordinates[1],
-      0
-    );
-    const sumLng = locations.reduce(
-      (sum, location) => sum + location.location.coordinates[0],
-      0
-    );
-
-    const avgLat = sumLat / locations.length;
-    const avgLng = sumLng / locations.length;
-
-    return { lat: avgLat, lng: avgLng };
-  };
 
   const saveCount = postCounts && postCounts[postid] ? postCounts[postid] : 0;
 
@@ -753,27 +805,150 @@ export default function EventDetail() {
 
   //edit post
 
-  const editHandlePost = (recommendationId) => {
-    const editedPost = {
-      title,
-      hours,
-      cost,
-      experience,
-      description,
-      location,
-      descriptors,
-      region,
-      links,
-    };
 
-    axios
-      .put(`${API_URL}api/recommendations/${recommendationId}`, editedPost)
-      .then((response) => {
-        console.log("Post edited successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error editing post:", error);
+
+
+
+  const updateEvent = async () => {
+    if (!isFormDataValid()) {
+      Swal.fire({
+        title: "Adding Event",
+        text: "Title and Upload Media Are Required ",
+        icon: "warning",
       });
+      return;
+    }
+    else {
+
+      const userIDsss = localStorage.getItem("userID");
+
+
+      // Create a new FormData object
+      const formData = new FormData();
+      console.log("type of", typeof previousImages)
+
+      // Append fields to the FormData object recommendationId
+      formData.append("recommendationId", id);
+      formData.append("userID", userIDsss);
+      formData.append("title", editedFields.title);
+      formData.append("cost", editedFields.cost);
+      formData.append("hours", editedFields.hours);
+      formData.append("experience", editedFields.experience);
+      formData.append("location", editedFields.location);
+      formData.append("longitude", currentLocation.lng);
+      formData.append("latitude", currentLocation.lat);
+      formData.append("region", editedFields.region);
+      formData.append("description", editedFields.description);
+      formData.append("links", editedFields.links);
+      formData.append("isItenrary", false);
+      formData.append("likes", editedFields.likes);
+      formData.append("currency", editedFields.currency);
+
+
+      // Append descriptors as an array
+      descriptors.forEach((descriptor, index) => {
+        formData.append(`descriptors[${index}]`, descriptor);
+      });
+
+      // Append oldImages as an array
+      for (let i = 0; i < previousImages.length; i++) {
+        formData.append("oldImages[]", previousImages[i]);
+      }
+
+
+      // Append images
+      for (let i = 0; i < newImages.length; i++) {
+        formData.append("newImages", newImages[i]);
+      }
+
+      console.log(formData);
+      try {
+        const url = `${API_URL}api/recommendations/updatecommendation`;
+
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setIsEditing(false);
+            setEvenDetail(data.data)
+            setEditedFields(data.data);
+          } else {
+            alert(data.message);
+          }
+        } else {
+          // Handle HTTP error if needed
+        }
+      } catch (error) {
+        // Handle fetch or other errors
+        console.error(error);
+      }
+    }
+
+
+  };
+
+  const isFormDataValid = () => {
+    if (
+      !editedFields.title.trim() || // Title must not be empty
+      newImages?.length + previousImages?.length === 0 // At least one file must be selected
+      //!cost.trim() || // Cost must not be empty
+      // !hours.trim() || // Hours must not be empty
+      // !experience.trim() || // Experience must not be empty
+      // !location.trim() || // Location must not be empty
+      // !region.trim() || // Region must not be empty
+      //descriptors.length === 0 // At least one descriptor must be selected
+      // !description.trim() || // Description must not be empty
+      // !links.trim() // Links must not be empty
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleFilesSelected = (e) => {
+    const files = e.target.files;
+    const updatedFiles = [...newImages];
+    let hasImage = false;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      // Check the MIME type to determine if it's an image or video
+      if (file.type.startsWith("image/")) {
+        // It's an image file
+        if (!hasImage) {
+          // Add the first image to the beginning of the array
+          updatedFiles.unshift(file);
+          hasImage = true;
+        } else {
+          // Add additional images to the end of the array
+          updatedFiles.push(file);
+        }
+      } else if (file.type.startsWith("video/")) {
+        // It's a video file
+        updatedFiles.push(file);
+      }
+    }
+
+    setNewImages(updatedFiles);
+  };
+
+  function hasAtLeastOneImage(files) {
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type && files[i].type.startsWith("image/")) {
+        return true; // Found at least one image
+      }
+    }
+    return false; // No images found
+  }
+
+  const handleRemoveFile = (indexToRemove) => {
+    const updatedFiles = newImages.filter((_, index) => index !== indexToRemove);
+    setNewImages(updatedFiles);
   };
 
   return (
@@ -786,7 +961,7 @@ export default function EventDetail() {
                 {isEditing ? (
                   <>
                     {/* Input fields for editing */}
-                    <div className="form-group pt-4">
+                    <div className="form-group pt-4 d-flex justify-content-between">
                       <input
                         type="text"
                         name="title"
@@ -800,12 +975,195 @@ export default function EventDetail() {
                           })
                         }
                       />
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        className={` bg-light border-0 rounded-5 position-absolute z-3 p-2 fw-700  cursor-pointer  ${styles.crossbtn}`}
+                        onClick={() => setIsEditing(false)}
+                      />
+                      <div>
+
+                      </div>
                     </div>
 
                     <div>
+                      <div className="row mt-lg-4">
+                        <div className="col-lg-7 col-md-6 col-12">
+                          {/* <SliderApps images1={eventDetail?.images} /> */}
+
+
+                          <div>
+                            <div>
+                              <label
+                                htmlFor="fileInput"
+                                className="cursor-pointer fw-bold"
+                              >
+                                <IconButton component="span">
+                                  <PhotoCameraIcon />
+                                </IconButton>
+                                Upload Media*
+                              </label>
+                              <input
+                                type="file"
+                                id="fileInput"
+                                //accept="image/*, video/*"
+                                accept=".heic,image/*,video/*"
+                                multiple
+                                onChange={handleFilesSelected}
+                                style={{ display: "none" }}
+                                ref={fileInputRef}
+                              />
+                            </div>
+
+                            <div>
+
+                              <ImageList variant="masonry" cols={3} gap={8}>
+                                {newImages?.map((item, index) => (
+                                  <ImageListItem key={index}>
+                                    <IconButton
+                                      style={{
+                                        position: "absolute",
+                                        top: "0",
+                                        right: "0",
+                                        backgroundColor: "#7CC5E5",
+                                        borderRadius: "50%",
+                                        padding: "2px",
+                                        marginRight: "3px",
+                                        marginTop: "3px",
+                                      }}
+                                      onClick={() => handleRemoveFile(index)}
+                                    >
+                                      <CloseIcon
+                                        style={{
+                                          color: "white",
+                                        }}
+                                      />
+                                    </IconButton>
+                                    {item.type.startsWith("image/") ? (
+                                      <img
+                                        src={URL.createObjectURL(item)}
+                                        alt={`Image ${index}`}
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <video controls width="100%">
+                                        <source
+                                          src={URL.createObjectURL(item)}
+                                          type={item.type}
+                                        />
+                                        Your browser does not support the video tag.
+                                      </video>
+                                    )}
+                                  </ImageListItem>
+                                ))}
+                              </ImageList>
+
+                              <ImageList variant="masonry" cols={3} gap={8}>
+                                {previousImages?.map((item, index) => (
+                                  <ImageListItem key={index}>
+                                    <IconButton
+                                      style={{
+                                        position: "absolute",
+                                        top: "0",
+                                        right: "0",
+                                        backgroundColor: "#7CC5E5",
+                                        borderRadius: "50%",
+                                        padding: "2px",
+                                        marginRight: "3px",
+                                        marginTop: "3px",
+                                      }}
+                                      onClick={() => {
+                                        const updatedImages = [...previousImages];
+
+                                        // Remove the item at the specified index
+                                        updatedImages.splice(index, 1);
+
+                                        // Update the state with the new array
+                                        setPreviousImages(updatedImages);
+                                      }}
+                                    >
+                                      <CloseIcon style={{ color: "white" }} />
+                                    </IconButton>
+                                    {item.endsWith(".mp4") || item.endsWith(".webm") ? (
+                                      <video controls width="100%">
+                                        <source
+                                          src={`${Files_URL}${item}`}
+                                          type={item.type}
+                                        />
+                                        Your browser does not support the video
+                                        tag.
+                                      </video>
+                                    ) : (
+                                      <img
+                                        src={`${Files_URL}${item}`}
+                                        alt={`Image ${index}`}
+                                        loading="lazy"
+                                      />
+
+                                    )}
+                                  </ImageListItem>
+                                ))}
+                              </ImageList>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={` col-lg-5 col-md-6 col-12`}>
+                          <div
+                            className={`d-flex justify-content-end align-items-center gap-5 w-100  px-1 ${styles.faxicon}`}
+                          >
+
+                          </div>
+
+                          <div class="responsive-map">
+                            <input
+                              type="text"
+                              placeholder="Enter Location..."
+                              onChange={handleLocationSearch}
+                              value={searchValue}
+                              style={{
+                                position: "absolute",
+                                top: "10px",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                                width: "80%",
+                                zIndex: 1,
+                                height: "7.5%",
+                                borderWidth: "1px",
+                                borderColor: "#7CC5E5",
+                                borderRadius: "20px",
+                              }}
+                            />
+                            <GoogleMapReact
+                              bootstrapURLKeys={{ key: `${GoogleMapApiKey}` }}
+                              defaultCenter={currentLocation || null}
+                              defaultZoom={defaultProps.zoom}
+                              center={currentLocation || null}
+                              onClick={handleMapClick}
+                              style={{
+                                width: "100%",
+                                height: "30px", // Adjust the height as needed
+
+                              }}
+                            >
+                              {currentLocation && (
+                                <RoomIcon
+                                  lat={currentLocation.lat}
+                                  lng={currentLocation.lng}
+                                  style={{
+                                    color: "#EA4335",
+                                  }}
+                                />
+                              )}
+                            </GoogleMapReact>
+                          </div>
+
+
+                        </div>
+                      </div>
+
                       <div className="row">
                         <div className="col-lg-7 col-md-6 col-12">
-                          <div className="form-group pt-5">
+                          {/* <div className="form-group pt-5">
                             <input
                               type="text"
                               name="location"
@@ -820,8 +1178,10 @@ export default function EventDetail() {
                               required
                               placeholder="Provide a Location"
                             />
-                          </div>
+                          </div> */}
                           <div className="form-group pt-5">
+                            <h5 className="fw-600">General Information / Highlights</h5>
+
                             <textarea
                               type="text"
                               name="region"
@@ -840,6 +1200,8 @@ export default function EventDetail() {
                             />
                           </div>
                           <div className="form-group pt-5">
+                            <h5 className="fw-600"> My Experience</h5>
+
                             <textarea
                               placeholder="Personal anecdote of experience..."
                               className="form-control"
@@ -852,11 +1214,13 @@ export default function EventDetail() {
                                   experience: e.target.value,
                                 })
                               }
-                              required
+
                               rows="5"
                             ></textarea>
                           </div>
                           <div className="form-group pt-5">
+                            <h5 className="fw-600">Tips</h5>
+
                             <textarea
                               placeholder="List some important tips..."
                               className="form-control p-3"
@@ -874,6 +1238,8 @@ export default function EventDetail() {
                             ></textarea>
                           </div>
                           <div className="form-group pt-5">
+                            <h5 className="fw-600">Useful Links</h5>
+
                             <textarea
                               placeholder="Additional Links..."
                               className="form-control p-3"
@@ -894,34 +1260,6 @@ export default function EventDetail() {
 
                         <div className="col-lg-5 col-md-4 col-12">
                           <div>
-                            <div class="responsive-map">
-                              <GoogleMapReact
-                                bootstrapURLKeys={{ key: `${GoogleMapApiKey}` }} // Replace with your actual API key
-                                defaultCenter={
-                                  currentLocation ? currentLocation : null
-                                }
-                                defaultZoom={defaultProps.zoom}
-                                center={
-                                  currentLocation ? currentLocation : null
-                                }
-                                onClick={handleMapClick}
-                                style={{
-                                  width: "12%",
-                                  height: "100%",
-                                }}
-                              >
-                                {currentLocation && (
-                                  <RoomIcon
-                                    lat={currentLocation.lat}
-                                    lng={currentLocation.lng}
-                                    style={{
-                                      color: "#EA4335",
-                                    }}
-                                  />
-                                )}
-                              </GoogleMapReact>
-                            </div>
-
                             <div className="col-lg-12 col-12 w-100 pt-2 pt-lg-2 d-flex flex-column align-items-center justify-content-center">
                               <Image
                                 width="40"
@@ -931,7 +1269,6 @@ export default function EventDetail() {
                                 alt="calender"
                               />
                               <h5 className="fw-600">Hours of Operation</h5>
-
                               <div className="w-100">
                                 <input
                                   type="text"
@@ -944,12 +1281,12 @@ export default function EventDetail() {
                                       hours: e.target.value,
                                     })
                                   }
-                                  required
+
                                   placeholder="Hours of Operation"
                                 />
                               </div>
                             </div>
-                            <div className="col-lg-12 col-12  pt-2 pt-lg-2 d-flex flex-column align-items-center justify-content-center">
+                            <div className="form-group col-lg-12 col-12 text-center align-items-center pt-3 pt-lg-5 justify-content-center flex-column d-flex">
                               <Image
                                 width="45"
                                 height="30"
@@ -958,20 +1295,43 @@ export default function EventDetail() {
                                 alt="calender"
                               />
                               <h5 className="fw-600">Cost to Attend</h5>
-                              <input
-                                type="number"
-                                name="cost"
-                                className="form-control py-2 w-100"
-                                value={editedFields.cost}
-                                onChange={(e) =>
-                                  setEditedFields({
-                                    ...editedFields,
-                                    cost: e.target.value,
-                                  })
-                                }
-                                required
-                                placeholder="Cost to Attend"
-                              />
+                              <div className="d-flex justify-content-center align-items-center w-100">
+                                <div style={{ width: "70%" }}>
+                                  <input
+                                    type="number"
+                                    name="cost"
+                                    className="form-control py-2"
+
+                                    value={editedFields.cost}
+                                    onChange={(e) =>
+                                      setEditedFields({
+                                        ...editedFields,
+                                        cost: e.target.value,
+                                      })
+                                    }
+                                    placeholder="Cost to Attend"
+                                  />
+                                </div>
+                                <div style={{ width: "30%" }}>
+                                  <select
+                                    name="country"
+                                    className="form-control py-2"
+                                    value={editedFields.currency}
+                                    onChange={(e) =>
+                                      setEditedFields({
+                                        ...editedFields,
+                                        currency: e.target.value,
+                                      })
+                                    }
+                                  >
+                                    {countryCodes.map((code) => (
+                                      <option key={code} value={code}>
+                                        {code}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
                             </div>
 
                             <div className="row justify-content-center pt-lg-0 pt-5 mb-3">
@@ -1076,7 +1436,7 @@ export default function EventDetail() {
                                     iconSrc={nature}
                                     selectedIconSrc={snature}
                                   />
-                                  <label className="fw-600 cgray pt-lg-3 pt-2">
+                                  <label className="fw-600 cgray pt-lg-3 pt-2 ">
                                     Nature
                                   </label>
                                 </div>
@@ -1097,14 +1457,20 @@ export default function EventDetail() {
                             </div>
 
                             <div className="d-flex justify-content-end align-items-end mt-5">
-                              <button
-                                className="savebtn1 text-light"
-                                onClick={() =>
-                                  handleSaveClick(filteredData._id)
-                                }
+                              <div
+                                style={{
+                                  display: 'inline-block',
+                                  padding: '10px 20px',
+                                  backgroundColor: 'blue',
+                                  color: 'white',
+                                  borderRadius: '5px',
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => updateEvent()}
                               >
                                 Save
-                              </button>
+                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -1234,11 +1600,10 @@ export default function EventDetail() {
                     </h6>
                     <p className="mb-0" style={{ fontSize: "14px" }}>
                       {userTotalExp > 0
-                        ? `${userTotalExp} ${
-                            userTotalExp === 1
-                              ? "experience"
-                              : "shared experiences"
-                          }`
+                        ? `${userTotalExp} ${userTotalExp === 1
+                          ? "experience"
+                          : "shared experiences"
+                        }`
                         : ""}
                     </p>
                   </div>
@@ -1319,16 +1684,16 @@ export default function EventDetail() {
               <p className={styles.eventtitlepara}>
                 {eventDetail?.links
                   ? eventDetail?.links.split("\n").map((link, index) => (
-                      <a
-                        key={index}
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link}
-                        <br />
-                      </a>
-                    ))
+                    <a
+                      key={index}
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link}
+                      <br />
+                    </a>
+                  ))
                   : ""}
               </p>
             </div>
@@ -1682,9 +2047,9 @@ const DescriptorRadio = ({
           style={
             descriptors.includes(descriptor)
               ? {
-                  border: "2px solid green",
-                  borderRadius: "50px",
-                }
+                border: "2px solid green",
+                borderRadius: "50px",
+              }
               : { border: "none" }
           }
         />

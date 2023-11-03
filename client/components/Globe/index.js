@@ -79,12 +79,12 @@ export default function Flobe(props) {
   } else {
     cityData = [];
   }
-
+ 
   const handleLocationClick = (event, data) => {
     const region = data.label;
     router.push({
       pathname: "/infinitescroll",
-      query: { region },
+      query: { region, type:"Globe" },
     });
   };
 

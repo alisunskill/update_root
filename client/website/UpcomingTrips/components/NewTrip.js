@@ -15,7 +15,7 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import styles from "../../../styles/viewsave.module.css";
-
+ 
 export default function NewTrip(props) {
   const router = useRouter();
   const [hasError,setHasError]=useState(false)
@@ -23,8 +23,8 @@ export default function NewTrip(props) {
   const [formData, setFormData] = useState({
     region: "",
     email: "",
-    sdate: "",
-    edate: "",
+    sdate: new Date(),
+    edate: new Date(),
     userID: "",
   });
 
@@ -75,6 +75,26 @@ export default function NewTrip(props) {
     const userID = localStorage.getItem("userID");
     setFormData((prevData) => ({ ...prevData, userID }));
   }, []);
+
+  const handleStartDateChange = (date) => {
+    if (date > formData.edate) {
+      // You can choose to show an error message or prevent the change in another way
+      // For now, let's just set the start date to the current selected end date
+      setFormData((prevData) => ({ ...prevData, sdate: formData.edate }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, sdate: date }));
+    }
+  };
+  
+  const handleEndDateChange = (date) => {
+    if (date < formData.sdate) {
+      // You can choose to show an error message or prevent the change in another way
+      // For now, let's just set the end date to the current selected start date
+      setFormData((prevData) => ({ ...prevData, edate: formData.sdate }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, edate: date }));
+    }
+  };
 
 
   return (
@@ -203,25 +223,21 @@ export default function NewTrip(props) {
                 placeholder="Start Date"
               /> */}
 
-              <DatePicker
-                selected={formData.sdate}
-                onChange={(date) =>
-                  setFormData((prevData) => ({ ...prevData, sdate: date }))
-                }
-                minDate={new Date()}
-                className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
-                placeholderText="Start Date"
-              />
-              <br />
-              <DatePicker
-                selected={formData.edate}
-                onChange={(date) =>
-                  setFormData((prevData) => ({ ...prevData, edate: date }))
-                }
-                minDate={formData.sdate || new Date()}
-                className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
-                placeholderText="End Date"
-              />
+<DatePicker
+      selected={formData.sdate}
+      onChange={handleStartDateChange}
+      minDate={new Date()}
+      className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
+      placeholderText="Start Date"
+    />
+    <br />
+    <DatePicker
+      selected={formData.edate}
+      onChange={handleEndDateChange}
+      minDate={formData.sdate || new Date()}
+      className={`py-lg-3 py-md-2 mt-3 form-control rounded-5 ${styles.datepicke_wrapper}`}
+      placeholderText="End Date"
+    />
 
               <button
                 className={`text-center fw-500 rounded-5 ${styles.herobtn}`}

@@ -1,8 +1,9 @@
 const SavePosts = require("../models/saveposts");
 const Recommendation = require("../models/recommendation");
-
+const Itinerary = require("../models/itinerary");
 const saveAllPost = async (req, res) => {
   const { postId, userID } = req.body;
+  console.log("Post to save: ",postId)
 
   try {
     if (!postId || !Array.isArray(postId) || postId.length === 0) {
@@ -23,7 +24,7 @@ const saveAllPost = async (req, res) => {
     // Respond with success
     res.status(201).json({ message: "Save posts created successfully." });
   } catch (error) {
-    console.error("Error:", error);
+   // console.error("Error:", error);
     res.status(500).json({ error: "Failed to create save posts." });
   }
 };
@@ -66,7 +67,7 @@ const isAlreadySave = async (req, res) => {
       res.status(200).json({ status: false, message: "Post is not saved." });
     }
   } catch (error) {
-    console.error("Error:", error);
+   // console.error("Error:", error);
     res.status(500).json({ error: "Failed to check if the post is saved." });
   }
 };
@@ -84,7 +85,7 @@ const deleteSavePost = async (req, res) => {
 
     res.json({ message: "Post deleted successfully" });
   } catch (error) {
-    console.error("Error deleting post:", error);
+   // console.error("Error deleting post:", error);
     res.status(500).json({ error: "Failed to delete save post." });
   }
 };
@@ -121,22 +122,55 @@ const userSavedPosts = async (req, res) => {
     // Find distinct saved posts for the specified user
     const distinctSavedPosts = await SavePosts.distinct("postId", { userID: userID });
 
-    if (!distinctSavedPosts) {
-      return res.status(404).json({status:false, message: "You do have any saved Posts" });
+    if (!distinctSavedPosts || distinctSavedPosts.length === 0) {
+      return res.status(404).json({ status: false, message: "You don't have any saved Posts" });
     }
 
-    // Now, you have an array of distinct `postId` values.
-    // You can fetch the corresponding recommendations for these distinct posts.
-    const recommendations = await Promise.all(
+    // Create arrays to store recommendations and itineraries
+    const recommendations = [];
+    const itineraries = [];
+
+    // Fetch recommendations for the distinct saved posts
+    await Promise.all(
       distinctSavedPosts.map(async (postId) => {
         const recommendation = await Recommendation.findById(postId).exec();
-        return recommendation;
+        if (recommendation) {
+          recommendations.push(recommendation);
+        }
       })
     );
 
-    res.status(200).json({status:true, message: "Data retrieved successfully!",data:recommendations });
+    // Fetch itineraries for the distinct saved posts
+    await Promise.all(
+      distinctSavedPosts.map(async (postId) => {
+        const itinerary = await Itinerary.findById(postId).exec();
+        if (itinerary) {
+          itineraries.push(itinerary);
+        }
+      })
+    );
+
+    const mergedDataItenraries = itineraries.map((itinerary) => {
+      const itineraryCopy = { ...itinerary._doc }; // Create a copy of the itinerary object
+      if (itineraryCopy.posts && itineraryCopy.posts.length > 0) {
+        const firstPost = itineraryCopy.posts[0];
+        delete firstPost.isItinerary;
+        // Create a copy of the first post without its _id
+        const firstPostWithoutId = { ...firstPost };
+        delete firstPostWithoutId._id;
+       // firstPostWithoutId.isItinerary = true; // Set isItinerary to true for the post
+        return { ...itineraryCopy, ...firstPostWithoutId };
+      }
+      return itineraryCopy;
+    });
+
+    // Create a merged data object
+    const mergedData = recommendations.concat(mergedDataItenraries);
+
+
+    res.status(200).json({ status: true, message: "Data retrieved successfully!", data: mergedData });
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

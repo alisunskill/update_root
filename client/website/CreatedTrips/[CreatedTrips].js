@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchSingleTrip } from "../../store/actions/singleTripAction"; ///
 import {
   updateTripAction,
-  removeTripAction,
+
 } from "../../store/actions/updateTripAction";
 import { Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,11 +31,22 @@ import Modal from "react-bootstrap/Modal";
 import { Files_URL } from "../../apiConfig";
 import Swal from "sweetalert2";
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import DatePicker from "react-datepicker";
+
+import AddIcon from '@mui/icons-material/Add';
+
+
 function CreatedTrips() {
   const router = useRouter();
   const dispatch = useDispatch();
   const recommendationsData = useSelector((state) => state.recommendation);
   const { recommendations, loading, error } = recommendationsData;
+
+
 
   const recData = recommendations.Recommendations;
   const [tripId, setTripId] = useState(router.query?.id);
@@ -51,6 +62,8 @@ function CreatedTrips() {
   const [note, setNote] = useState("");
   const [listTrip, setListTrip] = useState(1);
   const [numbeOfPostsInTrip, setnumbeOfPostsInTrip] = useState(false);
+  const [detailofEventDateToAddEvent, setDetailofEventDateToAddEvent] = useState({});
+  const [showModalToAddEvent, setShowModalToAddEvent] = useState(false);
   const [numColumns, setNumColumns] = useState(4);
   const updateNumColumns = () => {
     if (window.innerWidth >= 1500) {
@@ -147,8 +160,8 @@ function CreatedTrips() {
     fetchTrips();
   }, []);
 
-  
-  
+
+
 
   const fetchTrips = async () => {
     setTrips(saveTripsData);
@@ -237,18 +250,23 @@ function CreatedTrips() {
 
   useEffect(() => {
     const checkHasPosttoID = async () => {
-      for (const post of recData) {
-        if (matchingTrip?.posts.includes(post?._id)) {
-          setnumbeOfPostsInTrip(true);
-          break; // Exit the loop after the first match
+      if (recData?.length > 0) {
+        for (const post of recData) {
+          if (matchingTrip?.posts.includes(post?._id)) {
+            setnumbeOfPostsInTrip(true);
+            break; // Exit the loop after the first match
+          }
         }
       }
     }
     checkHasPosttoID();
-  }, [tripId, recData,matchingTrip]);
+  }, [tripId, recData, matchingTrip]);
 
   const userIDPerson1 =
     typeof window !== "undefined" ? localStorage.getItem("userID") : null;
+
+
+
 
   return (
     <>
@@ -354,13 +372,13 @@ function CreatedTrips() {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                      
-                        <p style={{
-                          textAlign: 'center',
-                        }}>
-                          There's no post added to the trip yet.
-                        </p>
-                    
+
+                    <p style={{
+                      textAlign: 'center',
+                    }}>
+                      There's no post added to the trip yet.
+                    </p>
+
                   </div>
                 )}
                 <Box sx={{ minHeight: numbeOfPostsInTrip ? 829 : 50 }}>
@@ -423,56 +441,90 @@ function CreatedTrips() {
                 <div className="row">
                   <div className={`col-lg-7 col-md-6 col-12`}>
                     <div className={styles.tripsscrolled}>
-                      {trips?.map((item) => {
-                        return (
-                          <div>
-                            {item.userID === userIDPerson1 && (
-                              <div
-                                key={item._id}
-                                // onChange={() => handleFavoriteTrips(item._id)}
-                                // onClick={() =>
-                                //   handleFavoriteTrips(item._id, item.title)
-                                // }
-                                className={`form-check d-flex align-items-center justify-content-between w-100  gap-3 ${styles.herosaves1}`}
-                              >
-                                {/* <input
-                            className={`form-check-input ${styles.radiobtn}`}
-                            type="radio"
-                            name="exampleRadios"
-                            id="exampleRadios1"
-                            value="option1"
-                          /> */}
-                                <div className="">
-                                  <label
-                                    className={`form-check-label f-16 fw-600 h4 mb-0 text-light ${styles.titleheader}`}
-                                    for="exampleRadios1"
-                                  >
-                                    {item.title}
-                                  </label>
-                                  {/* <label>{item.sdate.slice(0, 7)}</label> */}
-                                  <label className="mx-3 text-light">
-                                    {item && item.sdate
-                                      ? new Date(item.sdate).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric"
-                                      })
-                                      : "Date not available"}
+                      {matchingTrip?.plans.map((item, index) => (
+                        <div key={index} className={`form-check d-flex  justify-content-between w-100 gap-3 ${styles.herosaves1}`}>
+                          <div style={{ width: '100%', borderWidth: 0 }}>
+                            <Accordion className={`form-check-label f-16 fw-600 h4 mb-0 text-light ${styles.titleheader}`} htmlFor="exampleRadios1">
+                              <AccordionSummary style={{
+                                color: 'black',
+                                backgroundColor: '#D9D9D9'
+                              }}>
+                                {new Date(item.date).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric"
+                                })}
+                              </AccordionSummary>
+                              <AccordionDetails sx={{}}>
+                                {recData?.map((trip, index) => {
+                                  if (matchingTrip?.posts.includes(trip?._id) && item?.events?.includes(trip?._id)) {
+                                    return (
+                                      <div
+                                        key={trip?._id}
+                                        className={styles.trillistpost}
+                                      >
+                                        <div
+                                          className={`text-decoration-none d-flex  justify-content-center flex-column ${styles.savelink}`}
+                                          onClick={() =>
+                                            handleLinkClick(trip?._id, trip.title, trip)
+                                          }
 
-                                  </label>
-                                </div>
-                                <button
-                                  onClick={() => handleRemoveTrips(item._id)}
-                                  className="bg-transparent border-0 text-light"
-                                  style={{ fontSize: "25px" }}
-                                >
-                                  x
-                                </button>
-                              </div>
-                            )}
+                                        >
+                                          <img
+                                            className={styles.uploadimg}
+                                            src={`${Files_URL}${trip.images[0]}`}
+                                            alt="Uploaded Image"
+                                          />
+
+                                          <div
+                                            style={{
+                                              position: "absolute ",
+                                              zIndex: 999,
+                                            }}
+                                          >
+                                            <div className="text-center">
+
+                                              <h3 className="w-700 text-white">
+                                                {trip.title}
+                                              </h3>
+                                              <p className={`mb-0 m1 text-white`}>
+                                                {/* {trip.region} */}
+                                                {trip?.location}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                    );
+                                  }
+                                })}
+                              </AccordionDetails>
+                            </Accordion>
                           </div>
-                        );
-                      })}
+                          <div style={{
+                            cursor: 'pointer',
+                            marginTop:'15px'
+                          }}
+                            onClick={() => {
+                              setDetailofEventDateToAddEvent(item),
+                                setShowModalToAddEvent(true)
+                            }}
+                          >
+                            <AddIcon />
+                          </div>
+                          <AssignToDate
+                            show={showModalToAddEvent}
+                            onHide={() => setShowModalToAddEvent(false)}
+                            item={detailofEventDateToAddEvent}
+                            matchingTrip={matchingTrip}
+                            recData={recData}
+                            id={id}
+                          />
+                        </div>
+                      ))}
+
+
                     </div>
 
                     <div className="pt-4 pb-lg-5">
@@ -483,12 +535,12 @@ function CreatedTrips() {
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}>
-                            <p style={{
-                              textAlign: 'center',
-                            }}>
-                              There's no post added to the trip yet.
-                            </p>
-                          
+                          <p style={{
+                            textAlign: 'center',
+                          }}>
+                            There's no post added to the trip yet.
+                          </p>
+
                         </div>
                       )}
                       {trips.length > 0 ? (
@@ -630,6 +682,7 @@ function CreatedTrips() {
         {updateTrip.id && (
           <EditTripModal
             show={editModalShow}
+            id={tripId}
             onHide={() => setEditModalShow(false)}
             updateTrip={updateTrip}
             handleUpdateSubmit={handleUpdateSubmit}
@@ -642,10 +695,18 @@ function CreatedTrips() {
 
 export default CreatedTrips;
 
-function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
+function EditTripModal({ show,id, onHide, updateTrip, handleUpdateSubmit }) {
   const [editedTrip, setEditedTrip] = useState(updateTrip);
   const [isTripDeleted, setIsTripDeleted] = useState(false);
   const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    title: editedTrip?.title,
+    region:editedTrip?.region,
+    sdate: new Date(editedTrip?.sdate),
+    edate: new Date(editedTrip?.edate),
+    userID: editedTrip?.userID,
+  });
 
   useEffect(() => {
     if (isTripDeleted) {
@@ -653,11 +714,28 @@ function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
     }
   }, [isTripDeleted]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedTrip({ ...editedTrip, [name]: value });
-  };
+  
 
+  const handleStartDateChange = (date) => {
+    if (date > formData.edate) {
+      // You can choose to show an error message or prevent the change in another way
+      // For now, let's just set the start date to the current selected end date
+      setFormData((prevData) => ({ ...prevData, sdate: formData.edate }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, sdate: date }));
+    }
+  };
+  
+  const handleEndDateChange = (date) => {
+    if (date < formData.sdate) {
+      // You can choose to show an error message or prevent the change in another way
+      // For now, let's just set the end date to the current selected start date
+      setFormData((prevData) => ({ ...prevData, edate: formData.sdate }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, edate: date }));
+    }
+  };
+ 
   return (
     <Modal style={{ marginTop: 30 }} size="md" show={show} onHide={onHide}>
       <Modal.Header closeButton>
@@ -670,57 +748,98 @@ function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
           <Form.Group controlId="title">
             <Form.Label className="pt-3 fw-600 px-1">Title</Form.Label>
             <Form.Control
-              type="text"
-              name="title"
-              value={editedTrip.title || ""}
-              onChange={handleInputChange}
-              placeholder="Title"
-            />
-          </Form.Group>
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={(e)=>{
+                  setFormData((prevData) => ({ ...prevData, title: e.target.value }));
 
-          <Form.Group controlId="region">
+                }}
+                className="py-lg-3 py-md-2 rounded-5"
+                placeholder="Enter the Title"
+              />
+          </Form.Group>
+          <Form.Group controlId="title">
             <Form.Label className="pt-3 fw-600 px-1">Region</Form.Label>
             <Form.Control
-              type="text"
-              name="region"
-              value={editedTrip.region || ""}
-              onChange={handleInputChange}
-              placeholder="Region"
-            />
+                type="text"
+                name="title"
+                value={formData.region}
+                onChange={(e)=>{
+                  setFormData((prevData) => ({ ...prevData, region: e.target.value }));
+
+                }}
+                className="py-lg-3 py-md-2 rounded-5"
+                placeholder="Enter the Title"
+              />
           </Form.Group>
+
+          
 
           <Form.Group controlId="sdate">
             <Form.Label className="pt-3 fw-600 px-1">Start Date</Form.Label>
-            <Form.Control
-              type="text"
-              name="sdate"
-              value={editedTrip.sdate || ""}
-              onChange={handleInputChange}
-              placeholder="Start Date"
-            />
+            <DatePicker
+      selected={formData.sdate}
+      onChange={handleStartDateChange}
+      minDate={new Date()}
+      className={`py-lg-3 py-md-2  form-control rounded-5 ${styles.datepicke_wrapper}`}
+      placeholderText="Start Date"
+    />
           </Form.Group>
 
           <Form.Group controlId="edate">
             <Form.Label className="pt-3 fw-600 px-1">End Date</Form.Label>
-            <Form.Control
-              type="text"
-              name="edate"
-              value={editedTrip.edate || ""}
-              onChange={handleInputChange}
-              placeholder="End Date"
-            />
+            <DatePicker
+      selected={formData.edate}
+      onChange={handleEndDateChange}
+      minDate={formData.sdate || new Date()}
+      className={`py-lg-3 py-md-2  form-control rounded-5 ${styles.datepicke_wrapper}`}
+      placeholderText="End Date"
+    />
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-center pb-3">
+       
         <Button
-          className="savebtn1 px-4 w-100 rounded-4 "
-          onClick={() => {
-            handleUpdateSubmit(editedTrip);
+          className="savebtn1 mt-4 px-4 w-100 rounded-4 "
+          onClick={async () => {
+            
+            try {
+              //tripId, planDate, eventIds
+              const url = `${API_URL}api/trips/updateTrip`;
+              const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  tripId: id,
+                  title: formData.title,
+                  region: formData.region,
+                  sdate:formData.sdate,
+                  edate:formData.edate
+                }),
+              });
 
+              if (response.ok) {
+                const data = await response.json();
+                if (data.status) {
+                  router.push("/upcomingtrips");
+                } else {
+                  // Handle error if needed
+                }
+              } else {
+                // Handle HTTP error if needed
+              }
+            } catch (error) {
+              // Handle fetch or other errors
+              console.error(error);
+            }
           }}
         >
-          Finish
+          Update
         </Button>
         <Button
           className="savebtn1 px-4 w-100 rounded-4 "
@@ -763,6 +882,141 @@ function EditTripModal({ show, onHide, updateTrip, handleUpdateSubmit }) {
           Delete Trip
         </Button>
       </Modal.Footer>
+    </Modal>
+  );
+}
+
+function AssignToDate({ show, onHide, item, recData, matchingTrip, id }) {
+  const router = useRouter();
+
+  console.log("Events coming", item.events);
+
+  const [eventIds, setEventIds] = useState([]);
+
+  useEffect(() => {
+    if (item?.events?.length > 0) {
+      setEventIds(item.events)
+    }
+    else {
+      setEventIds([])
+    }
+
+  }, [item]);
+
+  const handleEventClick = (eventId) => {
+    // Toggle the selection of the event
+    if (eventIds?.includes(eventId)) {
+      // If event is already selected, remove it from the list
+      setEventIds(eventIds?.filter((id) => id !== eventId));
+    } else {
+      // If event is not selected, add it to the list
+      setEventIds([...eventIds, eventId]);
+    }
+  };
+  return (
+    <Modal style={{ marginTop: 30 }} size="lg" show={show} onHide={onHide}>
+      <Modal.Header closeButton>
+        <Modal.Title className="fw-600 d-flex  justify-content-center">
+          Assign To {matchingTrip?.title} for {new Date(item.date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          })}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body >
+
+        {recData?.map((trip, index) => {
+          if (matchingTrip?.posts.includes(trip?._id)) {
+            return (
+              <div
+                key={trip?._id}
+                className={styles.trillistpost}
+              >
+                <div
+                  className={`text-decoration-none d-flex  justify-content-center flex-column ${styles.savelink}`}
+                  style={{
+                    opacity: eventIds?.includes(trip._id) ? 0.5 : 1,
+                  }}
+                  onClick={() => handleEventClick(trip._id)}
+
+                >
+                  <img
+                    className={styles.uploadimg}
+                    src={`${Files_URL}${trip.images[0]}`}
+                    alt="Uploaded Image"
+                  />
+
+                  <div
+                    style={{
+                      position: "absolute ",
+                      zIndex: 999,
+                    }}
+                  >
+                    <div className="text-center">
+
+                      <h3 className="w-700 text-white">
+                        {trip.title}
+                      </h3>
+                      <p className={`mb-0 m1 text-white`}>
+                        {/* {trip.region} */}
+                        {trip?.location}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            );
+          }
+        })}
+
+        <Button
+          className="savebtn1 mt-4 px-4 w-100 rounded-4 "
+          onClick={async () => {
+            if (eventIds.length == 0) {
+              Swal.fire({
+                title: "Adding Event/Itenrary to Trip Date",
+                text: "Please select atleast one Event or Itenrary",
+                icon: "warning",
+              });
+              return;
+            }
+            try {
+              //tripId, planDate, eventIds
+              const url = `${API_URL}api/trips/addEventToSpecificDateInPlans`;
+              const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  tripId: id,
+                  planDate: item.date,
+                  eventIds: eventIds
+                }),
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+                if (data.status) {
+                  router.reload();
+                } else {
+                  // Handle error if needed
+                }
+              } else {
+                // Handle HTTP error if needed
+              }
+            } catch (error) {
+              // Handle fetch or other errors
+              console.error(error);
+            }
+          }}
+        >
+          Add
+        </Button>
+      </Modal.Body>
     </Modal>
   );
 }

@@ -5,7 +5,6 @@ const getAllRecommendations = async (req, res) => {
   try {
     // Find all recommendations and itineraries
     const allRecommendations = await Recommendation.find({ isItenrary: false });
-    
 
     const allItineraries = await Itinerary.find();
 
@@ -18,7 +17,7 @@ const getAllRecommendations = async (req, res) => {
         // Create a copy of the first post without its _id
         const firstPostWithoutId = { ...firstPost };
         delete firstPostWithoutId._id;
-       // firstPostWithoutId.isItinerary = true; // Set isItinerary to true for the post
+        // firstPostWithoutId.isItinerary = true; // Set isItinerary to true for the post
         return { ...itineraryCopy, ...firstPostWithoutId };
       }
       return itineraryCopy;
@@ -50,10 +49,6 @@ const getAllRecommendations = async (req, res) => {
     });
   }
 };
-
-
-
-
 
 //   const { title, region, descriptors, sort, select } = req.query;
 //   const queryObject = {};
@@ -262,14 +257,25 @@ const likeRecommendation = async (req, res) => {
       likesArray.splice(indexOfUser, 1);
       existingRecommendation.likes = likesArray;
       const updatedRecommendation = await existingRecommendation.save();
-      res.status(200).json({ status: false, message: "User unliked this recommendation.", data: updatedRecommendation });
+      res
+        .status(200)
+        .json({
+          status: false,
+          message: "User unliked this recommendation.",
+          data: updatedRecommendation,
+        });
     } else {
       // User has not liked the recommendation, add them
       existingRecommendation.likes.push(userID);
       const updatedRecommendation = await existingRecommendation.save();
-      res.status(200).json({ status: true, message: "User liked this recommendation.", data: updatedRecommendation });
+      res
+        .status(200)
+        .json({
+          status: true,
+          message: "User liked this recommendation.",
+          data: updatedRecommendation,
+        });
     }
-
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({
@@ -283,7 +289,9 @@ const isRecommendationAlreadyLiked = async (req, res) => {
   const userID = req.body.userID;
 
   try {
-    const existingRecommendation = await Recommendation.findById(recommendationId);
+    const existingRecommendation = await Recommendation.findById(
+      recommendationId
+    );
 
     if (!existingRecommendation) {
       return res.status(404).json({ error: "Recommendation not found." });
@@ -295,19 +303,28 @@ const isRecommendationAlreadyLiked = async (req, res) => {
     const isLiked = likesArray.includes(userID);
 
     if (isLiked) {
-      res.status(200).json({ status: true, message: "User has already liked this recommendation." });
+      res
+        .status(200)
+        .json({
+          status: true,
+          message: "User has already liked this recommendation.",
+        });
     } else {
-      res.status(200).json({ status: false, message: "User has not liked this recommendation." });
+      res
+        .status(200)
+        .json({
+          status: false,
+          message: "User has not liked this recommendation.",
+        });
     }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({
-      error: "Failed to check if recommendation is already liked. " + error.message,
+      error:
+        "Failed to check if recommendation is already liked. " + error.message,
     });
   }
 };
-
-
 
 // total likes
 const getTotalLikes = async (req, res) => {
@@ -351,15 +368,15 @@ const UserTotalRecommendations = async (req, res) => {
   }
 };
 const recommendationDetail = async (req, res) => {
-  const {
-    id,
-  } = req.body;
+  const { id } = req.body;
 
   try {
     // You can use the objectId to create an itinerary
     const recommendation = await Recommendation.findOne({ _id: id });
 
-    res.status(201).json({ status: true, message: 'Successful', data: recommendation });
+    res
+      .status(201)
+      .json({ status: true, message: "Successful", data: recommendation });
   } catch (err) {
     if (err.name === "ValidationError") {
       const errorMessages = Object.values(err.errors).map(
@@ -375,7 +392,9 @@ const recommendationDetail = async (req, res) => {
 const updateLikes = async (req, res) => {
   try {
     // Find all documents where "likes" is a number and update them
-    const documentsToUpdate = await Recommendation.find({ likes: { $exists: true, $type: 16 } });
+    const documentsToUpdate = await Recommendation.find({
+      likes: { $exists: true, $type: 16 },
+    });
 
     for (const doc of documentsToUpdate) {
       doc.likes = [];
@@ -399,5 +418,5 @@ module.exports = {
   UserTotalRecommendations,
   recommendationDetail,
   updateLikes,
-  isRecommendationAlreadyLiked
+  isRecommendationAlreadyLiked,
 };

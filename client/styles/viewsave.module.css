@@ -311,7 +311,7 @@
   padding: 10px 40px;
 }
 .tripsscrolled {
-  height: 200px;
+  
   overflow-y: scroll;
   margin-top: 20px;
 }

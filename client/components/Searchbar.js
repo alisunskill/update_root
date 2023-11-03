@@ -203,14 +203,14 @@ const Searchbar = () => {
             value={searchTerm}
             onChange={handleSearch}
             onKeyPress={handleKeyPress}
-            aria-describedby="button-addon5"
             className={`form-control rounded-5 ${styles.searchvally}`}
             list="itemList"
             placeholder="Explore With Us..."
             style={{
               backgroundColor:'#F9F9F9',
               paddingLeft:'25px',
-              fontSize:'15px'
+              fontSize:'15px',
+              
             }}
           />
           {/* <datalist id="itemList" className="w-100">
@@ -218,7 +218,7 @@ const Searchbar = () => {
               <option key={item.id} value={item.title} />
             ))}
           </datalist> */}
-          <FontAwesomeIcon  className={styles.inputgroupicon} icon={faSearch} />
+          <FontAwesomeIcon style={{color:"#727272",}}  className={styles.inputgroupicon} icon={faSearch} />
         </Form>
         {show && (
           <div className={styles.boxed}>
@@ -260,7 +260,7 @@ const Searchbar = () => {
                               }}
                               href={{
                                 pathname: "/infinitescroll",
-                                query: { region: item.location },
+                                query: { region: item.location, type:'Globe' },
                               }}
                               onClick={toggleShowAll}
                             >

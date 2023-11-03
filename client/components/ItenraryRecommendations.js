@@ -14,6 +14,11 @@ import saveicon from "../public/images/saveicon.png";
 import moneyicon from "../public/images/moneyicon.svg";
 import painticon from "../public/images/painticon.svg";
 import travelicon from "../public/images/travelicon.svg";
+import axios from "axios";
+import { deleteSavePost } from "../store/actions/savePostAction";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+
 
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -47,6 +52,8 @@ const ItenraryRecommendationGrid = ({
   error,
 }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const [numColumns, setNumColumns] = useState(4);
   const [postDetailId, setPostDetailId] = useState(data[0]._id);
   const [userId, setUserid] = useState(userID);
@@ -151,7 +158,7 @@ const ItenraryRecommendationGrid = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            postId: postDetailId,
+            postId: itenraryID,
             userID: userIDss,
           }),
         });
@@ -229,11 +236,12 @@ const ItenraryRecommendationGrid = ({
       setNumColumns(1);
     }
   };
-  const sendFavListToBackend = async (id) => {
+  const sendFavListToBackend = async () => {
     const useridd = localStorage.getItem("userID");
+    
     try {
       const response = await axios.post(`${API_URL}api/savepost`, {
-        postId: [id],
+        postId: [itenraryID],
         userID: useridd,
       });
       setIsPostSaved(true);
@@ -276,6 +284,12 @@ const ItenraryRecommendationGrid = ({
       // Handle fetch or other errors
       console.error(error);
     }
+  };
+
+  const handleRemove = async () => {
+    dispatch(deleteSavePost(itenraryID));
+
+    setIsPostSaved(false);
   };
 
   return (
@@ -691,21 +705,36 @@ const ItenraryRecommendationGrid = ({
           <div className="row mt-3 py-3">
             <div className="col-12 col-md-7 col-lg-7 ">
               {/* General Information / Highlights */}
+              {eventDetail?.region && (
+
               <h5 className="fw-600 mt-4">General Information / Highlights</h5>
+              )}
               <p className={styles.eventtitlepara}>{eventDetail?.region}</p>
               {/* My Experience */}
+              {eventDetail?.experience && (
+
               <h5 className="fw-600 mt-4">My Experience</h5>
+              )}
               <p className={styles.eventtitlepara}>{eventDetail?.experience}</p>
 
               {/* Tips */}
-              <h5 className="fw-600 mt-4">Tips</h5>
-              <ul>
-                <li className={styles.eventtitlepara}>
-                  {eventDetail?.description}
-                </li>
-              </ul>
+              {eventDetail?.description && eventDetail?.description != "•" && (
+                <h5 className="fw-600 mt-4">Tips</h5>
+              )}
+              {eventDetail?.description.trim()!="•" && (
+
+                <ul>
+                  {eventDetail?.description?.split('\n').map((item, index) => (
+                    <li className={styles.eventtitlepara} key={index}>
+                      {item.trim().replace(/•/g, '')}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {/* Useful Links */}
+              {eventDetail?.links && (
               <h5 className="fw-600 mt-4">Useful Links</h5>
+              )}
               <p className={styles.eventtitlepara}>
                 {eventDetail?.links
                   ? eventDetail?.links.split("\n").map((link, index) => (
@@ -719,7 +748,7 @@ const ItenraryRecommendationGrid = ({
                         <br />
                       </a>
                     ))
-                  : "This Post has no Links"}
+                  : ""}
               </p>
             </div>
           </div>
@@ -727,56 +756,119 @@ const ItenraryRecommendationGrid = ({
           {/* extra */}
           <div className="row d-flex justify-content-end mt-lg-5 mt-3 pt-lg-4 pt-3 px-lg-5  px-2 pb-2">
             <div
-              className={`col-md-3 col-lg-3 col-12 align-items-center d-flex justify-content-center  ${styles.eventicon}`}
+              className={`col-md-3 col-lg-3 col-12 align-items-center d-flex justify-content-center gap-3 ${styles.eventicon}`}
             >
-              <div className="row justify-content-around align-items-center">
+              <div className="row gap-3 justify-content-around align-align-items-center ">
                 <div
                   className={`d-flex align-items-center justify-content-center col-3 ${styles.eventicondiv}`}
+                  style={{
+                    height: '17px',
+                    width: '17px',
+                    borderRadius: '50%',
+                  }}
                 >
                   <Image
-                    onClick={() => setModalShow(true)}
+                    onClick={() => {
+                      const userIdsLogin = localStorage.getItem("userID");
+
+                      if (!userIdsLogin) {
+                        Swal.fire({
+                          title: "Access Denied",
+                          text: "Please login to your account to get more details",
+                          icon: "warning",
+                        });
+                        router.push("/login");
+                      }
+                      else {
+                        setModalShow(true)
+                      }
+                    }}
                     className={`${styles.eventtopicons} animated1`}
                     src={plusicon2}
                     alt=""
+
                   />
-                  <div className="text-center w-100 d-flex justify-content-center align-items-center">
+
+                  <div className="text-center w-100  d-flex justify-content-center align-items-center">
                     <Trip
                       show={modalShow}
-                      post={itenraryID}
                       onHide={() => setModalShow(false)}
                       setModalShow={setModalShow}
                       images1={eventDetail?.images}
+                      post={itenraryID}
                     />
                   </div>
                 </div>
 
-                <div
-                  className={`d-flex align-items-center justify-content-center bold1 col-3`}
+                {/* <div
+                  className={`d-flex align-items-center justify-content-center bold1 col-3 ${styles.eventicondiv}`}
+                  style={{
+                    border: isPostSaved ? '2px solid red' : '2px solid black',
+                    borderRadius: '5px', // Optional, for rounded corners
+                    borderRadius: "50%",
+                  }}
+                  onClick={() => {
+                    if(isPostSaved){
+                      handleRemove(eventDetail?._id)
+                    }
+                    else  {
+                    sendFavListToBackend(eventDetail?._id)
+                    }
+                  }}
                 >
-                  <div>
-                    <Image width={20} height={20} src={saveicon} />
-                  </div>
-                </div>
+                  <div
+                    className={`d-flex align-items-center justify-content-center bold1 col-3`}
 
+                  >
+                    <div
+                      
+
+                    >
+                      
+                      <Image width={20} height={20} src={saveicon} />
+                    </div>
+                  </div>
+                  
+                </div> */}
+                {/* LIKE LOGIC  */}
                 <div
                   className={`d-flex align-items-center justify-content-center bold1 col-3 ${styles.eventiconbox}`}
                 >
-                  <div className="d-flex align-items-center justify-content-center">
+                  <div className=" d-flex align-items-center justify-content-center" >
                     <FontAwesomeIcon
                       icon={faHeart}
-                      onClick={() => handleLikeCount()}
+                      onClick={() => {
+                        const userIdsLogin = localStorage.getItem("userID");
+
+                        if (!userIdsLogin) {
+                          Swal.fire({
+                            title: "Access Denied",
+                            text: "Please login to your account to get more details",
+                            icon: "warning",
+                          });
+                          router.push("/login");
+                        }
+                        else {
+                          if (isPostSaved) {
+                            handleRemove();
+                          } else {
+                            sendFavListToBackend(eventDetail?._id);
+                          }
+                        }
+                      }}
                       style={{
-                        color: isPostLiked ? "red" : "black",
+                        color: isPostSaved ? "red" : "black",
                         cursor: "pointer",
+                        fontSize: "24px", // Adjust the size as needed
                       }}
                     />
-                    <h5 className="mx-1 mb-0 fw-600" style={{ width: "80px" }}>
-                      {likes?.length === 1
-                        ? `${likes?.length} Like`
-                        : likes?.length === 0
-                        ? ""
-                        : `${likes?.length} Likes`}
-                    </h5>
+                    {/* <h5 className="mx-1 mb-0 fw-600" style={{ width: "80px" }}>
+                      {eventDetail?.likes?.length === 1
+                        ? `${eventDetail?.likes?.length} Like`
+                        : eventDetail?.likes?.length === 0
+                          ? ""
+                          : `${eventDetail?.likes?.length} Likes`}
+                    </h5> */}
                   </div>
                 </div>
               </div>
