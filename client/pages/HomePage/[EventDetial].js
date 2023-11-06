@@ -35,7 +35,11 @@ import srelaxation from "../../public/images/descriptors/srelaxation.svg";
 import travelicon from "../../public/images/travelicon.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { faHeart, faTimes, circleBookmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart,
+  faTimes,
+  circleBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { API_URL, Files_URL } from "../../apiConfig";
 import SliderApps from "./SliderApps";
@@ -96,9 +100,7 @@ export default function EventDetail() {
     lat: 33.572423,
     lng: 73.14675,
   });
-  const [descriptors, setDescriptors] = useState(
-    []
-  );
+  const [descriptors, setDescriptors] = useState([]);
 
   useEffect(() => {
     // Function to fetch the street address based on the current location
@@ -136,7 +138,7 @@ export default function EventDetail() {
               setEditedFields({
                 ...editedFields,
                 location: districtName,
-              })
+              });
               console.log(`State: ${stateName}`);
             } else {
               console.log(
@@ -156,7 +158,6 @@ export default function EventDetail() {
 
     fetchAddresssss();
   }, [currentLocation]);
-
 
   const handleLocationSearch = (e) => {
     const inputValue = e.target.value;
@@ -203,14 +204,17 @@ export default function EventDetail() {
           const data = await response.json();
           if (data.status) {
             setEvenDetail(data.data);
-            setEditedFields(data.data)
+            setEditedFields(data.data);
             getUserInfo(data.data.userID);
             getTotalExperiencesOfUser(data.data.userID);
             setPostUserID(data.data.userID);
             checkUserOwnership(data.data.userID);
-            setPreviousImages(data.data.images)
-            setCurrentLocation({ lat: data.data.latitude, lng: data.data.longitude })
-            setDescriptors(data.data.descriptors)
+            setPreviousImages(data.data.images);
+            setCurrentLocation({
+              lat: data.data.latitude,
+              lng: data.data.longitude,
+            });
+            setDescriptors(data.data.descriptors);
           } else {
             // Handle error if needed
           }
@@ -405,12 +409,10 @@ export default function EventDetail() {
   const [description, setDescription] = useState(
     filteredData?.description || ""
   );
-  
+
   //console.log(descriptors, "descriptorsdescriptorsdescriptors");
   const [links, setLinks] = useState(filteredData?.links || "");
   const [images, setImages] = useState(filteredData?.images || []);
-
-
 
   const filteredd = recData?.find((item) => item._id === id);
 
@@ -464,7 +466,6 @@ export default function EventDetail() {
     setIsEditing(true);
     setEditedImage(image);
   };
-
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -740,8 +741,6 @@ export default function EventDetail() {
     }
   }, [editPost]);
 
-
-
   const saveCount = postCounts && postCounts[postid] ? postCounts[postid] : 0;
 
   if (!user) {
@@ -805,10 +804,6 @@ export default function EventDetail() {
 
   //edit post
 
-
-
-
-
   const updateEvent = async () => {
     if (!isFormDataValid()) {
       Swal.fire({
@@ -817,15 +812,12 @@ export default function EventDetail() {
         icon: "warning",
       });
       return;
-    }
-    else {
-
+    } else {
       const userIDsss = localStorage.getItem("userID");
-
 
       // Create a new FormData object
       const formData = new FormData();
-      console.log("type of", typeof previousImages)
+      console.log("type of", typeof previousImages);
 
       // Append fields to the FormData object recommendationId
       formData.append("recommendationId", id);
@@ -844,7 +836,6 @@ export default function EventDetail() {
       formData.append("likes", editedFields.likes);
       formData.append("currency", editedFields.currency);
 
-
       // Append descriptors as an array
       descriptors.forEach((descriptor, index) => {
         formData.append(`descriptors[${index}]`, descriptor);
@@ -854,7 +845,6 @@ export default function EventDetail() {
       for (let i = 0; i < previousImages.length; i++) {
         formData.append("oldImages[]", previousImages[i]);
       }
-
 
       // Append images
       for (let i = 0; i < newImages.length; i++) {
@@ -867,14 +857,14 @@ export default function EventDetail() {
 
         const response = await fetch(url, {
           method: "POST",
-          body: formData
+          body: formData,
         });
 
         if (response.ok) {
           const data = await response.json();
           if (data.status) {
             setIsEditing(false);
-            setEvenDetail(data.data)
+            setEvenDetail(data.data);
             setEditedFields(data.data);
           } else {
             alert(data.message);
@@ -887,8 +877,6 @@ export default function EventDetail() {
         console.error(error);
       }
     }
-
-
   };
 
   const isFormDataValid = () => {
@@ -947,7 +935,9 @@ export default function EventDetail() {
   }
 
   const handleRemoveFile = (indexToRemove) => {
-    const updatedFiles = newImages.filter((_, index) => index !== indexToRemove);
+    const updatedFiles = newImages.filter(
+      (_, index) => index !== indexToRemove
+    );
     setNewImages(updatedFiles);
   };
 
@@ -957,7 +947,7 @@ export default function EventDetail() {
         <div className={`row ${styles.createdhero}`}>
           <div className={`col-12 ${styles.scenerypara}`}>
             <form>
-              <div className="row d-flex justify-content-end px-lg-5  px-2 pb-2">
+              <div className="row d-flex justify-content-end px-lg-2  px-2 pb-2">
                 {isEditing ? (
                   <>
                     {/* Input fields for editing */}
@@ -980,16 +970,13 @@ export default function EventDetail() {
                         className={` bg-light border-0 rounded-5 position-absolute z-3 p-2 fw-700  cursor-pointer  ${styles.crossbtn}`}
                         onClick={() => setIsEditing(false)}
                       />
-                      <div>
-
-                      </div>
+                      <div></div>
                     </div>
 
                     <div>
-                      <div className="row mt-lg-4">
+                      <div className="row mt-lg-4 justify-content-between">
                         <div className="col-lg-7 col-md-6 col-12">
                           {/* <SliderApps images1={eventDetail?.images} /> */}
-
 
                           <div>
                             <div>
@@ -1015,7 +1002,6 @@ export default function EventDetail() {
                             </div>
 
                             <div>
-
                               <ImageList variant="masonry" cols={3} gap={8}>
                                 {newImages?.map((item, index) => (
                                   <ImageListItem key={index}>
@@ -1050,7 +1036,8 @@ export default function EventDetail() {
                                           src={URL.createObjectURL(item)}
                                           type={item.type}
                                         />
-                                        Your browser does not support the video tag.
+                                        Your browser does not support the video
+                                        tag.
                                       </video>
                                     )}
                                   </ImageListItem>
@@ -1072,7 +1059,9 @@ export default function EventDetail() {
                                         marginTop: "3px",
                                       }}
                                       onClick={() => {
-                                        const updatedImages = [...previousImages];
+                                        const updatedImages = [
+                                          ...previousImages,
+                                        ];
 
                                         // Remove the item at the specified index
                                         updatedImages.splice(index, 1);
@@ -1083,7 +1072,8 @@ export default function EventDetail() {
                                     >
                                       <CloseIcon style={{ color: "white" }} />
                                     </IconButton>
-                                    {item.endsWith(".mp4") || item.endsWith(".webm") ? (
+                                    {item.endsWith(".mp4") ||
+                                    item.endsWith(".webm") ? (
                                       <video controls width="100%">
                                         <source
                                           src={`${Files_URL}${item}`}
@@ -1098,7 +1088,6 @@ export default function EventDetail() {
                                         alt={`Image ${index}`}
                                         loading="lazy"
                                       />
-
                                     )}
                                   </ImageListItem>
                                 ))}
@@ -1110,9 +1099,7 @@ export default function EventDetail() {
                         <div className={` col-lg-5 col-md-6 col-12`}>
                           <div
                             className={`d-flex justify-content-end align-items-center gap-5 w-100  px-1 ${styles.faxicon}`}
-                          >
-
-                          </div>
+                          ></div>
 
                           <div class="responsive-map">
                             <input
@@ -1142,7 +1129,6 @@ export default function EventDetail() {
                               style={{
                                 width: "100%",
                                 height: "30px", // Adjust the height as needed
-
                               }}
                             >
                               {currentLocation && (
@@ -1156,8 +1142,6 @@ export default function EventDetail() {
                               )}
                             </GoogleMapReact>
                           </div>
-
-
                         </div>
                       </div>
 
@@ -1180,7 +1164,9 @@ export default function EventDetail() {
                             />
                           </div> */}
                           <div className="form-group pt-5">
-                            <h5 className="fw-600">General Information / Highlights</h5>
+                            <h5 className="fw-600">
+                              General Information / Highlights
+                            </h5>
 
                             <textarea
                               type="text"
@@ -1214,7 +1200,6 @@ export default function EventDetail() {
                                   experience: e.target.value,
                                 })
                               }
-
                               rows="5"
                             ></textarea>
                           </div>
@@ -1281,7 +1266,6 @@ export default function EventDetail() {
                                       hours: e.target.value,
                                     })
                                   }
-
                                   placeholder="Hours of Operation"
                                 />
                               </div>
@@ -1301,7 +1285,6 @@ export default function EventDetail() {
                                     type="number"
                                     name="cost"
                                     className="form-control py-2"
-
                                     value={editedFields.cost}
                                     onChange={(e) =>
                                       setEditedFields({
@@ -1334,9 +1317,9 @@ export default function EventDetail() {
                               </div>
                             </div>
 
-                            <div className="row justify-content-center pt-lg-0 pt-5 mb-3">
+                            <div className="row justify-content-around pt-lg-0 px-lg-4 px-2 pt-5 mb-3">
                               <div
-                                className={`col-12 col-md-12 px-lg-0 px-3 col-lg-12 d-flex flex-wrap gap-lg-5 gap-4 justify-content-lg-around justify-content-between text-center ${styles.eventmidicons}`}
+                                className={`col-12 col-md-12 px-lg-1 px-3 col-lg-12 d-flex flex-wrap gap-lg-4 gap-3 justify-content-lg-between justify-content-between text-center ${styles.eventmidicons}`}
                               >
                                 <div className="text-center">
                                   <DescriptorRadio
@@ -1459,18 +1442,21 @@ export default function EventDetail() {
                             <div className="d-flex justify-content-end align-items-end mt-5">
                               <div
                                 style={{
-                                  display: 'inline-block',
-                                  padding: '10px 20px',
-                                  backgroundColor: 'blue',
-                                  color: 'white',
-                                  borderRadius: '5px',
-                                  cursor: 'pointer',
+                                  display: "inline-block",
+                                  padding: "10px 30px",
+                                  backgroundColor: "blue",
+                                  color: "white",
+                                  borderRadius: "10px",
+                                  cursor: "pointer",
+                                  backgroundColor: "#4562B2",
+                                  color: "white",
+                                  fontSize: "17px",
+                                  fontWeight: "bold",
                                 }}
                                 onClick={() => updateEvent()}
                               >
                                 Save
                               </div>
-
                             </div>
                           </div>
                         </div>
@@ -1600,10 +1586,11 @@ export default function EventDetail() {
                     </h6>
                     <p className="mb-0" style={{ fontSize: "14px" }}>
                       {userTotalExp > 0
-                        ? `${userTotalExp} ${userTotalExp === 1
-                          ? "experience"
-                          : "shared experiences"
-                        }`
+                        ? `${userTotalExp} ${
+                            userTotalExp === 1
+                              ? "experience"
+                              : "shared experiences"
+                          }`
                         : ""}
                     </p>
                   </div>
@@ -1684,16 +1671,16 @@ export default function EventDetail() {
               <p className={styles.eventtitlepara}>
                 {eventDetail?.links
                   ? eventDetail?.links.split("\n").map((link, index) => (
-                    <a
-                      key={index}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {link}
-                      <br />
-                    </a>
-                  ))
+                      <a
+                        key={index}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link}
+                        <br />
+                      </a>
+                    ))
                   : ""}
               </p>
             </div>
@@ -2047,9 +2034,9 @@ const DescriptorRadio = ({
           style={
             descriptors.includes(descriptor)
               ? {
-                border: "2px solid green",
-                borderRadius: "50px",
-              }
+                  border: "2px solid green",
+                  borderRadius: "50px",
+                }
               : { border: "none" }
           }
         />
